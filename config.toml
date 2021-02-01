@@ -1,4 +1,4 @@
-title = "Osprey Delight Demo"
+title = "Andrew Zhang"
 baseURL = "https://aspartate.github.io/personal_website/"
 languageCode = "en-US"
 theme = "osprey-delight"
@@ -11,10 +11,10 @@ pygmentsUseClasses = true
 
 ## Generic theme parameters:
 [Params]
-  author = "kdevo"
+  author = "aspartate"
   email = ""
   description = "osprey-delight example site"
-  tagline = "Hi there! Check out this theme."
+  tagline = "Hello, my name is Andrew."
   logoBig = "/images/osprey-delight-logo.png"
   # [str] This is the logo that will be shown in the left corner of the nav bar.
   #   Usually, you would like to use something bigger than a favicon - but not too big either.
@@ -32,7 +32,7 @@ pygmentsUseClasses = true
   copyright = true
   # [bool] Your credit is much appreciated. It will be displayed in a small way in your footer.
   #   Anyways, of course you're free to uncomment the following line to disable the credit.
-  # credit = false
+  credit = false
 
 ## Social media links in footer:
 [Params.Social]
@@ -41,7 +41,7 @@ pygmentsUseClasses = true
   # [str] Link to your LinkedIn.
   linkedin = ""
   # [str] Link to your GitHub.
-  github = "https://github.com/kdevo/osprey-delight"
+  github = "https://github.com/aspartate/personal_website"
   # [str] Link to your Facebook.
   facebook = ""
   # [str] Link to your Instagram.
@@ -95,9 +95,9 @@ pygmentsUseClasses = true
   name = "Contact"
   url  = "/#contact"
   weight = 4
-[[menu.main]]
+# [[menu.main]]
   # Use icon here to neatly back reference an external site/blog/whatever:
-  pre = "<i class='icon icon-link-ext'></i>&nbsp;"
-  name = ""
-  url  = "https://pyotek.dev"
-  weight = 5
+  # pre = "<i class='icon icon-link-ext'></i>&nbsp;"
+  # name = ""
+  # url  = "https://pyotek.dev"
+  # weight = 5

@@ -1,13 +1,9 @@
 +++
-title = "It's the Osprey Delight demo site."
+title = "I am a student, a tinkerer, and a creator."
 date = "2017-06-27T17:39:21-07:00"
 draft = false
 +++
 
-## And [here's my repo!](https://github.com/kdevo/osprey-delight)
+I’m a junior at Harvard College studying Human Developmental and Regenerative Biology. I’m heavily involved in the nonprofit [Global Alliance for Medical Innovation](https://www.harvardgami.org/), an incubator for budding healthtech startups. I believe that technological solutions are urgently needed to augment and expand the reach of limited healthcare resources in underserved areas around the world. Talk to me anytime about global health, technology, neuroscience, or magic tricks!
 
-Osprey **De**light is a sugar-free version of the [awesome Osprey theme](https://github.com/tomanistor/osprey) by [Toma Nistor](https://tomanistor.com/) for [Hugo](https://gohugo.io/).
-
-It tastes a bit different than the original (hence the "light" in the name) but also adds some new functionality -- hopefully to your **delight**.
-
-Have fun using it! {{< icon "rocket icon-pulse-fast" >}}
+{{< icon "rocket icon-pulse-fast" >}}
