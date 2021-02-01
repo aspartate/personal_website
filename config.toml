@@ -12,10 +12,10 @@ pygmentsUseClasses = true
 ## Generic theme parameters:
 [Params]
   author = "aspartate"
-  email = "a@b"
+  email = ""
   description = "my personal website"
   tagline = "Hello, my name is Andrew."
-  # logoBig = "/images/osprey-delight-logo.png"
+  logoBig = "/images/osprey-delight-logo.png"
   # [str] This is the logo that will be shown in the left corner of the nav bar.
   #   Usually, you would like to use something bigger than a favicon - but not too big either.
   #   Make sure that the image does not overlay the nav links. Don't be afraid of experimenting! 
@@ -95,9 +95,3 @@ pygmentsUseClasses = true
   name = "Contact"
   url  = "/#contact"
   weight = 4
-# [[menu.main]]
-  # Use icon here to neatly back reference an external site/blog/whatever:
-  # pre = "<i class='icon icon-link-ext'></i>&nbsp;"
-  # name = ""
-  # url  = "https://pyotek.dev"
-  # weight = 5
