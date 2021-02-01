@@ -70,7 +70,7 @@ pygmentsUseClasses = true
   #   This will use information that is publically available about your GitHub user profile at https://api.github.com/users/{USERNAME}.
   # structuredDataFromGithub = "USERNAME"
   # [bool] Enable the optional blog module
-  useBlog = false
+  useBlog = true
 
 ## Configure contact form:
 [Params.Contact]
