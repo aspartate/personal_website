@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Osprey Delight Demo</title>
+    <title>Andrew Zhang</title>
     <link>https://aspartate.github.io/personal_website/</link>
-    <description>Recent content on Osprey Delight Demo</description>
+    <description>Recent content on Andrew Zhang</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
     <lastBuildDate>Wed, 18 Sep 2019 21:57:17 -0700</lastBuildDate><atom:link href="https://aspartate.github.io/personal_website/index.xml" rel="self" type="application/rss+xml" />
@@ -99,14 +99,13 @@ Check it out.</description>
     </item>
     
     <item>
-      <title>It&#39;s the Osprey Delight demo site.</title>
+      <title>I am a student, a tinkerer, and a creator.</title>
       <link>https://aspartate.github.io/personal_website/about/</link>
       <pubDate>Tue, 27 Jun 2017 17:39:21 -0700</pubDate>
       
       <guid>https://aspartate.github.io/personal_website/about/</guid>
-      <description>And here&amp;rsquo;s my repo! Osprey Delight is a sugar-free version of the awesome Osprey theme by Toma Nistor for Hugo.
-It tastes a bit different than the original (hence the &amp;ldquo;light&amp;rdquo; in the name) but also adds some new functionality &amp;ndash; hopefully to your delight.
-Have fun using it!</description>
+      <description>I’m a junior at Harvard College studying Human Developmental and Regenerative Biology. I’m heavily involved in the nonprofit Global Alliance for Medical Innovation, an incubator for budding healthtech startups. I believe that technological solutions are urgently needed to augment and expand the reach of limited healthcare resources in underserved areas around the world. Talk to me anytime about global health, technology, neuroscience, or magic tricks!
+ </description>
     </item>
     
   </channel>

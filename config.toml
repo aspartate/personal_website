@@ -12,10 +12,10 @@ pygmentsUseClasses = true
 ## Generic theme parameters:
 [Params]
   author = "aspartate"
-  email = ""
-  description = "osprey-delight example site"
+  email = "a@b"
+  description = "my personal website"
   tagline = "Hello, my name is Andrew."
-  logoBig = "/images/osprey-delight-logo.png"
+  # logoBig = "/images/osprey-delight-logo.png"
   # [str] This is the logo that will be shown in the left corner of the nav bar.
   #   Usually, you would like to use something bigger than a favicon - but not too big either.
   #   Make sure that the image does not overlay the nav links. Don't be afraid of experimenting! 
@@ -70,7 +70,7 @@ pygmentsUseClasses = true
   #   This will use information that is publically available about your GitHub user profile at https://api.github.com/users/{USERNAME}.
   # structuredDataFromGithub = "USERNAME"
   # [bool] Enable the optional blog module
-  useBlog = true
+  useBlog = false
 
 ## Configure contact form:
 [Params.Contact]
