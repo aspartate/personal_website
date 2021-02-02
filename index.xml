@@ -6,15 +6,34 @@
     <description>Recent content on Andrew Zhang</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Mon, 01 Feb 2021 17:11:55 -0500</lastBuildDate><atom:link href="https://aspartate.github.io/personal_website/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 02 Feb 2021 01:47:17 -0500</lastBuildDate><atom:link href="https://aspartate.github.io/personal_website/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Week 2: 2D Design</title>
+      <link>https://aspartate.github.io/personal_website/blog/week-2-2d-design/</link>
+      <pubDate>Tue, 02 Feb 2021 01:47:17 -0500</pubDate>
+      
+      <guid>https://aspartate.github.io/personal_website/blog/week-2-2d-design/</guid>
+      <description>Placeholder for week 2 documentation.</description>
+    </item>
+    
     <item>
       <title>Week 1: Final Project Proposal</title>
       <link>https://aspartate.github.io/personal_website/blog/week-1-final-project/</link>
       <pubDate>Mon, 01 Feb 2021 17:11:55 -0500</pubDate>
       
       <guid>https://aspartate.github.io/personal_website/blog/week-1-final-project/</guid>
-      <description>For my final project, I have a couple of ideas revolving around robotics and control systems. I&amp;rsquo;ve always been fascinated with the ability of humans, through technology, to control things outside of our own body. Below are three ideas which I would like to explore.
+      <description>For my final project, I have a couple of ideas revolving around robotics and control systems. I&amp;rsquo;ve always been fascinated with the ability of humans, through technology, to control things outside of our own body. Below are several ideas which I would like to explore.
 EEG-controlled robot. I have this toy bluetooth-enabled EEG from a Star Wars Force Trainer kit which I had purchased a while back specifically for the purpose of doing some cool things with in terms of brain-machine interfaces.</description>
+    </item>
+    
+    <item>
+      <title>Bugs to be Squashed</title>
+      <link>https://aspartate.github.io/personal_website/blog/bugs/</link>
+      <pubDate>Fri, 01 Jan 2021 01:49:38 -0500</pubDate>
+      
+      <guid>https://aspartate.github.io/personal_website/blog/bugs/</guid>
+      <description>Here are the bugs I need to fix:
+ There a picture on the home page which won&amp;rsquo;t render and I can&amp;rsquo;t get rid of it. The modals don&amp;rsquo;t work in gallery mode. Also when making a new gallery post I get a weird json error, which goes away when I comment out a block of github stuff. When a blog post is opened, the header menu is in a weird place and covers up some of the text.</description>
     </item>
     
     <item>
@@ -23,7 +42,8 @@ EEG-controlled robot. I have this toy bluetooth-enabled EEG from a Star Wars For
       <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>
       
       <guid>https://aspartate.github.io/personal_website/blog/markdown-syntax/</guid>
-      <description>&lt;p&gt;This article offers a sample of basic Markdown syntax that can be used in Hugo content files, also it shows whether basic HTML elements are decorated with CSS in a Hugo theme.&lt;/p&gt;</description>
+      <description>&lt;p&gt;Please ignore, this is for my own edification.&lt;/p&gt;
+&lt;p&gt;This article offers a sample of basic Markdown syntax that can be used in Hugo content files, also it shows whether basic HTML elements are decorated with CSS in a Hugo theme.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -33,7 +53,7 @@ EEG-controlled robot. I have this toy bluetooth-enabled EEG from a Star Wars For
       
       <guid>https://aspartate.github.io/personal_website/about/</guid>
       <description>I’m a junior at Harvard College studying Human Developmental and Regenerative Biology. I’m heavily involved in the nonprofit Global Alliance for Medical Innovation, an incubator for budding healthtech startups. I believe that technological solutions are urgently needed to augment and expand the reach of limited healthcare resources in underserved areas around the world. Talk to me anytime about global health, technology, neuroscience, or magic tricks!
- Note: I&amp;rsquo;m trying to get gallery mode to work but am running into some issues with modals at the moment&amp;hellip;so please excuse the boring blog post format for now :P</description>
+ Note: I&amp;rsquo;m trying to get gallery mode to work but am running into some issues with modals at the moment&amp;hellip;so please excuse the boring blog post format for now.</description>
     </item>
     
   </channel>
