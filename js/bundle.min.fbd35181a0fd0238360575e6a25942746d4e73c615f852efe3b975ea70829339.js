@@ -14,33 +14,7 @@ line.removeAttribute(`${this.pfx}-cursor`);}}
 async type(line){const chars=[...line.textContent];const delay=line.getAttribute(`${this.pfx}-typeDelay`)||this.typeDelay;line.textContent='';this.container.appendChild(line);for(let char of chars){await this._wait(delay);line.textContent+=char;}}
 async progress(line){const progressLength=line.getAttribute(`${this.pfx}-progressLength`)||this.progressLength;const progressChar=line.getAttribute(`${this.pfx}-progressChar`)||this.progressChar;const chars=progressChar.repeat(progressLength);const progressPercent=line.getAttribute(`${this.pfx}-progressPercent`)||this.progressPercent;line.textContent='';this.container.appendChild(line);for(let i=1;i<chars.length+1;i++){await this._wait(this.typeDelay);const percent=Math.round(i/chars.length*100);line.textContent=`${chars.slice(0,i)}`;if(this.showPercent){line.textContent+=` ${percent}%`}
 if(percent>progressPercent){break;}}}
-_wait(time){return new Promise(resolve=>setTimeout(resolve,time));}};(function(){var ANIMATION_TIME=500
-var modal,modalBoxes=$$('.modal-box'),openLinks=$$('.gallery-modal-link'),closeLinks=$$('.close')
-function openModal(){modalBoxes.forEach(function(box){box.classList.add('scale-in-center')
-box.classList.remove('scale-out-center')})}
-function closeModal(){modalBoxes.forEach(function(box){box.classList.remove('scale-in-center')
-box.classList.add('scale-out-center')
-setTimeout(function(){modal.classList.remove('active')},ANIMATION_TIME)})}
-var terms={};var termOptions={};termOptions["osprey-delight"]={}
-function open(modalElement){modal=modalElement
-modal.classList.add('active')
-openModal()
-var termKey=modal.getAttribute('id').replace('modal-','')
-var term=$(`#term-${termKey}`)
-if(term!==null&&typeof terms[termKey]==='undefined'){var options=termOptions[termKey]
-options.onExitCommand=function(){term.classList.add('scale-out-center')
-setTimeout(function(){$(`#content-${termKey}`).removeAttribute("hidden")
-term.setAttribute("hidden",true)},ANIMATION_TIME+10)}
-terms[termKey]=new Termynal(term,options)}}
-openLinks.forEach(function(link){link.onclick=function(e){e.preventDefault()
-open($(`#modal-${e.target.getAttribute('href').substr(1)}`))}
-const loc=window.location.href
-const seg=loc.substring(loc.lastIndexOf('/')+1)
-if(link.getAttribute('href')==seg){open($(`#modal-${link.getAttribute('href').substr(1)}`))}})
-closeLinks.forEach(function(link){link.onclick=function(e){e.preventDefault()
-closeModal()}})
-window.onclick=function(e){if(e.target===modal){closeModal()}}
-document.onkeydown=function(e){if(e.key==='Escape'){closeModal()}}})();function handleNavBar(isMainPage){menuActive=false
+_wait(time){return new Promise(resolve=>setTimeout(resolve,time));}};function handleNavBar(isMainPage){menuActive=false
 var nav=$('nav')
 function setFixedNav(isFixed){if(isFixed){nav.classList.add('nav-fixed')
 nav.classList.add('nav-shadow')
