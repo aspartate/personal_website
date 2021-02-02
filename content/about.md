@@ -8,4 +8,4 @@ I’m a junior at Harvard College studying Human Developmental and Regenerative 
 
 {{< icon "rocket icon-pulse-fast" >}}
 
-Note: I'm trying to get gallery mode to work but am running into some issues with modals at the moment...so please excuse the boring blog post format for now :P
+Note: I'm trying to get gallery mode to work but am running into some issues with modals at the moment...so please excuse the boring blog post format for now.
