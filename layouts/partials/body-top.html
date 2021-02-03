@@ -5,12 +5,15 @@
   <!-- End Google Tag Manager (noscript) -->
 {{ end }}
 
+
 {{ if .IsHome }}
   <header class="row middle-xs center-xs">
     <div class="col-xs-12">
+      <!--
       <div class="row middle-xs center-xs">
         <div class="col-xs-12"><img {{ if .Site.Params.Feat.lazyLoading }}data-src="{{ .Site.Params.logoBig }}" onclick="onLogoClick()" lazyload="on"{{ else }}src="{{ .Site.Params.logoBig }}"{{ end }} alt="{{ .Site.Title }}" class="home-logo {{ if .Site.Params.Feat.lazyLoading }}lazyload{{ end }}"></div>
       </div>
+    -->
       <div class="row middle-xs center-xs">
         <div class="col-xs-12">
           <h1>{{ .Site.Params.tagline | markdownify }}<span class="cursor">|</span></h1>
@@ -23,6 +26,7 @@
     </div>
   </header>
 {{ end }}
+
 
 <nav class="row middle-xs center-xs">
   <div class="col-xs-6 col-sm-1 logo">

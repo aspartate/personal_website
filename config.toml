@@ -15,13 +15,11 @@ pygmentsUseClasses = true
   email = ""
   description = "my personal website"
   tagline = "Hello, my name is Andrew."
-  logoBig = "/images/osprey-delight-logo.png"
-  # [str] This is the logo that will be shown in the left corner of the nav bar.
-  #   Usually, you would like to use something bigger than a favicon - but not too big either.
-  #   Make sure that the image does not overlay the nav links. Don't be afraid of experimenting! 
+  logoBig = "images/osprey-delight-logo.png"
+  # [str] This is the logo that will be shown in the left corner of the nav bar. Usually, you would like to use something bigger than a favicon - but not too big either. Make sure that the image does not overlay the nav links. Don't be afraid of experimenting! 
   logoSmall = "favicon.png"
   favicon = "favicon.png"
-  opengraphImage = "/images/osprey-delight.png"
+  opengraphImage = "images/osprey-delight.png"
   googleTagManager = ""
   # [bool] The following will enforce redirection to the baseURL for all sub-directories/-pages.
   #   Example: If you create about.md, Hugo will also create a '/about/index.html'.
