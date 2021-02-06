@@ -8,29 +8,29 @@
     <language>en-US</language>
     <lastBuildDate>Wed, 03 Feb 2021 00:27:44 -0500</lastBuildDate><atom:link href="https://aspartate.github.io/personal_website/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Week 3</title>
-      <link>https://aspartate.github.io/personal_website/blog/week-3/</link>
+      <title>Week 2 - Press-Fit Kit</title>
+      <link>https://aspartate.github.io/personal_website/blog/week-2-press-fit-kit/</link>
       <pubDate>Wed, 03 Feb 2021 00:27:44 -0500</pubDate>
       
-      <guid>https://aspartate.github.io/personal_website/blog/week-3/</guid>
-      <description>hello world.</description>
+      <guid>https://aspartate.github.io/personal_website/blog/week-2-press-fit-kit/</guid>
+      <description>For this project we were asked to work in pairs make a press-fit kit out of 2D shapes in cardboard. My partner Jessica and I decided to make a truncated icosahedron (more commonly known as a soccer ball). We chose this shape because it consists of 2 side elements: hexagons and pentagons, and one of us could work on each. After googling around a bit we found an online example of what we wanted to achieve:</description>
     </item>
     
     <item>
-      <title>Week 2: 2D Design</title>
-      <link>https://aspartate.github.io/personal_website/blog/week-2-2d-design/</link>
+      <title>Week 2: 3D Modeling</title>
+      <link>https://aspartate.github.io/personal_website/blog/week-2-3d-modeling/</link>
       <pubDate>Tue, 02 Feb 2021 01:47:17 -0500</pubDate>
       
-      <guid>https://aspartate.github.io/personal_website/blog/week-2-2d-design/</guid>
+      <guid>https://aspartate.github.io/personal_website/blog/week-2-3d-modeling/</guid>
       <description>For this project we were asked to model two real-world components in Fusion 360 and create an assembly. I decided to model a PVC bulkhead which I had recently purchased for a hydroponics project. The bulkhead came without a nut, however, so I decided to model &amp;amp; 3D print one myself. Because this was my first time working with Fusion (I previously did all modeling in TinkerCAD), I figured this bulkhead offered a good mix of features to model without being too complicated.</description>
     </item>
     
     <item>
       <title>Week 1: Final Project Proposal</title>
-      <link>https://aspartate.github.io/personal_website/blog/week-1-final-project/</link>
+      <link>https://aspartate.github.io/personal_website/blog/week-1-final-project-proposal/</link>
       <pubDate>Mon, 01 Feb 2021 17:11:55 -0500</pubDate>
       
-      <guid>https://aspartate.github.io/personal_website/blog/week-1-final-project/</guid>
+      <guid>https://aspartate.github.io/personal_website/blog/week-1-final-project-proposal/</guid>
       <description>For my final project, I have a couple of ideas revolving around robotics and control systems. I&amp;rsquo;ve always been fascinated with the ability of humans, through technology, to control things outside of our own body. Below are several ideas which I would like to explore.
 EEG-controlled robot. I have this toy bluetooth-enabled EEG from a Star Wars Force Trainer kit which I had purchased a while back specifically for the purpose of doing some cool things with in terms of brain-machine interfaces.</description>
     </item>

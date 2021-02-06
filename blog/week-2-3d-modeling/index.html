@@ -7,10 +7,10 @@
 
   <title>
     
-    Week 1: Final Project Proposal | Andrew Zhang
+    Week 2: 3D Modeling | Andrew Zhang
   </title>
 
-  <meta name="title" content="Week 1: Final Project Proposal | Andrew Zhang">
+  <meta name="title" content="Week 2: 3D Modeling | Andrew Zhang">
 
   <meta charset="utf-8">
   
@@ -26,7 +26,7 @@
 
   
 
-  <meta property="og:title" content="Week 1: Final Project Proposal | Andrew Zhang">
+  <meta property="og:title" content="Week 2: 3D Modeling | Andrew Zhang">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://aspartate.github.io/personal_website/">
 
@@ -38,7 +38,7 @@
 
   <meta name="theme-color" content="#0097a7">
 
-  <link rel="canonical" href="https://aspartate.github.io/personal_website/blog/week-1-final-project/">
+  <link rel="canonical" href="https://aspartate.github.io/personal_website/blog/week-2-3d-modeling/">
   
   
 
@@ -107,26 +107,80 @@
 
       <section class="container">
         <section class="content">
-          <h1> Week 1: Final Project Proposal </h1>
+          <h1> Week 2: 3D Modeling </h1>
 
             <div class="sub-header">
-              February 1, 2021 · 3 minutes read
+              February 2, 2021 · 2 minutes read
             </div>
 
           <article class="entry-content">
-            <p>For my final project, I have a couple of ideas revolving around robotics and control systems. I&rsquo;ve always been fascinated with the ability of humans, through technology, to control things outside of our own body. Below are several ideas which I would like to explore.</p>
-<p><strong>EEG-controlled robot.</strong> I have this toy bluetooth-enabled EEG from a Star Wars Force Trainer kit which I had purchased a while back specifically for the purpose of doing some cool things with in terms of brain-machine interfaces. Alas, I never mustered up the courage to crack that bad boy open and start soldering things onto the circuit board. The closest I got was reading the signals from the headset via apps on my phone. In the course of my experimentation, I found that the claimed EEG functionality is indeed real, but the headset could detect blinks with far greater accuracy than it could detect brainwaves. This is probably because the single &ldquo;read&rdquo; electrode is conveniently located on the left eyebrow, where the eyelid muscles are. In fact, the headset is capable of differentiating between &ldquo;soft&rdquo; blinks and &ldquo;hard&rdquo; blinks, assigning different relative strength values to each. Because of this, I think it may be theoretically feasible to provide input to a robot with <em>n</em> degrees of freedom given <em>n</em> possible distinct signals using blinks. These can be blink sequences, e.g. a double-blink, a soft-blink followed by a strong-blink, etc. Though this doesn&rsquo;t technically count as &ldquo;brain-controlled&rdquo;, I think the increased fidelity of blink detection over brainwave detection makes this a much more practical application of the EEG. The major challenges here would be 1) extracting the signal from the EEG and 2) wirelessly receiving and interpreting the signal.</p>
-<p><strong>EMG-controlled prosthesis.</strong> Kind of similar idea as above, but with an electromyography interface instead of EEG. I don&rsquo;t have an EMG but there are kits online. This is also a rather difficult signal processing problem, however&hellip;</p>
-<p><strong>Fail-proof wake-up alarm.</strong> Okay this is a radically different idea from the previous ones, but hear me out. So I&rsquo;m one of those people who tend to have trouble waking up early in the morning. Worse, my sleep-deprived lizard brain can fully neutralize any alarm before my prefrontal cortex knows what&rsquo;s up. I&rsquo;ve tried nearly everything, from lamps that blast light in my face at 7 AM to those gimmicky alarm apps that make you solve a math problem to wake up. It got to the point where I was solving 5-digit by 5-digit multiplication problems and turning off the alarm while practically still unconscious. So, I need to make an alarm that 1) never lets down its guard, and 2) is annoying enough to actually get me out of bed. Therefore, my big idea is to construct a pressure-sensing pad on the bed which sends a wireless signal to a speaker. When the bed pad is triggered, the speaker will play heavy metal music or, even better, loudly read the 37 items on my to-do list. This system will remain active between the hours of 7 AM and 9 PM, so I cannot stay in bed beyond 7. My intention is to lock the speaker plus power supply in a box (possibly handmade, I do enjoy woodworking) and store it somewhere inaccessible in my room. I believe this system truly represents the holy grail of alarms, and may usher in a new era of unprecedented morning productivity.</p>
+            <p>For this project we were asked to model two real-world components in Fusion 360 and create an assembly. I decided to model a PVC bulkhead which I had recently purchased for a hydroponics project. The bulkhead came without a nut, however, so I decided to model &amp; 3D print one myself. Because this was my first time working with Fusion (I previously did all modeling in TinkerCAD), I figured this bulkhead offered a good mix of features to model without being too complicated.</p>
+<p><img src="images/week2-bulkhead/bulkhead.png" alt="The bulkhead."></p>
+<p>The bulkhead consists of a threaded <strong>stem</strong> and a <strong>barb</strong>, separated by a <strong>hexagonal prism</strong>. I&rsquo;ll tackle each of these separately.</p>
+<h3 id="1-modeling-the-stem">1. Modeling the stem.</h3>
+<p>First, I measured the pertinent dimensions of the stem and threads using calipers. I got the following values:</p>
+<ul>
+<li>Outer diameter including threads: 27 mm</li>
+<li>Outer diameter not including threads: 22.6 mm</li>
+<li>Depth of threads: (27 - 22.6)/2 = 2.2 mm</li>
+<li>Distance between threads: 1.75 mm</li>
+<li>Inner diameter: 18.15 mm</li>
+<li>Total stem length: 17.6 mm</li>
+<li>Length of threaded portion: 16 mm</li>
+</ul>
+<p>I found that Fusion had a built-in threads option, but it came with all these standard presets which did not offer enough customization for my purposes. Finally, I found this guy on Youtube who taught me how to use the &ldquo;Coil&rdquo; function. His tutorial is pretty good, check it out below:</p>
+
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+  <iframe src="https://www.youtube.com/embed/N8xL32uV0SA" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
+</div>
+
+<p>
+</p>
+<p>I made a hollow shell, representing the stem without threads:</p>
+<p><img src="images/week2-bulkhead/hollow-shell.png" alt="Hollow shell."></p>
+<p>Then I created a coil like so:</p>
+<p><img src="images/week2-bulkhead/threaded-shell.png" alt="Threaded shell."></p>
+<p>I double-checked that the threads were going in the right direction! Good habit to have.</p>
+<p>How to get rid of the thread sticking out the bottom? Simply create a sketch on the bottom face and extrude to cut:</p>
+<p><img src="images/week2-bulkhead/trim-threads.png" alt="Trim threads."></p>
+<p>Done! With a nice flat surface for joining later.</p>
+<p><img src="images/week2-bulkhead/stem-done.png" alt="Stem done."></p>
+<h3 id="2-modeling-the-barb">2. Modeling the barb.</h3>
+<p>The barb is shaped somewhat like a 4-tiered Christmas tree. Here are some measurements:</p>
+<ul>
+<li>Barb shaft outer diameter: 19.5 mm</li>
+<li>Barb shaft tip outer diameter: 17.1 mm</li>
+<li>Barb shaft inner diameter: 15 mm</li>
+<li>Barb flare outer diameter: 21.5 mm</li>
+<li>Width of bottom 3 barbs: 4 mm</li>
+<li>Distance between barbs: 4 mm</li>
+</ul>
+<p>First, I drew the profile of the barb as a sketch:</p>
+<p><img src="images/week2-bulkhead/barb-profile.png" alt="Barb profile."></p>
+<p>Then I could revolve it to obtain the solid barb:</p>
+<p><img src="images/week2-bulkhead/barb-revolve.png" alt="Solid barb."></p>
+<p>Finally, I extruded a circle to cut out the center:</p>
+<p><img src="images/week2-bulkhead/barb-finished.png" alt="Solid barb."></p>
+<h3 id="3-modeling-the-hexagonal-prism">3. Modeling the hexagonal prism.</h3>
+<p>The prism is a relatively simple affair. The only two pertinent measurements are below:</p>
+<ul>
+<li>Diameter: 32.5 mm</li>
+<li>Height: 6.4 mm</li>
+</ul>
+<p>I made this prism and rounded the vertical edges. Tada!</p>
+<p><img src="images/week2-bulkhead/prism.png" alt="The prism."></p>
+<h3 id="4-finishing-the-bulkhead">4. Finishing the bulkhead.</h3>
+<h3 id="5-designing-the-nut">5. Designing the nut.</h3>
+<h3 id="6-finished">6. Finished!</h3>
 
           </article>
 
           <div class="pagination">
             
-              <a href="https://aspartate.github.io/personal_website/blog/bugs/">&laquo; Bugs to be Squashed</a>
+              <a href="https://aspartate.github.io/personal_website/blog/week-1-final-project-proposal/">&laquo; Week 1: Final Project Proposal</a>
             
             
-              <a href="https://aspartate.github.io/personal_website/blog/week-2-2d-design/">Week 2: 2D Design &raquo;</a>
+              <a href="https://aspartate.github.io/personal_website/blog/week-2-press-fit-kit/">Week 2 - Press-Fit Kit &raquo;</a>
             
           </div>
         </section>

@@ -7,10 +7,10 @@
 
   <title>
     
-    Week 3 | Andrew Zhang
+    Week 2 - Press-Fit Kit | Andrew Zhang
   </title>
 
-  <meta name="title" content="Week 3 | Andrew Zhang">
+  <meta name="title" content="Week 2 - Press-Fit Kit | Andrew Zhang">
 
   <meta charset="utf-8">
   
@@ -26,7 +26,7 @@
 
   
 
-  <meta property="og:title" content="Week 3 | Andrew Zhang">
+  <meta property="og:title" content="Week 2 - Press-Fit Kit | Andrew Zhang">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://aspartate.github.io/personal_website/">
 
@@ -38,7 +38,7 @@
 
   <meta name="theme-color" content="#0097a7">
 
-  <link rel="canonical" href="https://aspartate.github.io/personal_website/blog/week-3/">
+  <link rel="canonical" href="https://aspartate.github.io/personal_website/blog/week-2-press-fit-kit/">
   
   
 
@@ -107,20 +107,46 @@
 
       <section class="container">
         <section class="content">
-          <h1> Week 3 </h1>
+          <h1> Week 2 - Press-Fit Kit </h1>
 
             <div class="sub-header">
-              February 3, 2021 · One minute read
+              February 3, 2021 · 2 minutes read
             </div>
 
           <article class="entry-content">
-            <p>hello world.</p>
+            <p>For this project we were asked to work in pairs make a press-fit kit out of 2D shapes in cardboard. My partner Jessica and I decided to make a truncated icosahedron (more commonly known as a soccer ball). We chose this shape because it consists of 2 side elements: hexagons and pentagons, and one of us could work on each. After googling around a bit we found an online example of what we wanted to achieve:</p>
+<p><img src="images/week2-pressfit/example-icosahedron.jpg" alt="Example icosahedron."></p>
+<p>We are using a technique called <strong>parametric modeling</strong>, which allows us to create shapes based on given parameters. We can then adjust the parameters to adjust the shape without changing the overall structure. To coordinate between Jessica and I, we made sure that both of us used the following parameters:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">edge_length</span> <span class="o">=</span> <span class="mi">40</span> <span class="n">mm</span> <span class="c1">#this is the side length of each polygon</span>
+<span class="n">thickness</span> <span class="o">=</span> <span class="mf">4.3</span> <span class="n">mm</span> <span class="c1">#thickness of the cardboard</span>
+<span class="n">kerf</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="n">mm</span> <span class="c1">#width of path carved out by laser</span>
+<span class="n">finger_count</span> <span class="o">=</span> <span class="mi">4</span> <span class="c1">#the number of fingers on each edge</span>
+<span class="n">fillet_radius</span> <span class="o">=</span> <span class="mi">1</span> <span class="n">mm</span> <span class="c1">#radius of finger filleting</span>
+</code></pre></div><p><img src="images/week2-pressfit/parameters.png" alt="Parameters."></p>
+<h3 id="1-modeling-the-hexagon">1. Modeling the hexagon.</h3>
+<p>My job is to make the hexagon component of this press-fit kit. I decided to start with a hexagon base and add the fingers on later:</p>
+<p><img src="images/week2-pressfit/hexagon.png" alt="Parameters."></p>
+<p>In addition, to speed things up I decided to ignore the kerf for now and add the fingers as perfect squares. The side length of each square is <code>edge_length/(2*finger_count)</code>. I will later widen the squares to account for the kerf and achieve a press fit.</p>
+<p>I first made the fingers on one side, and will rotate this for the other sides.</p>
+<p><img src="images/week2-pressfit/finger-1.png" alt="Finger squares."></p>
+<p>I then widened the fingers by moving each vertical edge by a value of <code>kerf/2</code> in either direction.</p>
+<p><img src="images/week2-pressfit/finger-2.png" alt="Fingers widened."></p>
+<p>Next, I rotated the fingers about the center of the hexagon to complete the shape.</p>
+<p><img src="images/week2-pressfit/finger-done.png" alt="Fingers done."></p>
+<p>Extrude to <code>thickness</code>, and we have the 3D shape! All that&rsquo;s left to do now is fillet the outer edges of the fingers.</p>
+<p><img src="images/week2-pressfit/hexagon-done.png" alt="Hexagon done."></p>
+<h3 id="2-modeling-the-pentagon">2. Modeling the pentagon.</h3>
+<p>Jessica modeled the pentagon using a similar workflow, to get the following:</p>
+<p><img src="images/sample_image.png" alt="Pentagon done."></p>
+<h3 id="3-laser-cut--construct">3. Laser-cut &amp; construct.</h3>
+<p>After laser-cutting 20 hexagons and 12 pentagons, we made a soccer ball!</p>
+<p><img src="images/sample_image.png" alt="Soccer ball."></p>
 
           </article>
 
           <div class="pagination">
             
-              <a href="https://aspartate.github.io/personal_website/blog/week-2-2d-design/">&laquo; Week 2: 2D Design</a>
+              <a href="https://aspartate.github.io/personal_website/blog/week-2-3d-modeling/">&laquo; Week 2: 3D Modeling</a>
             
             
           </div>
