@@ -46,13 +46,15 @@ Extrude to `thickness`, and we have the 3D shape! All that's left to do now is f
 
 Project the object onto a sketch and save as DXF, and we're done! Here is the DXF file:
 
-[Click to download DXF](files/week2-pressfit/press_fit_hexagon.dxf)
+[Click to download DXF](files/week2-pressfit/press-fit-hexagon.dxf)
 
 ### 2. Modeling the pentagon.
 
 Jessica modeled the pentagon using a similar workflow, to get the following:
 
-![Pentagon done.](images/sample_image.png)
+[Click to download DXF](files/week2-pressfit/press-fit-pentagon.dxf)
+
+![Pentagon done.](images/week2-pressfit/pentagon-done.png)
 
 ### 3. Laser-cut & construct.
 
