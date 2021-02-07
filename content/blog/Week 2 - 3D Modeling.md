@@ -74,12 +74,43 @@ The prism is a relatively simple affair. The only two pertinent measurements are
 * Diameter: 32.5 mm
 * Height: 6.4 mm
 
-I made this prism and rounded the vertical edges. Tada!
+I made this prism and rounded the vertical edges.
 
 ![The prism.](images/week2-bulkhead/prism.png)
 
+Next, I added a hole with the same diameter as the hole in the barb. I then filleted one side of the hole (with radius 1.5 mm) to reduce the turbulence of the flow, since the hole in the stem is larger (18.15 mm) than the hole in the barb (15 mm).
+
+![The prism with hole.](images/week2-bulkhead/prism-hole.png)
+
 ### 4. Finishing the bulkhead.
+
+The final step in modeling the bulkhead is to combine everything into one piece. Here it is:
+
+![The bulkhead model.](images/week2-bulkhead/bulkhead-done.png)
 
 ### 5. Designing the nut.
 
+To make the nut, first I made a hexagonal prism with radius 20 mm, and cut a hole in it equivalent to the size of the threadless stem (diameter 22.6 mm).
+
+![The pre-proto-nut.](images/week2-bulkhead/nut-with-hole.png)
+
+Because I had a custom thread profile, I couldn't make the threaded hole using the native thread presets in the "Hole" function. So I instead duplicated the bulkhead, expanded by 0.5 mm in the X- and Y-axes for clearance, and cut out the threads from the nut.
+
+![The proto-nut.](images/week2-bulkhead/nut-with-threads.png)
+
+Let's check the clearance using the Section Analysis tool:
+
+![Section analysis.](images/week2-bulkhead/section-analysis.png)
+
+Looking good! Now let's make the nut just a bit fancier by chamfering & filleting the edges:
+
+![Finished nut.](images/week2-bulkhead/nut-done.png)
+
+
 ### 6. Finished!
+
+![Finished components.](images/week2-bulkhead/assembly-done.png)
+
+[Download bulkhead as STL](files/week2-bulkhead/bulkhead.stl)
+
+[Download nut as STL](files/week2-bulkhead/nut.stl)
