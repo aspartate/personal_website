@@ -58,6 +58,7 @@ Jessica modeled the pentagon using a similar workflow, to get the following:
 
 ### 3. Laser-cut & construct.
 
-After laser-cutting 20 hexagons and 12 pentagons, we made a soccer ball!
+After laser-cutting 20 hexagons and 12 pentagons, we tried assembling the soccer ball. The pieces fit together very nicely in small numbers but putting together many pieces at an angle was a bit more difficult than we expected. Nonetheless, we got to the following:
 
-![Soccer ball.](images/sample_image.png)
+![Fit of pieces.](images/week2-pressfit/fit.jpg)
+![Assembly done.](images/week2-pressfit/assembly-done.jpg)
