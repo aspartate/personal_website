@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+  
+
+  
+
+  <title>
+    
+    Week 2 - Intro to Electronics | Andrew Zhang
+  </title>
+
+  <meta name="title" content="Week 2 - Intro to Electronics | Andrew Zhang">
+
+  <meta charset="utf-8">
+  
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer-when-downgrade">
+  <base href="https://aspartate.github.io/personal_website/">
+
+  <meta name="description" content="my personal website">
+
+  <meta name="author" content="aspartate">
+
+  
+
+  <meta property="og:title" content="Week 2 - Intro to Electronics | Andrew Zhang">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://aspartate.github.io/personal_website/">
+
+  <meta property="og:image" content="https://aspartate.github.io/personal_website/images/osprey-delight.png">
+
+  <meta property="og:description" content="my personal website">
+
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <meta name="theme-color" content="#0097a7">
+
+  <link rel="canonical" href="https://aspartate.github.io/personal_website/blog/week-2-circuits/">
+  
+  
+
+  <link rel="stylesheet" href="https://aspartate.github.io/personal_website/style.9ff615c48229657d182d4c0c716ebf5f26645eff21662abca5e094e2b245bfeb.css" type="text/css">
+
+  <script type="application/ld+json">
+  {"@context":"http://www.schema.org","@type":"Person","@id":"https://aspartate.github.io/personal_website/","name":"aspartate","url":"https://aspartate.github.io/personal_website/","description":"my personal website","sameAs":["","https://github.com/aspartate/personal_website","","",""]}
+  </script>
+
+  <style>.lazyload{opacity:.0001;}.logo .lazyload{min-width:10em;}</style>
+    <script src="https://aspartate.github.io/personal_website/js/vendor/lazysizes.min.js" async></script>
+</head>
+
+  <body>
+    
+
+
+
+
+
+<nav class="row middle-xs center-xs">
+  <div class="col-xs-6 col-sm-1 logo">
+    <a href="/personal_website/#"><img data-src="favicon.png" class="lazyload" lazyload="on" alt="Andrew Zhang"></a>
+  </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#about">About</a></h3>
+      </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#work">Work</a></h3>
+      </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#blog">Blog</a></h3>
+      </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#contact">Contact</a></h3>
+      </div>
+    
+  <div class="col-xs-6 col-sm-1 nav-toggle">
+      <a href="" class="nav-icon" onclick="return false">
+        <i id="open" class="icon icon-2x icon-menu"></i>
+      </a>
+  </div>
+</nav>
+
+<section class="nav-full row middle-xs center-xs">
+  <div class="col-xs-12">
+    <div class="row middle-xs center-xs">
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#about">About</a></h1></div>
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#work">Work</a></h1></div>
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#blog">Blog</a></h1></div>
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#contact">Contact</a></h1></div>
+      
+    </div>
+  </div>
+</section>
+
+    <main>
+
+      <section class="container">
+        <section class="content">
+          <h1> Week 2 - Intro to Electronics </h1>
+
+            <div class="sub-header">
+              February 9, 2021 · 3 minutes read
+            </div>
+
+          <article class="entry-content">
+            <p>This is an introduction to working with electronic circuits. As a simple exercise, we will calculate the current across an LED in various configurations. The current can be calculated by using Ohm&rsquo;s Law:</p>
+<p><img src="https://latex.codecogs.com/gif.latex?I&amp;space;=&amp;space;%5Cfrac%7B%5CDelta&amp;space;V%7D%7BR%7D" alt="Ohm&rsquo;s Law."></p>
+<p>We will use both TinkerCAD circuit simulations and real-world measurements, and compare.</p>
+<p>Power supply: 3.3 V pin on Metro M0/Arduino</p>
+<h3 id="1-no-resistor">1. No resistor.</h3>
+<p>First, we will determine the current through a single LED bulb with no resistor. The TinkerCAD diagram looks like this:</p>
+<p><img src="images/week2-circuits/noresistor-tinkercad.png" alt="No resistor - TinkerCAD."></p>
+<p>It seems like this is too much current, as the LED blows out. So we will not do a real-world experiment for this case.</p>
+<h3 id="2-single-1k-ohm-resistor">2. Single 1k ohm resistor.</h3>
+<p>Let&rsquo;s add a resistor!</p>
+<p><img src="images/week2-circuits/1kresistor-tinkercad.png" alt="1k resistor - TinkerCAD."></p>
+<p>Here, we see that the voltage across the LED is 1.84V. We know that the resistance is 1000 ohms, so Ohm&rsquo;s Law gives a current of <strong>0.00184 A, or 1.84 mA</strong>.</p>
+<p>Let&rsquo;s try this IRL:</p>
+<p><img src="images/week2-circuits/1kresistor.jpg" alt="1k resistor - IRL."></p>
+<p>The measured voltage is <strong>2.63 V</strong>, which is pretty different from the theoretical value of 1.84 V. I&rsquo;m not sure what&rsquo;s wrong here&hellip;</p>
+<h3 id="2-two-1k-ohm-resistors-in-series">2. Two 1k ohm resistors, in series.</h3>
+<p>Adding another 1k ohm resistor in series to the circuit gives the following:</p>
+<p><img src="images/week2-circuits/seriesresistors-tinkercad.png" alt="Two 1k resistors in series - TinkerCAD."></p>
+<p>The voltage drops by a little bit, to 1.81 V. The net resistance for resistors in series is the sum of the individual resistances, so we have R = 2000 ohms. Therefore Ohm&rsquo;s Law gives a current of <strong>0.91 mA</strong>.</p>
+<p>Putting theory to practice:</p>
+<p><img src="images/week2-circuits/seriesresistors.jpg" alt="Two 1k resistors in series - IRL."></p>
+<p>The measured voltage is <strong>2.60 V</strong>. Again, very different from the theoretical value of 1.81 V, but it did decrease from the single resistor setup.</p>
+<h3 id="3-two-1k-ohm-resistors-in-parallel">3. Two 1k ohm resistors, in parallel.</h3>
+<p>Adding another 1k ohm resistor in series to the circuit gives the following:</p>
+<p><img src="images/week2-circuits/parallelresistors-tinkercad.png" alt="Two 1k resistors in parallel - TinkerCAD."></p>
+<p>The voltage increases by a little bit, to 1.88 V. The net resistance for resistors in series is given by the following:</p>
+<p><img src="https://latex.codecogs.com/gif.latex?R&amp;space;=&amp;space;%5Cfrac%7B1%7D%7B1/R_1&amp;space;+&amp;space;1/R_2%7D&amp;space;=&amp;space;%5Cfrac%7B1%7D%7B1/1000&amp;space;+&amp;space;1/1000%7D&amp;space;=&amp;space;500&amp;space;%5Ctext%7B&amp;space;%7D&amp;space;%5COmega" alt="Net resistance in parallel."></p>
+<p>Therefore Ohm&rsquo;s Law gives a current of <strong>3.76 mA</strong>.</p>
+<p>On the breadboard:</p>
+<p><img src="images/week2-circuits/parallelresistors.jpg" alt="Two 1k resistors in parallel - IRL."></p>
+<p>The measured voltage is <strong>2.66 V</strong>. This is slightly higher than the single resistor baseline, as expected, but does not match the theoretical value.</p>
+<h3 id="conclusions">Conclusions.</h3>
+<table>
+<thead>
+<tr>
+<th><strong>Setup</strong></th>
+<th><strong>TinkerCAD</strong></th>
+<th><strong>IRL</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>=================</td>
+<td>===========</td>
+<td>========</td>
+</tr>
+<tr>
+<td><strong>Single Resistor</strong></td>
+<td>1.84 V</td>
+<td>2.63 V</td>
+</tr>
+<tr>
+<td><strong>Series Resistors</strong></td>
+<td>1.81 V</td>
+<td>2.60 V</td>
+</tr>
+<tr>
+<td><strong>Parallel Resistors</strong></td>
+<td>1.88 V</td>
+<td>2.66 V</td>
+</tr>
+</tbody>
+</table>
+<p>
+</p>
+<p>Compared to the baseline single resistor setup, the series resistors setup had a slightly decreased voltage and the parallel resistors setup had a slightly increased voltage in both the simulation and real-world measurements. This makes sense because placing resistors in series increases net resistance, while placing resistors in parallel decreases net resistance. Surprisingly, the voltage drop across the LED did not change much as the net resistance in the circuit varied. The current, however, did change dramatically. This should have translated to a difference in LED brightness, but I did not perceive an obvious difference in either the TinkerCAD or real-world setups.</p>
+<p>Reasons for the voltage differences between TinkerCAD and real-world measurements could perhaps be attributed to&hellip;</p>
+
+          </article>
+
+          <div class="pagination">
+            
+              <a href="https://aspartate.github.io/personal_website/blog/week-2-press-fit-kit/">&laquo; Week 2 - Press-Fit Kit</a>
+            
+            
+          </div>
+        </section>
+        <br>
+        <section class="disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname == "localhost")
+        return;
+      var disqus_shortname = '';
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view comments powered by <a href="http://disqus.com/?ref_noscript">Disqus</a>.</noscript>
+</section>
+
+      </section>
+
+    </main>
+    <footer class="row middle-xs center-xs">
+  <div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-facebook"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href="https://github.com/aspartate/personal_website"><i class="icon icon-github"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-linkedin"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-stackoverflow"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-twitter"></i></a>
+    </div>
+  <div class="col-xs-12">
+      <small>
+      
+      Copyright &copy; 2021 Andrew Zhang
+      
+      
+      </small>
+    </div>
+</footer>
+
+    
+
+
+
+
+
+
+  <script src="https://aspartate.github.io/personal_website/js/bundle.min.fbd35181a0fd0238360575e6a25942746d4e73c615f852efe3b975ea70829339.js" type="text/javascript"></script>
+  <script>handleNavBar( false )</script>
+
+  </body>
+</html>

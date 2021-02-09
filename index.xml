@@ -6,7 +6,19 @@
     <description>Recent content on Andrew Zhang</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Wed, 03 Feb 2021 00:27:44 -0500</lastBuildDate><atom:link href="https://aspartate.github.io/personal_website/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 09 Feb 2021 12:05:15 -0500</lastBuildDate><atom:link href="https://aspartate.github.io/personal_website/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Week 2 - Intro to Electronics</title>
+      <link>https://aspartate.github.io/personal_website/blog/week-2-circuits/</link>
+      <pubDate>Tue, 09 Feb 2021 12:05:15 -0500</pubDate>
+      
+      <guid>https://aspartate.github.io/personal_website/blog/week-2-circuits/</guid>
+      <description>This is an introduction to working with electronic circuits. As a simple exercise, we will calculate the current across an LED in various configurations. The current can be calculated by using Ohm&amp;rsquo;s Law:
+We will use both TinkerCAD circuit simulations and real-world measurements, and compare.
+Power supply: 3.3 V pin on Metro M0/Arduino
+1. No resistor. First, we will determine the current through a single LED bulb with no resistor. The TinkerCAD diagram looks like this:</description>
+    </item>
+    
     <item>
       <title>Week 2 - Press-Fit Kit</title>
       <link>https://aspartate.github.io/personal_website/blog/week-2-press-fit-kit/</link>
