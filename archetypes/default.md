@@ -1,11 +1,12 @@
 ---
 title: "{{ replace .Name "-" " " | title }}"
 date: {{ .Date }}
-draft: true
+draft: false
 ---
 
-![Alt text.](images/sample_image.png "Rollover text.")
-
-{{< youtube id="N8xL32uV0SA" >}}
 
 ### 1. Section.
+
+![The bulkhead.](images/week2-bulkhead/bulkhead.png)
+
+{{< youtube id="N8xL32uV0SA" >}}
