@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+  
+
+  
+
+  <title>
+    
+    Week 3 - Kinetic Sculpture | Andrew Zhang
+  </title>
+
+  <meta name="title" content="Week 3 - Kinetic Sculpture | Andrew Zhang">
+
+  <meta charset="utf-8">
+  
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer-when-downgrade">
+  <base href="https://aspartate.github.io/personal_website/">
+
+  <meta name="description" content="my personal website">
+
+  <meta name="author" content="aspartate">
+
+  
+
+  <meta property="og:title" content="Week 3 - Kinetic Sculpture | Andrew Zhang">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://aspartate.github.io/personal_website/">
+
+  <meta property="og:image" content="https://aspartate.github.io/personal_website/images/osprey-delight.png">
+
+  <meta property="og:description" content="my personal website">
+
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <meta name="theme-color" content="#0097a7">
+
+  <link rel="canonical" href="https://aspartate.github.io/personal_website/blog/week-3-kinetic-sculpture/">
+  
+  
+
+  <link rel="stylesheet" href="https://aspartate.github.io/personal_website/style.9ff615c48229657d182d4c0c716ebf5f26645eff21662abca5e094e2b245bfeb.css" type="text/css">
+
+  <script type="application/ld+json">
+  {"@context":"http://www.schema.org","@type":"Person","@id":"https://aspartate.github.io/personal_website/","name":"aspartate","url":"https://aspartate.github.io/personal_website/","description":"my personal website","sameAs":["","https://github.com/aspartate/personal_website","","",""]}
+  </script>
+
+  <style>.lazyload{opacity:.0001;}.logo .lazyload{min-width:10em;}</style>
+    <script src="https://aspartate.github.io/personal_website/js/vendor/lazysizes.min.js" async></script>
+</head>
+
+  <body>
+    
+
+
+
+
+
+<nav class="row middle-xs center-xs">
+  <div class="col-xs-6 col-sm-1 logo">
+    <a href="/personal_website/#"><img data-src="favicon.png" class="lazyload" lazyload="on" alt="Andrew Zhang"></a>
+  </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#about">About</a></h3>
+      </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#work">Work</a></h3>
+      </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#blog">Blog</a></h3>
+      </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#contact">Contact</a></h3>
+      </div>
+    
+  <div class="col-xs-6 col-sm-1 nav-toggle">
+      <a href="" class="nav-icon" onclick="return false">
+        <i id="open" class="icon icon-2x icon-menu"></i>
+      </a>
+  </div>
+</nav>
+
+<section class="nav-full row middle-xs center-xs">
+  <div class="col-xs-12">
+    <div class="row middle-xs center-xs">
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#about">About</a></h1></div>
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#work">Work</a></h1></div>
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#blog">Blog</a></h1></div>
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#contact">Contact</a></h1></div>
+      
+    </div>
+  </div>
+</section>
+
+    <main>
+
+      <section class="container">
+        <section class="content">
+          <h1> Week 3 - Kinetic Sculpture </h1>
+
+            <div class="sub-header">
+              February 11, 2021 · 6 minutes read
+            </div>
+
+          <article class="entry-content">
+            <p>For this project my task was to make a kinetic sculpture using principles of mechanical design. I&rsquo;ve always been fascinated by the concept of time, and wanted to make something that, like Christopher Nolan movies, could provoke reevaluation of our relationship with time. I also really like clocks (especially old mechanical clocks). So, the natural choice for me was to do something with pendulums.</p>
+<p>In particular, I wanted to try to make a perpetually swinging pendulum, oscillating at a much slower speed than constrained by gravity. This would be achieved by a pair of magnets: one in the pendulum bob and one hidden in the base. To enhance the &ldquo;mystery&rdquo; aspect of the motion, I wanted to expose as little of the mechanism as possible. Below are several versions of my idea:</p>
+<p><img src="images/week3-sculpture/sculpture-concept.png" alt="Kinetic sculpture concept."></p>
+<h3 id="1-an-early-roadblock">1. An early roadblock.</h3>
+<p>I really liked the rightmost design, but the motion of the base magnet proved to be a real challenge. In particular, the magnet needed to oscillate in an arc, with all linkages located on the convex side of the arc. This would have been far easier to implement with linkages on the concave side, as in the coulisse mechanism below:</p>
+<p>
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+  <iframe src="https://www.youtube.com/embed/dPEBbcDiWNs" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
+</div>
+
+
+</p>
+<p>However, the hollow center of the design meant that this mechanism was not possible. Therefore, I spent a good amount of time designing a curved rack &amp; pinion mechanism, but in order for this to work the direction of travel needed to reverse at each end of the travel path. Though this would have been easy to implement using an Arduino, I wanted this sculpture to be microcontroller-free and, in the spirit of kinetic art, allow for the motor to be easily replaced by a spring or falling weight if need be.</p>
+<p>My first thought was to make a reciprocating rack-and-pinion mechanism, which allows for back-and-forth motion from constant rotary motion. However, in this mechanism the range of motion is limited by the diameter of the pinion, making it unsuitable for my purposes.</p>
+<p>
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+  <iframe src="https://www.youtube.com/embed/zae2ZePQTwQ" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
+</div>
+
+
+</p>
+<p>A polarity-reversing switch at the center of the base could be activated as the rack moved to each extreme, causing the motor to switch direction and move the rack in the other direction. Searching online, I found that DPDT (double-pole-double-throw) toggle switches seemed to fit the bill, but I needed a bistable one (ON-ON) without the center OFF position. This was not easily obtained online. Therefore, I fell down a rabbit hole of sorts trying to design my own 3D-printable DPDT switch.</p>
+<p><img src="images/week3-sculpture/dpdt-concept.png" alt="DPDT concept."></p>
+<p>I did in fact come up with a reasonable-looking design, but at this point I realized that I only had several days to make this happen and I estimated just perfecting the switch would take up a good chunk of that time. In the end, a calculated decision was made to abandon this design in favor of a simpler coulisse mechanism. This mechanism necessitated using the first design in the concept sketch above.</p>
+<h3 id="2-taking-shape">2. Taking shape.</h3>
+<p>An advantage of the coulisse mechanism is that it is fairly simple and looks to be fool-proof. Also, due to the nature of the crank mechanism, the motion of the arm approximates the motion of a swinging pendulum. Namely, the velocity of the arm is greater when passing through the central plane than at each extreme. One slight drawback is that one direction of the arm motion is necessarily faster than the other, as the distance from the crank pin to the arm pivot varies. However, I hoped that this would not be very obvious at the slow speed I planned to operate this sculpture.</p>
+<p>The next step was to CAD. I am fortunate to have a 3D printer at home, so I could print most of my parts. I decided to go with TinkerCAD because even though I would like to practice my Fusion skills, I am much faster operating in TinkerCAD. I started with a low-fidelity prototype and gradually added complexity. Here is what I came up with:</p>
+<p><img src="images/week3-sculpture/cad-outer-view.png" alt="Outer view."></p>
+<p>The mechanism:</p>
+<p><img src="images/week3-sculpture/cad-mechanism.png" alt="Mechanism."></p>
+<p>The N20 motor from the kit drives the worm gear, which turns the main coulisse gear. The coulisse gear drives the arm, and a rod extends from the arm on which a small neodymium magnet is glued. As this rod oscillates, the magnet traces the path of an arc and the pendulum bob (with its own magnet inside) follows. For all the rods in the design I wanted to use wooden dowels, since I had them on hand and rods are notoriously hard to 3D print. There are a total of 7 printed pieces.</p>
+<h3 id="3-testing">3. Testing.</h3>
+<p>I first printed out the coulisse gear and worm gear to test the fit. It was pretty good. The worm gear hole for the motor shaft was a bit small, but I widened it out with a screwdriver.</p>
+<p><img src="images/week3-sculpture/gear-fit.jpg" alt="Gear fit."></p>
+<p>Next, I printed out the rest of the parts and put it all together. The outer shell and motor mount required hot glue. The wooden dowels (which I cut to size using a hand saw) required some coaxing to go into the friction-fit holes, but the clearance was just right on the moving parts. Next, I glued on two 3mm x 6mm neodymium magnets: one on the oscillating rod, and one inside the pendulum bob. Finally, I tied the pendulum bob to the top rod using some thread.</p>
+<p><img src="images/week3-sculpture/finished.jpg" alt="Finished."></p>
+<h3 id="3-circuitry">3. Circuitry.</h3>
+<p>For some control over the speed of the pendulum, I made a simple circuit with a potentiometer in series with the motor. The middle pin goes to ground, and one of the side pins is connected to the positive supply. This is a 10K ohm potentiometer, which was a bit too much to allow for a large range of adjustability. A potentiometer with smaller resistance would be ideal here.</p>
+<p><img src="images/week3-sculpture/circuit.jpg" alt="Circuit."></p>
+<h3 id="4-finished">4. Finished!</h3>
+<p>It works! I mounted it to the wall with a bit of poster tack.</p>
+<p><img src="images/week3-sculpture/front-view.gif" alt="Front view."></p>
+<p><img src="images/week3-sculpture/side-view.gif" alt="Side view."></p>
+<p>Also works upside down. Kind of looks like a balloon.</p>
+<p><img src="images/week3-sculpture/upside-down.gif" alt="Upside down."></p>
+<p>Here is a view of the mechanism:</p>
+<p><img src="images/week3-sculpture/mechanism.gif" alt="Mechanism."></p>
+<p>Here it is on slow mode, adjusted using the potentiometer:</p>
+<p><img src="images/week3-sculpture/slow-mode.gif" alt="Slow mode."></p>
+<p>Overall, I am pleased with how this turned out. It is noisier than I would like, which is likely a consequence of slop in the gears as well as the rather imprecise nature of the wood-and-plastic mechanism. If I were to redesign this, I would make more (and smaller) gear teeth and replace the wooden dowels with brass rods. Lastly, though the motor by itself was pretty quiet, once mounted inside the shell the noise was amplified. I think a geared brushless motor might be best here.</p>
+<h3 id="5-measurements--calculations">5. Measurements &amp; calculations</h3>
+<p>As part of this assignment we were also asked to measure the voltage using the Metro M0 Express analog-to-digital conversion (ADC) function. ADC on the M0 converts analog voltages to a digital 10-bit number (0 to 1023). This number is directly proportional to the voltage.</p>
+<p>The first step is to load the <code>analogReadSerial</code> script into the Arduino IDE:</p>
+<p><img src="images/week3-sculpture/analogreadserial.png" alt="Default script."></p>
+<p>I edited this script to convert the 10-bit <code>sensorValue</code> to a voltage, assuming a reference voltage of 5V.</p>
+<p><img src="images/week3-sculpture/analogreadserial-edit.png" alt="Default script."></p>
+<p>Then I uploaded the script to the M0, and connected GND on the M0 to the middle pin of the potentiometer and A0 on the M0 to the left pin on the potentiometer. This should give the voltage drop across the potentiometer.</p>
+<p>The reading on the serial monitor is</p>
+<p>Next,</p>
+
+          </article>
+
+          <div class="pagination">
+            
+              <a href="https://aspartate.github.io/personal_website/blog/week-2-circuits/">&laquo; Week 2 - Intro to Electronics</a>
+            
+            
+          </div>
+        </section>
+        <br>
+        <section class="disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname == "localhost")
+        return;
+      var disqus_shortname = '';
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view comments powered by <a href="http://disqus.com/?ref_noscript">Disqus</a>.</noscript>
+</section>
+
+      </section>
+
+    </main>
+    <footer class="row middle-xs center-xs">
+  <div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-facebook"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href="https://github.com/aspartate/personal_website"><i class="icon icon-github"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-linkedin"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-stackoverflow"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-twitter"></i></a>
+    </div>
+  <div class="col-xs-12">
+      <small>
+      
+      Copyright &copy; 2021 Andrew Zhang
+      
+      
+      </small>
+    </div>
+</footer>
+
+    
+
+
+
+
+
+
+  <script src="https://aspartate.github.io/personal_website/js/bundle.min.fbd35181a0fd0238360575e6a25942746d4e73c615f852efe3b975ea70829339.js" type="text/javascript"></script>
+  <script>handleNavBar( false )</script>
+
+  </body>
+</html>
