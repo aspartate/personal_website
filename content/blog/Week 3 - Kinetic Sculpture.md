@@ -70,15 +70,15 @@ It works! I mounted it to the wall with a bit of poster tack.
 
 Also works upside down. Kind of looks like a balloon.
 
-![Upside down.](images/week3-sculpture/upside-down.gif)
+![Upside down.](images/week3-sculpture/upside-down-gif.gif)
 
 Here is a view of the mechanism:
 
-![Mechanism.](images/week3-sculpture/mechanism.gif)
+![Mechanism.](images/week3-sculpture/mechanism-gif.gif)
 
 Here it is on slow mode, adjusted using the potentiometer:
 
-![Slow mode.](images/week3-sculpture/slow-mode.gif)
+![Slow mode.](images/week3-sculpture/slowmode-gif.gif)
 
 Overall, I am pleased with how this turned out. It is noisier than I would like, which is likely a consequence of slop in the gears as well as the rather imprecise nature of the wood-and-plastic mechanism. If I were to redesign this, I would make more (and smaller) gear teeth and replace the wooden dowels with brass rods. Lastly, though the motor by itself was pretty quiet, once mounted inside the shell the noise was amplified. I think a geared brushless motor might be best here.
 
@@ -90,14 +90,16 @@ The first step is to load the `analogReadSerial` script into the Arduino IDE:
 
 ![Default script.](images/week3-sculpture/analogreadserial.png)
 
-I edited this script to convert the 10-bit `sensorValue` to a voltage, assuming a reference voltage of 5V.
+I edited this script to convert the 10-bit `sensorValue` to a voltage, using a reference voltage of 5V.
 
-![Default script.](images/week3-sculpture/analogreadserial-edit.png)
+![Default script.](images/week3-sculpture/analogreadvoltage.png)
 
-Then I uploaded the script to the M0, and connected GND on the M0 to the middle pin of the potentiometer and A0 on the M0 to the left pin on the potentiometer. This should give the voltage drop across the potentiometer.
+Then I uploaded the script to the M0, and rewired the circuit as shown below. This should give the voltage drop across the motor.
 
+![Slow mode.](images/week3-sculpture/m0-circuit-gif.gif)
 
-The reading on the serial monitor is 
+The reading on the serial monitor could be varied from 0.03 (stop) to 5V (full speed), although the voltage dropped very quickly from 5 V with minimal adjustments to the potentiometer. This is probably due to the rheostat wiring configuration of the potentiometer, which is not ideal for motor speed control. At around 2V and below, the motor would not run. Wiring it in the voltage divider configuration may yield better results.
 
-Next, 
+Let's calculate the current through the circuit then the potentiometer is cranked to 50 ohms (as determined by multimeter). The voltage drop across the potentiometer is 1V. Using Ohm's Law, the current through the potentiometer is around 20 mA. The current through the motor should be the same as the current through the potentiometer, so the current through the motor in this setup is also **20 mA**. This is consistent with the amperage rating of the N20 motor. 
 
+Interestingly, I noticed that the voltage drop across the potentiometer (as measured by multimeter) and the voltage drop across the motor (as measured by ADC) did not always add up to 5V. When the potentiometer was adjusted to a relatively low but still substantial resistance (0-50 ohms), the serial monitor would still read 5.00 V while the multimeter would read a nonzero voltage.
