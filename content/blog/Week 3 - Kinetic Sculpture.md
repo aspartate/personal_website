@@ -42,7 +42,7 @@ The mechanism:
 
 ![Mechanism.](images/week3-sculpture/cad-mechanism.png)
 
-The N20 motor from the kit drives the worm gear, which turns the main coulisse gear. The coulisse gear drives the arm, and a rod extends from the arm on which a small neodymium magnet is glued. As this rod oscillates, the magnet traces the path of an arc and the pendulum bob (with its own magnet inside) follows. For all the rods in the design I wanted to use wooden dowels, since I had them on hand and rods are notoriously hard to 3D print. There are a total of 7 printed pieces.
+The N20 motor from the kit drives the worm gear, which turns the main coulisse gear. The coulisse gear drives the arm, and a rod extends from the arm on which a small neodymium magnet is glued. As this rod oscillates, the magnet traces the path of an arc and the pendulum bob (with its own magnet inside) follows. For all the rods in the design I wanted to use wooden dowels, since I had them on hand and rods are notoriously hard to 3D print. There are a total of 8 printed pieces.
 
 ### 3. Testing.
 
@@ -82,7 +82,7 @@ Here it is on slow mode, adjusted using the potentiometer:
 
 Overall, I am pleased with how this turned out. It is noisier than I would like, which is likely a consequence of slop in the gears as well as the rather imprecise nature of the wood-and-plastic mechanism. If I were to redesign this, I would make more (and smaller) gear teeth and replace the wooden dowels with brass rods. Lastly, though the motor by itself was pretty quiet, once mounted inside the shell the noise was amplified. I think a geared brushless motor might be best here.
 
-### 5. Measurements & calculations
+### 5. Measurements & calculations.
 
 As part of this assignment we were also asked to measure the voltage using the Metro M0 Express analog-to-digital conversion (ADC) function. ADC on the M0 converts analog voltages to a digital 10-bit number (0 to 1023). This number is directly proportional to the voltage.
 
@@ -103,3 +103,27 @@ The reading on the serial monitor could be varied from 0.03 (stop) to 5V (full s
 Let's calculate the current through the circuit then the potentiometer is cranked to 50 ohms (as determined by multimeter). The voltage drop across the potentiometer is 1V. Using Ohm's Law, the current through the potentiometer is around 20 mA. The current through the motor should be the same as the current through the potentiometer, so the current through the motor in this setup is also **20 mA**. This is consistent with the amperage rating of the N20 motor. 
 
 Interestingly, I noticed that the voltage drop across the potentiometer (as measured by multimeter) and the voltage drop across the motor (as measured by ADC) did not always add up to 5V. When the potentiometer was adjusted to a relatively low but still substantial resistance (0-50 ohms), the serial monitor would still read 5.00 V while the multimeter would read a nonzero voltage.
+
+### 6. Make your own!
+
+I have included the STL files below if you are interested in building this model. In addition to these parts, you will need hot glue, 2 neodymium magnets (size 3mm height x 6mm diameter), an N20 motor, and a 5mm diameter wooden dowel cut to the following lengths:
+* 38 mm
+* 15.5 mm
+* 11 mm
+* 21.5 mm
+
+I made minor edits to the back shell and main gear retainer to allow for more clearance between the arm and the motor. I also increased the size of the hole on the worm gear to better accommodate the motor shaft. The old design worked fine for me but it took a little bit of finessing. The new parts have not been tested but I believe they will work better than the old ones.
+
+Download parts for the shell:
+1. [Back shell](files/week3-sculpture/body-shell-back.stl)
+2. [Front shell](files/week3-sculpture/body-shell-front.stl)
+3. [Front plate](files/week3-sculpture/front-plate.stl)
+4. [Pendulum bob](files/week3-sculpture/pendulum-bob.stl)
+
+Download parts for the mechanism:
+1. [Main gear](files/week3-sculpture/main-gear.stl)
+2. [Worm gear](files/week3-sculpture/worm-gear.stl)
+3. [Arm](files/week3-sculpture/arm.stl)
+4. [Main gear retainer](files/week3-sculpture/main-gear-retainer.stl)
+
+Enjoy!
