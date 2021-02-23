@@ -176,7 +176,7 @@
     <span class="n">digitalWrite</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div><p>This actually kind of worked, as the LED cycled between off and on whenever I pressed the button. However, this code was not reliable. Using <code>Serial.print()</code> to debug, I realized that <code>motor_state</code> was rapidly cycling between -1 and 1 whenever the button was pressed down, making it essentially a 50% chance that it would be in the desired state when the button was released.</p>
+</code></pre></div><p>This actually kind of worked, as the LED sometimes cycled on and off when I pressed the button. However, this code was not reliable. Using <code>Serial.print()</code> to debug, I realized that <code>motor_state</code> was rapidly cycling between -1 and 1 whenever the button was pressed down, making it essentially a 50% chance that it would be in the desired state when the button was released.</p>
 <p><img src="images/week4-stepper/nice-try.gif" alt="Nice try."></p>
 <p>Upon further research, I discovered that temporary pushbutton transitions needed something called a <em>debounce</em>, which polls the button twice in rapid succession to determine state changes. After scouring web forums for an embarrassingly long time, I found a rather elegant implementation of detecting pushbutton transitions in one of the Arduino built-in examples (StateChangeDetection). From here, it was only a matter of adding the code for initializing and running the stepper motor.</p>
 <div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="o">/*</span>
