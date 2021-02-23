@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+  
+
+  
+
+  <title>
+    
+    Week 4: Stepper Motor Drive | Andrew Zhang
+  </title>
+
+  <meta name="title" content="Week 4: Stepper Motor Drive | Andrew Zhang">
+
+  <meta charset="utf-8">
+  
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer-when-downgrade">
+  <base href="https://aspartate.github.io/personal_website/">
+
+  <meta name="description" content="my personal website">
+
+  <meta name="author" content="aspartate">
+
+  
+
+  <meta property="og:title" content="Week 4: Stepper Motor Drive | Andrew Zhang">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://aspartate.github.io/personal_website/">
+
+  <meta property="og:image" content="https://aspartate.github.io/personal_website/images/osprey-delight.png">
+
+  <meta property="og:description" content="my personal website">
+
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <meta name="theme-color" content="#0097a7">
+
+  <link rel="canonical" href="https://aspartate.github.io/personal_website/blog/week-4-stepper-drive/">
+  
+  
+
+  <link rel="stylesheet" href="https://aspartate.github.io/personal_website/style.9ff615c48229657d182d4c0c716ebf5f26645eff21662abca5e094e2b245bfeb.css" type="text/css">
+
+  <script type="application/ld+json">
+  {"@context":"http://www.schema.org","@type":"Person","@id":"https://aspartate.github.io/personal_website/","name":"aspartate","url":"https://aspartate.github.io/personal_website/","description":"my personal website","sameAs":["","https://github.com/aspartate/personal_website","","",""]}
+  </script>
+
+  <style>.lazyload{opacity:.0001;}.logo .lazyload{min-width:10em;}</style>
+    <script src="https://aspartate.github.io/personal_website/js/vendor/lazysizes.min.js" async></script>
+</head>
+
+  <body>
+    
+
+
+
+
+
+<nav class="row middle-xs center-xs">
+  <div class="col-xs-6 col-sm-1 logo">
+    <a href="/personal_website/#"><img data-src="favicon.png" class="lazyload" lazyload="on" alt="Andrew Zhang"></a>
+  </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#about">About</a></h3>
+      </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#work">Work</a></h3>
+      </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#blog">Blog</a></h3>
+      </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#contact">Contact</a></h3>
+      </div>
+    
+  <div class="col-xs-6 col-sm-1 nav-toggle">
+      <a href="" class="nav-icon" onclick="return false">
+        <i id="open" class="icon icon-2x icon-menu"></i>
+      </a>
+  </div>
+</nav>
+
+<section class="nav-full row middle-xs center-xs">
+  <div class="col-xs-12">
+    <div class="row middle-xs center-xs">
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#about">About</a></h1></div>
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#work">Work</a></h1></div>
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#blog">Blog</a></h1></div>
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#contact">Contact</a></h1></div>
+      
+    </div>
+  </div>
+</section>
+
+    <main>
+
+      <section class="container">
+        <section class="content">
+          <h1> Week 4: Stepper Motor Drive </h1>
+
+            <div class="sub-header">
+              February 23, 2021 · 8 minutes read
+            </div>
+
+          <article class="entry-content">
+            <p>The night sky is truly fascinating to behold. I&rsquo;m fortunate to live in a place with relatively little light pollution and there&rsquo;s plenty of stars visible on clear nights. So while stuck at home I&rsquo;ve enjoyed stargazing. Lately I&rsquo;ve been trying my hand at astrophotography, and I&rsquo;ve gotten decent results by using my phone to take photos through an old pair of binoculars mounted on a tripod.</p>
+<p>I&rsquo;m especially interested in imaging deep sky objects (DSOs), such as nebulae and galaxies. To think that the light from these objects has taken millions of years to reach me boggles my mind. The challenge with DSOs is that they&rsquo;re very faint, so unless you&rsquo;re looking through a really wide telescope (sometimes called a &ldquo;light bucket&rdquo;) you can&rsquo;t see much detail with your eyes. Cameras, on the other hand, can <em>accumulate</em> light: the longer a camera sensor is exposed to an object, the more light (and hence detail) you&rsquo;re able to collect. This can be achieved in two ways: increasing exposure time directly, or taking a bunch of photos of the same object and using special software to combine them. Astrophotography typically involves a combination of these strategies.</p>
+<p>Either way, however, we need the object to say in the field of view of the camera. As the Earth rotates, the sky appears to move in the opposite direction. Over the course of an imaging session (can be anywhere from several minutes to several hours), the object we&rsquo;re imaging can move a significant amount. Although you can manually move the camera (or telescope, or binoculars) to follow the object, this is tedious and not feasible for long exposure shots. So amateur astronomers have come up with plenty of ways to automate this task.</p>
+<p>The simplest star-tracking solution I&rsquo;ve found is a barn door tracker. So-called because it looks like a hinged door, the barn door tracker slowly opens with the help of a motorized threaded rod. By carefully setting the speed and pointing the hinge at Polaris, anything mounted on the top face of the tracker will remain stationary with respect to the sky.</p>
+<p><img src="images/week4-stepper/barndoor.jpg" alt="A barn door tracker."></p>
+<p>Since our assignment this week was to create a program on a microcontroller, I decided to create the motor drive component of a barn door tracker. Although I considered using a simple DC motor, I opted for a stepper motor instead for more precise speed control and higher torque. I also wanted this tracker to be driven by a portable battery pack, so I needed a stepper motor that could run on 5V. I purchased the following stepper and driver board:</p>
+<p><img src="images/week4-stepper/stepper.png" alt="5V stepper & driver."></p>
+<p>These things are pretty cheap, about $2 for the motor+driver. They seem like a handy alternative to the larger NEMA17 steppers, so you might see more of these pop up in a future project! They are unipolar, so they have 5 wires (bipolar motors have 4). This video does a really nice job explaining the basics of steppers:</p>
+<p>
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+  <iframe src="https://www.youtube.com/embed/0qwrnUeSpYQ" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
+</div>
+
+
+</p>
+<p>In terms of a minimal functionality all I needed was for the stepper motor to spin at a given speed. But since this is fairly trivial to implement, I decided to do something a bit fancier and add a pushbutton to control the stepper. In particular, I wanted the motor to start spinning when I push the button, stop spinning when I push it again, and cycle through this pattern. The difficult part of this job is sensing the <em>past state</em> of the pushbutton, instead of only the current state. Pushbuttons can change the state of a circuit by closing a connection, but typically the button needs to be held down to sustain the change. I wanted state changes to be effected by a temporary button push.</p>
+<p>My initial attempt involved making variables for <code>motor_state</code> and for <code>button_state</code>. <code>motor_state</code> controls whether the motor is spinning (<code>motor_state = 1</code>) or stopped (<code>motor_state = -1</code>). <code>button_state</code> is the current state of the button. Since my button is in a pullup configuration, the default (unpressed) state is HIGH (<code>button_state = 1</code>). Therefore, I made <code>button_state</code> reverse the sign of <code>motor_state</code> whenever the microcontroller sensed that the button was pressed (<code>button_state = 0</code>).</p>
+<p>I first modeled my circuit in TinkerCAD. For simplicity, I am first testing the button functionality on an LED instead of a stepper motor. Therefore <code>motor_state</code> below actually refers to the state of the LED.</p>
+<p><img src="images/week4-stepper/tinkertest-1.png" alt="LED Test 1."></p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="o">//</span><span class="n">Include</span> <span class="n">the</span> <span class="n">Arduino</span> <span class="n">Stepper</span> <span class="n">Library</span>
+<span class="c1">#include &lt;Stepper.h&gt;</span>
+ 
+<span class="o">//</span> <span class="n">Define</span> <span class="n">Constants</span>
+<span class="n">const</span> <span class="nb">int</span> <span class="n">buttonPin</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="o">//</span> <span class="n">number</span> <span class="n">of</span> <span class="n">pushbutton</span> <span class="nb">input</span> <span class="n">pin</span>
+
+<span class="o">//</span> <span class="n">Define</span> <span class="n">Variables</span>
+<span class="nb">int</span> <span class="n">button_state</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="o">//</span> <span class="n">current</span> <span class="n">state</span> <span class="n">of</span> <span class="n">button</span>
+<span class="nb">int</span> <span class="n">button_prev_state</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="o">//</span> <span class="n">previous</span> <span class="n">state</span> <span class="n">of</span> <span class="n">button</span>
+<span class="nb">int</span> <span class="n">motor_state</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="o">//</span> <span class="n">state</span> <span class="n">of</span> <span class="n">motor</span>
+
+<span class="n">void</span> <span class="n">setup</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">buttonPin</span><span class="p">,</span> <span class="n">INPUT_PULLUP</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="o">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">9600</span><span class="p">);</span>
+<span class="p">}</span>
+ 
+<span class="n">void</span> <span class="n">loop</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">motorState</span><span class="p">();</span>
+  <span class="n">motorRun</span><span class="p">();</span>
+  <span class="n">Serial</span><span class="o">.</span><span class="k">print</span><span class="p">(</span><span class="n">motor_state</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="o">//========================================================</span>
+
+<span class="n">void</span> <span class="n">motorState</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">button_state</span> <span class="o">=</span> <span class="n">digitalRead</span><span class="p">(</span><span class="n">buttonPin</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">button_state</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">motor_state</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">motor_state</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">motor_state</span> <span class="o">=</span> <span class="n">motor_state</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">void</span> <span class="n">motorRun</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">motor_state</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><p>This actually kind of worked, as the LED cycled between off and on whenever I pressed the button. However, this code was not reliable. Using <code>Serial.print()</code> to debug, I realized that <code>motor_state</code> was rapidly cycling between -1 and 1 whenever the button was pressed down, making it essentially a 50% chance that it would be in the desired state when the button was released.</p>
+<p><img src="images/week4-stepper/nice-try.gif" alt="Nice try."></p>
+<p>Upon further research, I discovered that temporary pushbutton transitions needed something called a <em>debounce</em>, which polls the button twice in rapid succession to determine state changes. After scouring web forums for an embarrassingly long time, I found a rather elegant implementation of detecting pushbutton transitions in one of the Arduino built-in examples (StateChangeDetection). From here, it was only a matter of adding the code for initializing and running the stepper motor.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="o">/*</span>
+  <span class="n">State</span> <span class="n">change</span> <span class="n">detection</span> <span class="p">(</span><span class="n">edge</span> <span class="n">detection</span><span class="p">)</span>
+
+  <span class="n">Often</span><span class="p">,</span> <span class="n">you</span> <span class="n">don</span><span class="s1">&#39;t need to know the state of a digital input all the time, but</span>
+  <span class="n">you</span> <span class="n">just</span> <span class="n">need</span> <span class="n">to</span> <span class="n">know</span> <span class="n">when</span> <span class="n">the</span> <span class="nb">input</span> <span class="n">changes</span> <span class="kn">from</span> <span class="nn">one</span> <span class="nn">state</span> <span class="nn">to</span> <span class="nn">another.</span>
+  <span class="n">For</span> <span class="n">example</span><span class="p">,</span> <span class="n">you</span> <span class="n">want</span> <span class="n">to</span> <span class="n">know</span> <span class="n">when</span> <span class="n">a</span> <span class="n">button</span> <span class="n">goes</span> <span class="kn">from</span> <span class="nn">OFF</span> <span class="nn">to</span> <span class="nn">ON.</span> <span class="nn">This</span> <span class="nn">is</span> <span class="nn">called</span>
+  <span class="n">state</span> <span class="n">change</span> <span class="n">detection</span><span class="p">,</span> <span class="ow">or</span> <span class="n">edge</span> <span class="n">detection</span><span class="o">.</span>
+
+  <span class="n">This</span> <span class="n">example</span> <span class="n">shows</span> <span class="n">how</span> <span class="n">to</span> <span class="n">detect</span> <span class="n">when</span> <span class="n">a</span> <span class="n">button</span> <span class="ow">or</span> <span class="n">button</span> <span class="n">changes</span> <span class="kn">from</span> <span class="nn">off</span> <span class="nn">to</span> <span class="nn">on</span>
+  <span class="ow">and</span> <span class="n">on</span> <span class="n">to</span> <span class="n">off</span><span class="o">.</span>
+
+  <span class="n">The</span> <span class="n">circuit</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">pushbutton</span> <span class="n">attached</span> <span class="n">to</span> <span class="n">pin</span> <span class="mi">2</span> <span class="kn">from</span> <span class="o">+</span><span class="mi">5</span><span class="n">V</span>
+  <span class="o">-</span> <span class="mi">10</span> <span class="n">kilohm</span> <span class="n">resistor</span> <span class="n">attached</span> <span class="n">to</span> <span class="n">pin</span> <span class="mi">2</span> <span class="kn">from</span> <span class="nn">ground</span>
+  <span class="o">-</span> <span class="n">LED</span> <span class="n">attached</span> <span class="kn">from</span> <span class="nn">pin</span> <span class="mi">13</span> <span class="n">to</span> <span class="n">ground</span> <span class="p">(</span><span class="ow">or</span> <span class="n">use</span> <span class="n">the</span> <span class="n">built</span><span class="o">-</span><span class="ow">in</span> <span class="n">LED</span> <span class="n">on</span> <span class="n">most</span>
+    <span class="n">Arduino</span> <span class="n">boards</span><span class="p">)</span>
+
+  <span class="n">created</span>  <span class="mi">27</span> <span class="n">Sep</span> <span class="mi">2005</span>
+  <span class="n">modified</span> <span class="mi">30</span> <span class="n">Aug</span> <span class="mi">2011</span>
+  <span class="n">by</span> <span class="n">Tom</span> <span class="n">Igoe</span>
+
+  <span class="n">This</span> <span class="n">example</span> <span class="n">code</span> <span class="ow">is</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">public</span> <span class="n">domain</span><span class="o">.</span>
+
+  <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">arduino</span><span class="o">.</span><span class="n">cc</span><span class="o">/</span><span class="n">en</span><span class="o">/</span><span class="n">Tutorial</span><span class="o">/</span><span class="n">ButtonStateChange</span>
+<span class="o">*/</span>
+
+<span class="c1">#include &lt;Stepper.h&gt;</span>
+
+<span class="o">//</span> <span class="n">this</span> <span class="n">constant</span> <span class="n">won</span><span class="s1">&#39;t change:</span>
+<span class="n">const</span> <span class="nb">int</span>  <span class="n">buttonPin</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>    <span class="o">//</span> <span class="n">the</span> <span class="n">pin</span> <span class="n">that</span> <span class="n">the</span> <span class="n">pushbutton</span> <span class="ow">is</span> <span class="n">attached</span> <span class="n">to</span>
+<span class="n">const</span> <span class="nb">int</span> <span class="n">ledPin</span> <span class="o">=</span> <span class="mi">13</span><span class="p">;</span> <span class="o">//</span> <span class="n">LED</span> <span class="n">indicator</span>
+<span class="n">const</span> <span class="nb">float</span> <span class="n">STEPS_PER_REV</span> <span class="o">=</span> <span class="mi">32</span><span class="p">;</span> <span class="o">//</span> <span class="n">Number</span> <span class="n">of</span> <span class="n">steps</span> <span class="n">per</span> <span class="n">internal</span> <span class="n">motor</span> <span class="n">revolution</span> 
+<span class="n">const</span> <span class="nb">float</span> <span class="n">GEAR_RED</span> <span class="o">=</span> <span class="mi">64</span><span class="p">;</span> <span class="o">//</span>  <span class="n">Amount</span> <span class="n">of</span> <span class="n">Gear</span> <span class="n">Reduction</span>
+
+<span class="o">//</span> <span class="n">Variables</span> <span class="n">will</span> <span class="n">change</span><span class="p">:</span>
+<span class="nb">int</span> <span class="n">buttonPushCounter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>   <span class="o">//</span> <span class="n">counter</span> <span class="k">for</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">button</span> <span class="n">presses</span>
+<span class="nb">int</span> <span class="n">buttonState</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>         <span class="o">//</span> <span class="n">current</span> <span class="n">state</span> <span class="n">of</span> <span class="n">the</span> <span class="n">button</span>
+<span class="nb">int</span> <span class="n">lastButtonState</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>     <span class="o">//</span> <span class="n">previous</span> <span class="n">state</span> <span class="n">of</span> <span class="n">the</span> <span class="n">button</span>
+<span class="n">Stepper</span> <span class="n">steppermotor</span><span class="p">(</span><span class="n">STEPS_PER_REV</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">11</span><span class="p">);</span> <span class="o">//</span> <span class="n">Create</span> <span class="n">Instance</span> <span class="n">of</span> <span class="n">Stepper</span> <span class="n">Class</span>
+<span class="o">//</span> <span class="n">Specify</span> <span class="n">Pins</span> <span class="n">used</span> <span class="k">for</span> <span class="n">motor</span> <span class="n">coils</span> <span class="p">(</span><span class="n">the</span> <span class="n">pins</span> <span class="n">used</span> <span class="n">are</span> <span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span> <span class="n">connected</span> <span class="n">to</span> <span class="n">ULN2003</span> <span class="n">Motor</span> <span class="n">Driver</span> <span class="n">In1</span><span class="p">,</span> <span class="n">In2</span><span class="p">,</span> <span class="n">In3</span><span class="p">,</span> <span class="n">In4</span> 
+<span class="o">//</span> <span class="n">Pins</span> <span class="n">entered</span> <span class="ow">in</span> <span class="n">sequence</span> <span class="mi">1</span><span class="o">-</span><span class="mi">3</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="mi">4</span> <span class="k">for</span> <span class="n">proper</span> <span class="n">step</span> <span class="n">sequencing</span>
+
+<span class="n">void</span> <span class="n">setup</span><span class="p">()</span> <span class="p">{</span>
+  <span class="o">//</span> <span class="n">initialize</span> <span class="n">the</span> <span class="n">button</span> <span class="n">pin</span> <span class="k">as</span> <span class="n">a</span> <span class="nb">input</span><span class="p">:</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">buttonPin</span><span class="p">,</span> <span class="n">INPUT_PULLUP</span><span class="p">);</span>
+  <span class="o">//</span> <span class="n">initialize</span> <span class="n">the</span> <span class="n">LED</span> <span class="k">as</span> <span class="n">an</span> <span class="n">output</span><span class="p">:</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">ledPin</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
+  <span class="o">//</span> <span class="n">initialize</span> <span class="n">serial</span> <span class="n">communication</span><span class="p">:</span>
+  <span class="n">Serial</span><span class="o">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">9600</span><span class="p">);</span>
+<span class="p">}</span>
+
+
+<span class="n">void</span> <span class="n">loop</span><span class="p">()</span> <span class="p">{</span>
+  <span class="o">//</span> <span class="n">read</span> <span class="n">the</span> <span class="n">pushbutton</span> <span class="nb">input</span> <span class="n">pin</span><span class="p">:</span>
+  <span class="n">buttonState</span> <span class="o">=</span> <span class="n">digitalRead</span><span class="p">(</span><span class="n">buttonPin</span><span class="p">);</span>
+
+  <span class="o">//</span> <span class="n">compare</span> <span class="n">the</span> <span class="n">buttonState</span> <span class="n">to</span> <span class="n">its</span> <span class="n">previous</span> <span class="n">state</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">buttonState</span> <span class="o">!=</span> <span class="n">lastButtonState</span><span class="p">)</span> <span class="p">{</span>
+    <span class="o">//</span> <span class="k">if</span> <span class="n">the</span> <span class="n">state</span> <span class="n">has</span> <span class="n">changed</span><span class="p">,</span> <span class="n">increment</span> <span class="n">the</span> <span class="n">counter</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">buttonState</span> <span class="o">==</span> <span class="n">HIGH</span><span class="p">)</span> <span class="p">{</span>
+      <span class="o">//</span> <span class="k">if</span> <span class="n">the</span> <span class="n">current</span> <span class="n">state</span> <span class="ow">is</span> <span class="n">HIGH</span> <span class="n">then</span> <span class="n">the</span> <span class="n">button</span> <span class="n">went</span> <span class="kn">from</span> <span class="nn">off</span> <span class="nn">to</span> <span class="nn">on</span><span class="p">:</span>
+      <span class="n">buttonPushCounter</span><span class="o">++</span><span class="p">;</span>
+      <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="s2">&#34;on&#34;</span><span class="p">);</span>
+      <span class="n">Serial</span><span class="o">.</span><span class="k">print</span><span class="p">(</span><span class="s2">&#34;number of button pushes: &#34;</span><span class="p">);</span>
+      <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">buttonPushCounter</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="o">//</span> <span class="k">if</span> <span class="n">the</span> <span class="n">current</span> <span class="n">state</span> <span class="ow">is</span> <span class="n">LOW</span> <span class="n">then</span> <span class="n">the</span> <span class="n">button</span> <span class="n">went</span> <span class="kn">from</span> <span class="nn">on</span> <span class="nn">to</span> <span class="nn">off</span><span class="p">:</span>
+      <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="s2">&#34;off&#34;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="o">//</span> <span class="n">Delay</span> <span class="n">a</span> <span class="n">little</span> <span class="n">bit</span> <span class="n">to</span> <span class="n">avoid</span> <span class="n">bouncing</span>
+    <span class="n">delay</span><span class="p">(</span><span class="mi">50</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="o">//</span> <span class="n">save</span> <span class="n">the</span> <span class="n">current</span> <span class="n">state</span> <span class="k">as</span> <span class="n">the</span> <span class="n">last</span> <span class="n">state</span><span class="p">,</span> <span class="k">for</span> <span class="nb">next</span> <span class="n">time</span> <span class="n">through</span> <span class="n">the</span> <span class="n">loop</span>
+  <span class="n">lastButtonState</span> <span class="o">=</span> <span class="n">buttonState</span><span class="p">;</span>
+
+
+  <span class="o">//</span> <span class="n">turns</span> <span class="n">on</span> <span class="n">the</span> <span class="n">LED</span> <span class="n">every</span> <span class="n">four</span> <span class="n">button</span> <span class="n">pushes</span> <span class="n">by</span> <span class="n">checking</span> <span class="n">the</span> <span class="n">modulo</span> <span class="n">of</span> <span class="n">the</span>
+  <span class="o">//</span> <span class="n">button</span> <span class="n">push</span> <span class="n">counter</span><span class="o">.</span> <span class="n">the</span> <span class="n">modulo</span> <span class="n">function</span> <span class="n">gives</span> <span class="n">you</span> <span class="n">the</span> <span class="n">remainder</span> <span class="n">of</span> <span class="n">the</span>
+  <span class="o">//</span> <span class="n">division</span> <span class="n">of</span> <span class="n">two</span> <span class="n">numbers</span><span class="p">:</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">buttonPushCounter</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">ledPin</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+    <span class="n">motorRun</span><span class="p">();</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">ledPin</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+  <span class="p">}</span>
+
+<span class="p">}</span>
+
+
+<span class="o">//</span> <span class="o">==========================================</span>
+
+<span class="n">void</span> <span class="n">motorRun</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">steppermotor</span><span class="o">.</span><span class="n">setSpeed</span><span class="p">(</span><span class="mi">600</span><span class="p">);</span>
+    <span class="n">steppermotor</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> 
+<span class="p">}</span>
+</code></pre></div><p>I tested this code in TinkerCAD. Because the stepper motor I&rsquo;m using and its driver don&rsquo;t exist as pre-made components in TinkerCAD Circuits, I used a stepper motor simulator circuit built from scratch by a user named JeanPaulPetillon. The four LEDs represent the poles of a stepper. I added in a pushbutton and LED, made sure the pins were correct, and it worked!</p>
+<p><img src="images/week4-stepper/tinkertest-2.png" alt="Test 2."></p>
+<p>The only thing left to do now is test this IRL!  I also tested varying the speed of the motor using <code>steppermotor.setSpeed()</code> and that works too.</p>
+<p><img src="images/week4-stepper/yay.gif" alt="Finished."></p>
+<p>Stay tuned for more updates on the star tracker!</p>
+
+          </article>
+
+          <div class="pagination">
+            
+              <a href="https://aspartate.github.io/personal_website/blog/week-3-kinetic-sculpture/">&laquo; Week 3 - Kinetic Sculpture</a>
+            
+            
+          </div>
+        </section>
+        <br>
+        <section class="disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname == "localhost")
+        return;
+      var disqus_shortname = '';
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view comments powered by <a href="http://disqus.com/?ref_noscript">Disqus</a>.</noscript>
+</section>
+
+      </section>
+
+    </main>
+    <footer class="row middle-xs center-xs">
+  <div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-facebook"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href="https://github.com/aspartate/personal_website"><i class="icon icon-github"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-linkedin"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-stackoverflow"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-twitter"></i></a>
+    </div>
+  <div class="col-xs-12">
+      <small>
+      
+      Copyright &copy; 2021 Andrew Zhang
+      
+      
+      </small>
+    </div>
+</footer>
+
+    
+
+
+
+
+
+
+  <script src="https://aspartate.github.io/personal_website/js/bundle.min.fbd35181a0fd0238360575e6a25942746d4e73c615f852efe3b975ea70829339.js" type="text/javascript"></script>
+  <script>handleNavBar( false )</script>
+
+  </body>
+</html>
