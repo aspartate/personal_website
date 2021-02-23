@@ -78,7 +78,7 @@ void motorRun() {
 }
 ```
 
-This actually kind of worked, as the LED cycled between off and on whenever I pressed the button. However, this code was not reliable. Using `Serial.print()` to debug, I realized that `motor_state` was rapidly cycling between -1 and 1 whenever the button was pressed down, making it essentially a 50% chance that it would be in the desired state when the button was released.
+This actually kind of worked, as the LED sometimes cycled on and off when I pressed the button. However, this code was not reliable. Using `Serial.print()` to debug, I realized that `motor_state` was rapidly cycling between -1 and 1 whenever the button was pressed down, making it essentially a 50% chance that it would be in the desired state when the button was released.
 
 ![Nice try.](images/week4-stepper/nice-try.gif)
 
