@@ -2,6 +2,16 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
     <url>
+      <loc>https://aspartate.github.io/personal_website/blog/telescope/</loc>
+      <lastmod>2021-03-02T12:53:47-05:00</lastmod>
+    </url>
+  
+    <url>
+      <loc>https://aspartate.github.io/personal_website/blog/week-5-photogrammetry/</loc>
+      <lastmod>2021-03-02T10:56:04-05:00</lastmod>
+    </url>
+  
+    <url>
       <loc>https://aspartate.github.io/personal_website/blog/week-4-stepper-drive/</loc>
       <lastmod>2021-02-23T12:05:34-05:00</lastmod>
     </url>
