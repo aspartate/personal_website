@@ -110,13 +110,36 @@
           <h1> Astro-Imaging Telescope </h1>
 
             <div class="sub-header">
-              March 2, 2021 · 2 minutes read
+              March 9, 2021 · 7 minutes read
             </div>
 
           <article class="entry-content">
-            <p>This post will document progress on my efforts to build a dedicated astronomical imaging telescope with star tracking. I will divide the project into three parts: the optical tube assembly (OTA) and the tracking mount.</p>
-<h3 id="1-star-tracking-mount">1. Star tracking mount.</h3>
-<p>The mount is a much easier build than the OTA, so let&rsquo;s start with that. I already described the basics of this mount in <strong><a href="https://aspartate.github.io/personal_website/blog/week-4-stepper-drive/">an earlier post</a></strong>, but here is a diagram to remind us what we are building:</p>
+            <p>This post will document progress on my efforts to build a dedicated astronomical imaging telescope with star tracking. I will divide the project into two parts: the optical tube assembly (OTA) and the tracking mount.</p>
+<h3 id="1-ota">1. OTA.</h3>
+<p>The OTA is the most important bit, and potentially also the most finicky. Before we begin, it would be a good idea to review how a reflector telescope (the type that uses mirrors instead of lenses) works. Reflectors are a very popular choice for amateur telescope makers because of their relative simplicity and lack of chromatic abberation. (Mirrors do not produce chromatic abberation, but lenses do). The simplest reflector consists of two mirrors: a large primary mirror and a small secondary mirror. The primary mirror is curved to focus light at a point. The secondary mirror then bounces the light from the primary up into the eyepiece. Refer to the diagram below:</p>
+<p>Most people think the point of a telescope is to magnify. However, this is not entirely true when it comes to astronomy, particularly for deep space objects (DSOs). Many DSOs are gigantic, but just too dim to be seen with the naked eye. For example, the Andromeda galaxy if viewed at full brightness would be many times the size of a full moon! Frankly, this blows my mind:</p>
+<p><img src="images/telescope/andromeda.png" alt="Andromeda size."></p>
+<p>So in the case of DSOs, telescopes are really meant to concentrate light. If you&rsquo;ve ever seen the effects of a magnifying glass on sunlight, you&rsquo;ll recall that they can concentrate a harmless beam of sunshine into a damaging point of light capable of even setting things on fire (as well as ruining your eyes, so don&rsquo;t do this on purpose). This is the reason why it is highly recommended to NOT leave water bottles and similarly lens-shaped objects on windowsills, because a fire could start that way. A concave mirror, specifically in the shape of a parabola, works the same way: it focuses light to a point. The larger the mirror, the more light it can collect and thus focus. In a telescope, the primary mirror is basically beaming the light from a million stars straight into your eye, which sounds pretty cool (and dangerous) if you think about it. However, because these stars are so far away, we need this light to be concentrated in order to see it at all. A standard 6-inch wide primary mirror can gather 576 times as much light as the human eye, with an aperture of a quarter inch. (Do you see how we arrived at this calculation?)</p>
+<p>The optics of telescopes are insanely precise. To give you an idea, a good-quality amateur-grade parabolic mirror is figured to a wavefront error of anywhere from 1/10 to 1/40 wave. This &ldquo;wave&rdquo; refers to the wavelength of light! In building the OTA, a good-quality primary mirror is not enough; we also need to make sure that the primary mirror is aligned (&ldquo;collimated&rdquo;) with the secondary.</p>
+<p>Accordingly, the most expensive part of a telescope is typically the optics. The larger the mirror, the more difficult it is to manufacture and prices can rise exponentially with increases in diameter. In addition, the parabolic shape is harder to achieve than a spherical shape; therefore, on many cheaper telescopes you&rsquo;ll find that the mirror is in fact spherical. For high f/ ratios, the spherical shape approximates a parabola and so a spherical mirror is acceptable.</p>
+<p>What is an f/ ratio? It is the focal length of the mirror divided by its diameter. A 6&quot; mirror that is f/8 has a focal length of 48 inches, meaning that it focuses light to a point 48&quot; from the center of the mirror. Therefore the telescope it sits in will need to have a length around 48 inches. An acceptable level of error is 1/8 wave deviation between the spherical and parabolic shapes. There is an equation to determine the minimum f/ ratio <em>F</em> (<strong><a href="https://www.cloudynights.com/topic/42362-parabolic-v-spherical-mirrors/#entry550430">source</a></strong>):</p>
+<p><img src="https://latex.codecogs.com/gif.latex?%5CLARGE&amp;space;F&amp;space;=&amp;space;%5Cbig%5B&amp;space;88.6&amp;space;D&amp;space;%5Cbig%5D&amp;space;%5E%7B1/3%7D" alt="Spherical error equation."></p>
+<p>where D is the aperture in inches. On eBay, I found a 4.5 inch spherical mirror with a focal ratio of f/8. According to the equation above, the minimum focal ratio to permit the use of a spherical mirror is f/7.4. This mirror satisfies that threshold and also came with a secondary for only 30 bucks, so I purchased it with the intention of building my own scope.</p>
+<p>The most important part of a reflector is the mirror cell, or the base that holds the mirror. This needs to be mounted within the body of the scope. Many amateur telescope makers use cardboard concrete forms (also known as sonotubes) for their telescope bodies, but I could not find one that would be a suitable diameter for a 4.5&quot; mirror. However, I did have an empty paint can laying around, as well as a broken aluminum tripod.</p>
+<p><img src="images/telescope/can_paint.jpg" alt="Paint can."></p>
+<p><img src="images/telescope/tripod.jpg" alt="Tripod."></p>
+<p>These could be the beginnings of a truss tube-style telescope such as this:</p>
+<p><img src="images/telescope/truss-tube-dob.jpg" alt="Truss tube dob."></p>
+<p>I don&rsquo;t think anyone has ever made a telescope out of a paint can before, so this will be interesting. The first step was to clean the paint out of the can. Peeling off dried paint is quite satisfying:</p>
+<p><img src="images/telescope/can_clean.jpg" alt="Clean can."></p>
+<p>It&rsquo;s a tad rusty but that&rsquo;s all right. I needed to cut the can in half: one half for the primary cell and one half for the secondary cell (which holdes the secondary mirror and eyepiece). I also needed to cut out the bottom. A jigsaw with a metal blade made quick work of the can. I was <em>very</em> glad I wore thick gloves and safety goggles, however. Steel shrapnel is nasty!</p>
+<p><img src="images/telescope/can_cut.jpg" alt="Cut can."></p>
+<p>I think the part with the handle would do well as the base of the telescope, since that&rsquo;s where the center of mass (CoM) is at and it would be convenient to pick up.</p>
+<p>I also took apart the tripod and got 6 nice aluminum supports about 3 feet long. These can be arranged to form a truss structure.</p>
+<p><img src="images/telescope/trusses.jpg" alt="Aluminum tubes."></p>
+<p>To be continued!</p>
+<h3 id="2-star-tracking-mount">2. Star tracking mount.</h3>
+<p>The mount should be a much easier build than the OTA. I already described the basics of this mount in <strong><a href="https://aspartate.github.io/personal_website/blog/week-4-stepper-drive/">an earlier post</a></strong>, but here is a diagram to remind us what we are building:</p>
 <p><img src="images/telescope/barndoor.jpg" alt="Barn door tracker."></p>
 <p>I&rsquo;ve acquired a 100mm T8 lead screw which will be driven by the stepper motor and raise the platform. My first task is to design a gear in which I can press-fit the brass nut. As in the diagram above, this gear will be driven by a second, smaller gear, which is attached to the stepper motor.</p>
 <p><img src="images/telescope/screw-and-nut.jpg" alt="T8 screw and nut."></p>
@@ -141,7 +164,7 @@
 
           <div class="pagination">
             
-              <a href="https://aspartate.github.io/personal_website/blog/week-5-photogrammetry/">&laquo; Week 5 - Photogrammetry</a>
+              <a href="https://aspartate.github.io/personal_website/blog/final-project/">&laquo; Final Project</a>
             
             
           </div>

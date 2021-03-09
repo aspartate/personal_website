@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+  
+
+  
+
+  <title>
+    
+    Week 6 - Sensors | Andrew Zhang
+  </title>
+
+  <meta name="title" content="Week 6 - Sensors | Andrew Zhang">
+
+  <meta charset="utf-8">
+  
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer-when-downgrade">
+  <base href="https://aspartate.github.io/personal_website/">
+
+  <meta name="description" content="my personal website">
+
+  <meta name="author" content="aspartate">
+
+  
+
+  <meta property="og:title" content="Week 6 - Sensors | Andrew Zhang">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://aspartate.github.io/personal_website/">
+
+  <meta property="og:image" content="https://aspartate.github.io/personal_website/images/osprey-delight.png">
+
+  <meta property="og:description" content="my personal website">
+
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <meta name="theme-color" content="#0097a7">
+
+  <link rel="canonical" href="https://aspartate.github.io/personal_website/blog/week-6-sensors/">
+  
+  
+
+  <link rel="stylesheet" href="https://aspartate.github.io/personal_website/style.9ff615c48229657d182d4c0c716ebf5f26645eff21662abca5e094e2b245bfeb.css" type="text/css">
+
+  <script type="application/ld+json">
+  {"@context":"http://www.schema.org","@type":"Person","@id":"https://aspartate.github.io/personal_website/","name":"aspartate","url":"https://aspartate.github.io/personal_website/","description":"my personal website","sameAs":["","https://github.com/aspartate/personal_website","","",""]}
+  </script>
+
+  <style>.lazyload{opacity:.0001;}.logo .lazyload{min-width:10em;}</style>
+    <script src="https://aspartate.github.io/personal_website/js/vendor/lazysizes.min.js" async></script>
+</head>
+
+  <body>
+    
+
+
+
+
+
+<nav class="row middle-xs center-xs">
+  <div class="col-xs-6 col-sm-1 logo">
+    <a href="/personal_website/#"><img data-src="favicon.png" class="lazyload" lazyload="on" alt="Andrew Zhang"></a>
+  </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#about">About</a></h3>
+      </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#work">Work</a></h3>
+      </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#blog">Blog</a></h3>
+      </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#contact">Contact</a></h3>
+      </div>
+    
+  <div class="col-xs-6 col-sm-1 nav-toggle">
+      <a href="" class="nav-icon" onclick="return false">
+        <i id="open" class="icon icon-2x icon-menu"></i>
+      </a>
+  </div>
+</nav>
+
+<section class="nav-full row middle-xs center-xs">
+  <div class="col-xs-12">
+    <div class="row middle-xs center-xs">
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#about">About</a></h1></div>
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#work">Work</a></h1></div>
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#blog">Blog</a></h1></div>
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#contact">Contact</a></h1></div>
+      
+    </div>
+  </div>
+</section>
+
+    <main>
+
+      <section class="container">
+        <section class="content">
+          <h1> Week 6 - Sensors </h1>
+
+            <div class="sub-header">
+              March 7, 2021 · 3 minutes read
+            </div>
+
+          <article class="entry-content">
+            <p>The goal of this week was to learn how to use sensors in Arduino, with a focus on capacitive sensors. I wanted to do something related to my final project, so I decided to follow a tutorial on making a 3D capacitive motion tracker. I thought that this may have potential applications in hand tracking for the purposes of controlling a robot arm via inverse kinematics.</p>
+<p>This is a rather popular project, with tutorials by Make: Magazine as well as others. <strong><a href="https://www.instructables.com/DIY-3D-Controller/">This instructable</a></strong> also gives a nice explanation of the concept. The hardware components are simple, and though the code looked complicated I thought I would try my best to understand it. The stock code comes with a Processing widget (first time I&rsquo;ve heard of this programming language) that shows the position of your hand in real time. Eventually, I wanted to modify the code to extract coordinates of the hand.</p>
+<p>
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+  <iframe src="https://www.youtube.com/embed/ikD_3Vemkf0" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
+</div>
+
+
+</p>
+<h3 id="1-hardware">1. Hardware.</h3>
+<p>The bulk of the hardware is three cardboard squares partially covered by foil. These were simple enough to make:</p>
+<p><img src="images/week6-sensors/squares.jpg" alt="Squares."></p>
+<p>As you can see, I started off taping the edges of the foil with electrical tape but realized it was easier to just stick the foil to the cardboard by double-sided tape on the corners.</p>
+<p><img src="images/week6-sensors/frame.jpg" alt="Frame."></p>
+<p>I cut an opening at the junction of the three faces to allow the wires to pass through. Theoretically, I should be using shielded wires but I thought regular Dupont wires were enough for a proof of concept.</p>
+<p><img src="images/week6-sensors/hole.jpg" alt="Hole."></p>
+<p>Here is the wiring. Those are 1M ohm resistors coming from the power rail, and 10K ohm resistors in between the wires. The wires go into pins 8, 9, and 10.</p>
+<h3 id="2-software">2. Software.</h3>
+<p>There are two pieces of code needed to make this work: the Arduino script and the Processing script. Both can be downloaded from this rather old GitHub repo <strong><a href="https://github.com/Make-Magazine/3DInterface">here</a></strong>. We also need to download and install the Processing IDE <strong><a href="https://processing.org/">here</a></strong>.</p>
+<p>Here is where I ran into trouble. Upon trying to verify the Arduino script, I ran into an error: <em>lvalue required as left operand of assignment</em>.</p>
+<p><img src="images/week6-sensors/arduino_error_1.png" alt="Arduino error 1."></p>
+<p>It seemed like PORTB was an undefined variable, which confused me. Confident that the writer of this code could not have overlooked something so simple, I thought there must be another explanation. Some Googling told me that this was an example of controlling Arduino pins using port registers, which is apparently <strong><a href="https://electronoobs.com/eng_arduino_tut130.php">60 times (!) faster than using <code>digitalWrite</code></a></strong>. This made sense because we want the sampling rate to be really high to achieve near-real time detection. It appeared the port register control needed to use syntax like <code>PORTB = B00000000</code> instead of <code>PORTB = 0</code>. I presumed the 8 zeros represent a byte. So I changed that in the script, and&hellip;it was fixed!</p>
+<p>But lo and behold there was another error.</p>
+<p><img src="images/week6-sensors/arduino_error_2.png" alt="Arduino error 2."></p>
+<p>Now it seems like <code>PINB</code> is not a declared variable. As far as I knew, <code>PINB</code> had something to do with the register control and did not have to be defined. Perhaps somehow the Arduino was not recognizing that <code>PINB</code> referred to a pin? At this point it was in the wee hours of the morning and I had a 75 minute presentation due for class the next day, so I decided to come back to it later.</p>
+
+          </article>
+
+          <div class="pagination">
+            
+              <a href="https://aspartate.github.io/personal_website/blog/week-5-photogrammetry/">&laquo; Week 5 - Photogrammetry</a>
+            
+            
+              <a href="https://aspartate.github.io/personal_website/blog/final-project/">Final Project &raquo;</a>
+            
+          </div>
+        </section>
+        <br>
+        <section class="disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname == "localhost")
+        return;
+      var disqus_shortname = '';
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view comments powered by <a href="http://disqus.com/?ref_noscript">Disqus</a>.</noscript>
+</section>
+
+      </section>
+
+    </main>
+    <footer class="row middle-xs center-xs">
+  <div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-facebook"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href="https://github.com/aspartate/personal_website"><i class="icon icon-github"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-linkedin"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-stackoverflow"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-twitter"></i></a>
+    </div>
+  <div class="col-xs-12">
+      <small>
+      
+      Copyright &copy; 2021 Andrew Zhang
+      
+      
+      </small>
+    </div>
+</footer>
+
+    
+
+
+
+
+
+
+  <script src="https://aspartate.github.io/personal_website/js/bundle.min.fbd35181a0fd0238360575e6a25942746d4e73c615f852efe3b975ea70829339.js" type="text/javascript"></script>
+  <script>handleNavBar( false )</script>
+
+  </body>
+</html>
