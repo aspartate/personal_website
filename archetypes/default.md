@@ -12,3 +12,4 @@ draft: false
 {{< youtube id="N8xL32uV0SA" >}}
 &NewLine;
 
+MP4 to GIF resolution: 270 x 480
