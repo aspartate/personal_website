@@ -1,7 +1,7 @@
 ---
 title: "Week 7 - Input/Output"
 date: 2021-03-11T16:50:16-05:00
-draft: true
+draft: false
 ---
 
 
