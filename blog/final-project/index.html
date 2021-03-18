@@ -110,7 +110,7 @@
           <h1> Final Project </h1>
 
             <div class="sub-header">
-              March 9, 2021 · 4 minutes read
+              March 9, 2021 · 7 minutes read
             </div>
 
           <article class="entry-content">
@@ -144,6 +144,65 @@
 <p>First, to get an idea of how the change in resistance is affected by the speed at which I rotate the potentiometer, I defined a new variable <code>delta_pot</code>. I also renamed the variables to more sensible names, changed them to floats, and remapped the potentiometer reading from 0 to 1024 (instead of 500) for maximum resolution. I then plotted <code>delta_pot</code> as I rotated the potentiometer at various speeds and directions. As expected, I got different <code>delta_pot</code> values for different speeds. This suggests that <code>delta_pot</code> could be used to control <code>stepsize</code>.</p>
 <p><img src="images/avatarm/code-2-SM.png" alt="Code 2 SM.">
 <img src="images/avatarm/code-2.png" alt="Code 2."></p>
+<p>I realized the sign of <code>delta_pot</code> indicates the direction of motion, so there was no need for an if statement in the code. In fact, the structure could be greatly simplified to the following:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1">#include &lt;Stepper.h&gt; // Include the header file</span>
+
+<span class="o">//</span> <span class="n">change</span> <span class="n">this</span> <span class="n">to</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">steps</span> <span class="n">on</span> <span class="n">your</span> <span class="n">motor</span>
+<span class="c1">#define STEPS 32</span>
+
+<span class="o">//</span> <span class="n">create</span> <span class="n">an</span> <span class="n">instance</span> <span class="n">of</span> <span class="n">the</span> <span class="n">stepper</span> <span class="k">class</span> <span class="nc">using</span> <span class="n">the</span> <span class="n">steps</span> <span class="ow">and</span> <span class="n">pins</span>
+<span class="n">Stepper</span> <span class="n">stepper</span><span class="p">(</span><span class="n">STEPS</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">11</span><span class="p">);</span>
+
+<span class="nb">float</span> <span class="n">pot_old</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="nb">float</span> <span class="n">pot_new</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="nb">int</span> <span class="n">stepsize</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="nb">float</span> <span class="n">delta_pot</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="n">void</span> <span class="n">setup</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">Serial</span><span class="o">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">9600</span><span class="p">);</span>
+  <span class="n">stepper</span><span class="o">.</span><span class="n">setSpeed</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">void</span> <span class="n">loop</span><span class="p">()</span> <span class="p">{</span>
+
+<span class="n">pot_new</span> <span class="o">=</span> <span class="n">analogRead</span><span class="p">(</span><span class="n">A0</span><span class="p">);</span>
+<span class="n">delta_pot</span> <span class="o">=</span> <span class="n">pot_new</span> <span class="o">-</span> <span class="n">pot_old</span><span class="p">;</span>
+
+<span class="n">stepper</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">stepsize</span><span class="o">*</span><span class="n">delta_pot</span><span class="p">));</span>
+<span class="n">pot_old</span> <span class="o">=</span> <span class="n">pot_new</span><span class="p">;</span>
+
+<span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">delta_pot</span><span class="p">);</span> <span class="o">//</span><span class="k">for</span> <span class="n">debugging</span>
+<span class="p">}</span>
+</code></pre></div><p><img src="images/avatarm/try-2.gif" alt="Try 2."></p>
+<p>Indeed, this simple script worked much better than what I had before. In hindsight this should have been rather obvious from the start haha. However, now I came across the second challenge: the noise in the potentiometer reading was causing the motor to vibrate in place. Though I tried filtering <code>delta_pot</code> to values above a certain magnitude, I ultimately could not eliminate the vibrations. It was around this time that I also started considering the GPIO capacity of the Metro M0 Express: with only 14 digital pins, I could control a maximum of 3 steppers since the drivers I was using required 4 pins each. This was problematic as I hoped to achieve at least 4 degrees of freedom in my Avatarm. Moreover, I found that the steppers tend to get worryingly hot after a while, whether moving or not.</p>
+<p>At this point servos seemed like a more and more attractive option. They only needed one control pin each, and some preliminary testing verified that the &ldquo;vibrating-in-place&rdquo; symptom plaguing my steppers was nearly absent in my SG90 servos. My preconceptions about the torque of servos compared to steppers were shattered when I found that servos can have even larger torque than steppers, especially larger metal-geared servos such as the MG996r. This is probably why the vast majority of hobby robot arms use servos&hellip;sigh. Well, at least I learned something, and I&rsquo;ll find another use for my 28-BYJ48 steppers soon enough.</p>
+<p>It was fairly trivial to implement the same functionality as above using servos, especially with <strong><a href="https://www.arduino.cc/en/tutorial/knob">abundant online tutorials</a></strong>:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1">#include &lt;Servo.h&gt;</span>
+
+<span class="n">Servo</span> <span class="n">myservo</span><span class="p">;</span>  <span class="o">//</span> <span class="n">create</span> <span class="n">servo</span> <span class="nb">object</span> <span class="n">to</span> <span class="n">control</span> <span class="n">a</span> <span class="n">servo</span>
+
+<span class="nb">int</span> <span class="n">potpin</span> <span class="o">=</span> <span class="n">A0</span><span class="p">;</span>  <span class="o">//</span> <span class="n">analog</span> <span class="n">pin</span> <span class="n">used</span> <span class="n">to</span> <span class="n">connect</span> <span class="n">the</span> <span class="n">potentiometer</span>
+<span class="nb">int</span> <span class="n">val</span><span class="p">;</span>    <span class="o">//</span> <span class="n">variable</span> <span class="n">to</span> <span class="n">read</span> <span class="n">the</span> <span class="n">value</span> <span class="kn">from</span> <span class="nn">the</span> <span class="nn">analog</span> <span class="nn">pin</span>
+
+<span class="n">void</span> <span class="n">setup</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">myservo</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="mi">9</span><span class="p">);</span>  <span class="o">//</span> <span class="n">attaches</span> <span class="n">the</span> <span class="n">servo</span> <span class="n">on</span> <span class="n">pin</span> <span class="mi">9</span> <span class="n">to</span> <span class="n">the</span> <span class="n">servo</span> <span class="nb">object</span>
+<span class="p">}</span>
+
+<span class="n">void</span> <span class="n">loop</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">val</span> <span class="o">=</span> <span class="n">analogRead</span><span class="p">(</span><span class="n">potpin</span><span class="p">);</span>            <span class="o">//</span> <span class="n">reads</span> <span class="n">the</span> <span class="n">value</span> <span class="n">of</span> <span class="n">the</span> <span class="n">potentiometer</span> <span class="p">(</span><span class="n">value</span> <span class="n">between</span> <span class="mi">0</span> <span class="ow">and</span> <span class="mi">1023</span><span class="p">)</span>
+  <span class="n">val</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1023</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">180</span><span class="p">);</span>     <span class="o">//</span> <span class="n">scale</span> <span class="n">it</span> <span class="n">to</span> <span class="n">use</span> <span class="n">it</span> <span class="k">with</span> <span class="n">the</span> <span class="n">servo</span> <span class="p">(</span><span class="n">value</span> <span class="n">between</span> <span class="mi">0</span> <span class="ow">and</span> <span class="mi">180</span><span class="p">)</span>
+  <span class="n">myservo</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">val</span><span class="p">);</span>                  <span class="o">//</span> <span class="n">sets</span> <span class="n">the</span> <span class="n">servo</span> <span class="n">position</span> <span class="n">according</span> <span class="n">to</span> <span class="n">the</span> <span class="n">scaled</span> <span class="n">value</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">15</span><span class="p">);</span>                           <span class="o">//</span> <span class="n">waits</span> <span class="k">for</span> <span class="n">the</span> <span class="n">servo</span> <span class="n">to</span> <span class="n">get</span> <span class="n">there</span>
+</code></pre></div><p><img src="images/avatarm/try-3.gif" alt="Try 3."></p>
+<p>The next step is to achieve this wirelessly, over a WiFi server if possible or at least 2.4 GHz radio. I found <strong><a href="https://www.homemade-circuits.com/wireless-servo-motor-control-using/">here</a></strong> a nice tutorial on how to achieve the latter with Arduino Unos and some NRF24L01 modules, but I didn&rsquo;t have either component handy and I really wanted the ability to be able to control the Avatarm from anywhere in the world with WiFi. Since I had 2 WiFi-enabled ESP32 boards, the Huzzah and the ESP32-CAM, I figured they would be able to make this happen. (It is worth noting that ESP-NOW, a non-WiFi communications protocol for ESP32s, already has an impressive range of 480 meters, so in case the WiFi server did not work out this would be my backup plan.)</p>
+<p>Various helpful links:</p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=uEd2B7fS8Eg">https://www.youtube.com/watch?v=uEd2B7fS8Eg</a></li>
+<li><a href="https://www.youtube.com/watch?v=zxBC1ivOVfM">https://www.youtube.com/watch?v=zxBC1ivOVfM</a></li>
+<li><a href="https://www.youtube.com/watch?v=GC0gRdBpylw">https://www.youtube.com/watch?v=GC0gRdBpylw</a></li>
+<li><a href="https://www.instructables.com/Wireless-Servo-Control/">https://www.instructables.com/Wireless-Servo-Control/</a></li>
+<li><a href="https://dronebotworkshop.com/esp32-servo/">https://dronebotworkshop.com/esp32-servo/</a></li>
+</ul>
 
           </article>
 
