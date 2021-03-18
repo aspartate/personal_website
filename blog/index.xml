@@ -6,7 +6,17 @@
     <description>Recent content in Blogs on Andrew Zhang</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Tue, 09 Mar 2021 12:53:47 -0500</lastBuildDate><atom:link href="https://aspartate.github.io/personal_website/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 11 Mar 2021 16:50:16 -0500</lastBuildDate><atom:link href="https://aspartate.github.io/personal_website/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Week 7 - Input/Output</title>
+      <link>https://aspartate.github.io/personal_website/blog/week-7-input-output/</link>
+      <pubDate>Thu, 11 Mar 2021 16:50:16 -0500</pubDate>
+      
+      <guid>https://aspartate.github.io/personal_website/blog/week-7-input-output/</guid>
+      <description>The assignment this week was to create an input-output system, preferably using millis() for timing. Since we recently learned to use the Adafruit TFT display in lab, I decided to build upon my work for the final project to have the TFT display the motor angle. This turned out to be not as simple as simply mashing together the TFT code from here with the servo code from here.
+I wanted the display to update at a certain framerate (10 Hz) so the numbers are actually visible on screen for an appreciable amount of time.</description>
+    </item>
+    
     <item>
       <title>Astro-Imaging Telescope</title>
       <link>https://aspartate.github.io/personal_website/blog/telescope/</link>

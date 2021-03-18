@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+  
+
+  
+
+  <title>
+    
+    Week 7 - Input/Output | Andrew Zhang
+  </title>
+
+  <meta name="title" content="Week 7 - Input/Output | Andrew Zhang">
+
+  <meta charset="utf-8">
+  
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer-when-downgrade">
+  <base href="https://aspartate.github.io/personal_website/">
+
+  <meta name="description" content="my personal website">
+
+  <meta name="author" content="aspartate">
+
+  
+
+  <meta property="og:title" content="Week 7 - Input/Output | Andrew Zhang">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://aspartate.github.io/personal_website/">
+
+  <meta property="og:image" content="https://aspartate.github.io/personal_website/images/osprey-delight.png">
+
+  <meta property="og:description" content="my personal website">
+
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <meta name="theme-color" content="#0097a7">
+
+  <link rel="canonical" href="https://aspartate.github.io/personal_website/blog/week-7-input-output/">
+  
+  
+
+  <link rel="stylesheet" href="https://aspartate.github.io/personal_website/style.9ff615c48229657d182d4c0c716ebf5f26645eff21662abca5e094e2b245bfeb.css" type="text/css">
+
+  <script type="application/ld+json">
+  {"@context":"http://www.schema.org","@type":"Person","@id":"https://aspartate.github.io/personal_website/","name":"aspartate","url":"https://aspartate.github.io/personal_website/","description":"my personal website","sameAs":["","https://github.com/aspartate/personal_website","","",""]}
+  </script>
+
+  <style>.lazyload{opacity:.0001;}.logo .lazyload{min-width:10em;}</style>
+    <script src="https://aspartate.github.io/personal_website/js/vendor/lazysizes.min.js" async></script>
+</head>
+
+  <body>
+    
+
+
+
+
+
+<nav class="row middle-xs center-xs">
+  <div class="col-xs-6 col-sm-1 logo">
+    <a href="/personal_website/#"><img data-src="favicon.png" class="lazyload" lazyload="on" alt="Andrew Zhang"></a>
+  </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#about">About</a></h3>
+      </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#work">Work</a></h3>
+      </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#blog">Blog</a></h3>
+      </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#contact">Contact</a></h3>
+      </div>
+    
+  <div class="col-xs-6 col-sm-1 nav-toggle">
+      <a href="" class="nav-icon" onclick="return false">
+        <i id="open" class="icon icon-2x icon-menu"></i>
+      </a>
+  </div>
+</nav>
+
+<section class="nav-full row middle-xs center-xs">
+  <div class="col-xs-12">
+    <div class="row middle-xs center-xs">
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#about">About</a></h1></div>
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#work">Work</a></h1></div>
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#blog">Blog</a></h1></div>
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#contact">Contact</a></h1></div>
+      
+    </div>
+  </div>
+</section>
+
+    <main>
+
+      <section class="container">
+        <section class="content">
+          <h1> Week 7 - Input/Output </h1>
+
+            <div class="sub-header">
+              March 11, 2021 · 4 minutes read
+            </div>
+
+          <article class="entry-content">
+            <p>The assignment this week was to create an input-output system, preferably using millis() for timing. Since we recently learned to use the Adafruit TFT display in lab, I decided to build upon my work for the final project to have the TFT display the motor angle. This turned out to be not as simple as simply mashing together the TFT code from <strong><a href="https://learn.adafruit.com/adafruit-1-14-240x135-color-tft-breakout/arduino-wiring-test">here</a></strong> with the servo code from <strong><a href="https://www.arduino.cc/en/tutorial/knob">here</a></strong>.</p>
+<p>I wanted the display to update at a certain framerate (10 Hz) so the numbers are actually visible on screen for an appreciable amount of time. This required the use of the millis() function so that the display updates at a rate independently of the servo position/potentiometer sampling rate. Other minor changes included setting the screen to landscape mode (<code>tft.setRotation(1)</code>), defining the appropriate character and string variables to display motor angle, and customizing the text style. Below is what I tried:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1">#include &lt;Servo.h&gt;</span>
+<span class="c1">#include &lt;Adafruit_GFX.h&gt;    // Core graphics library</span>
+<span class="c1">#include &lt;Adafruit_ST7735.h&gt; // Hardware-specific library for ST7735</span>
+<span class="c1">#include &lt;Adafruit_ST7789.h&gt; // Hardware-specific library for ST7789</span>
+<span class="c1">#include &lt;SPI.h&gt;</span>
+
+<span class="c1">#define TFT_CS        10</span>
+<span class="c1">#define TFT_RST        -1 // Or set to -1 and connect to Arduino RESET pin</span>
+<span class="c1">#define TFT_DC         8</span>
+<span class="n">Adafruit_ST7789</span> <span class="n">tft</span> <span class="o">=</span> <span class="n">Adafruit_ST7789</span><span class="p">(</span><span class="n">TFT_CS</span><span class="p">,</span> <span class="n">TFT_DC</span><span class="p">,</span> <span class="n">TFT_RST</span><span class="p">);</span>
+
+<span class="n">Servo</span> <span class="n">myservo</span><span class="p">;</span>  <span class="o">//</span> <span class="n">create</span> <span class="n">servo</span> <span class="nb">object</span> <span class="n">to</span> <span class="n">control</span> <span class="n">a</span> <span class="n">servo</span>
+
+<span class="nb">int</span> <span class="n">potpin</span> <span class="o">=</span> <span class="n">A0</span><span class="p">;</span>  <span class="o">//</span> <span class="n">analog</span> <span class="n">pin</span> <span class="n">used</span> <span class="n">to</span> <span class="n">connect</span> <span class="n">the</span> <span class="n">potentiometer</span>
+<span class="nb">int</span> <span class="n">val</span><span class="p">;</span>    <span class="o">//</span> <span class="n">variable</span> <span class="n">to</span> <span class="n">read</span> <span class="n">the</span> <span class="n">value</span> <span class="kn">from</span> <span class="nn">the</span> <span class="nn">analog</span> <span class="nn">pin</span>
+
+<span class="nb">int</span> <span class="n">update_interval</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="n">unsigned</span> <span class="nb">long</span> <span class="n">current_millis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">unsigned</span> <span class="nb">long</span> <span class="n">previous_millis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">char</span> <span class="n">pos_print</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>  <span class="o">//</span> <span class="n">Initialize</span> <span class="n">character</span> <span class="n">array</span> <span class="k">for</span> <span class="n">printing</span> <span class="n">on</span> <span class="n">TFT</span>
+
+<span class="n">void</span> <span class="n">setup</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">myservo</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="mi">9</span><span class="p">);</span>  <span class="o">//</span> <span class="n">attaches</span> <span class="n">the</span> <span class="n">servo</span> <span class="n">on</span> <span class="n">pin</span> <span class="mi">9</span> <span class="n">to</span> <span class="n">the</span> <span class="n">servo</span> <span class="nb">object</span>
+  <span class="n">Serial</span><span class="o">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">9600</span><span class="p">);</span>
+  <span class="n">tft</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="mi">135</span><span class="p">,</span> <span class="mi">240</span><span class="p">);</span>
+  <span class="n">tft</span><span class="o">.</span><span class="n">fillScreen</span><span class="p">(</span><span class="n">ST77XX_BLACK</span><span class="p">);</span>
+  <span class="n">tft</span><span class="o">.</span><span class="n">setRotation</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">void</span> <span class="n">loop</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">current_millis</span> <span class="o">=</span> <span class="n">millis</span><span class="p">();</span>
+  <span class="n">val</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">analogRead</span><span class="p">(</span><span class="n">potpin</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1023</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">180</span><span class="p">);</span>     <span class="o">//</span> <span class="n">scale</span> <span class="n">it</span> <span class="n">to</span> <span class="n">use</span> <span class="n">it</span> <span class="k">with</span> <span class="n">the</span> <span class="n">servo</span> <span class="p">(</span><span class="n">value</span> <span class="n">between</span> <span class="mi">0</span> <span class="ow">and</span> <span class="mi">180</span><span class="p">)</span>
+  <span class="n">myservo</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">val</span><span class="p">);</span>                  <span class="o">//</span> <span class="n">sets</span> <span class="n">the</span> <span class="n">servo</span> <span class="n">position</span> <span class="n">according</span> <span class="n">to</span> <span class="n">the</span> <span class="n">scaled</span> <span class="n">value</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">current_millis</span> <span class="o">-</span> <span class="n">previous_millis</span> <span class="o">&gt;=</span> <span class="n">update_interval</span><span class="p">){</span>
+    <span class="n">tft</span><span class="o">.</span><span class="n">fillScreen</span><span class="p">(</span><span class="n">ST77XX_BLACK</span><span class="p">);</span>
+    <span class="n">String</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">String</span><span class="p">(</span><span class="n">val</span><span class="p">);</span>
+    <span class="n">pos</span><span class="o">.</span><span class="n">toCharArray</span><span class="p">(</span><span class="n">pos_print</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
+    <span class="n">TFTwrite</span><span class="p">(</span><span class="n">pos_print</span><span class="p">,</span> <span class="n">ST77XX_WHITE</span><span class="p">);</span>
+    <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">pos_print</span><span class="p">);</span>
+    <span class="n">previous_millis</span> <span class="o">=</span> <span class="n">current_millis</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">void</span> <span class="n">TFTwrite</span><span class="p">(</span><span class="n">char</span> <span class="o">*</span><span class="n">text</span><span class="p">,</span> <span class="n">uint16_t</span> <span class="n">color</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">tft</span><span class="o">.</span><span class="n">setCursor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="n">tft</span><span class="o">.</span><span class="n">setTextColor</span><span class="p">(</span><span class="n">color</span><span class="p">);</span>
+  <span class="n">tft</span><span class="o">.</span><span class="n">setTextSize</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+  <span class="n">tft</span><span class="o">.</span><span class="n">setTextWrap</span><span class="p">(</span><span class="n">true</span><span class="p">);</span>
+  <span class="n">tft</span><span class="o">.</span><span class="k">print</span><span class="p">(</span><span class="n">text</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div><p><img src="images/week7-io/jerky.gif" alt="Jerky movement."></p>
+<p>Notice the jerky movement on the servo and the less-than ideal refresh behavior of the TFT. After some diagnosing, I found that both problems had a common cause: the slowness of <code>tft.fillScreen(ST77XX_BLACK)</code> meant that every time the screen refreshed, it would visibly turn black and keep the servo from responding to potentiometer movements. Some Googling gave me a solution: replace <code>tft.fillScreen(ST77XX_BLACK)</code> with the more efficient <code>TFTwrite(pos_print, ST77XX_BLACK)</code>, which prints the stored pos_print value in black pixels and thus effectively erases the previous screen output without having to change every pixel. This resulted in the following:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1">#include &lt;Servo.h&gt;</span>
+<span class="c1">#include &lt;Adafruit_GFX.h&gt;    // Core graphics library</span>
+<span class="c1">#include &lt;Adafruit_ST7735.h&gt; // Hardware-specific library for ST7735</span>
+<span class="c1">#include &lt;Adafruit_ST7789.h&gt; // Hardware-specific library for ST7789</span>
+<span class="c1">#include &lt;SPI.h&gt;</span>
+
+<span class="c1">#define TFT_CS        10</span>
+<span class="c1">#define TFT_RST        -1 // Or set to -1 and connect to Arduino RESET pin</span>
+<span class="c1">#define TFT_DC         8</span>
+<span class="n">Adafruit_ST7789</span> <span class="n">tft</span> <span class="o">=</span> <span class="n">Adafruit_ST7789</span><span class="p">(</span><span class="n">TFT_CS</span><span class="p">,</span> <span class="n">TFT_DC</span><span class="p">,</span> <span class="n">TFT_RST</span><span class="p">);</span>
+
+<span class="n">Servo</span> <span class="n">myservo</span><span class="p">;</span>  <span class="o">//</span> <span class="n">create</span> <span class="n">servo</span> <span class="nb">object</span> <span class="n">to</span> <span class="n">control</span> <span class="n">a</span> <span class="n">servo</span>
+
+<span class="nb">int</span> <span class="n">potpin</span> <span class="o">=</span> <span class="n">A0</span><span class="p">;</span>  <span class="o">//</span> <span class="n">analog</span> <span class="n">pin</span> <span class="n">used</span> <span class="n">to</span> <span class="n">connect</span> <span class="n">the</span> <span class="n">potentiometer</span>
+<span class="nb">int</span> <span class="n">val</span><span class="p">;</span>    <span class="o">//</span> <span class="n">variable</span> <span class="n">to</span> <span class="n">read</span> <span class="n">the</span> <span class="n">value</span> <span class="kn">from</span> <span class="nn">the</span> <span class="nn">analog</span> <span class="nn">pin</span>
+
+<span class="nb">int</span> <span class="n">update_interval</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="n">unsigned</span> <span class="nb">long</span> <span class="n">current_millis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">unsigned</span> <span class="nb">long</span> <span class="n">previous_millis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">char</span> <span class="n">pos_print</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>  <span class="o">//</span> <span class="n">Initialize</span> <span class="n">character</span> <span class="n">array</span> <span class="k">for</span> <span class="n">printing</span> <span class="n">on</span> <span class="n">TFT</span>
+
+<span class="n">void</span> <span class="n">setup</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">myservo</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="mi">9</span><span class="p">);</span>  <span class="o">//</span> <span class="n">attaches</span> <span class="n">the</span> <span class="n">servo</span> <span class="n">on</span> <span class="n">pin</span> <span class="mi">9</span> <span class="n">to</span> <span class="n">the</span> <span class="n">servo</span> <span class="nb">object</span>
+  <span class="n">Serial</span><span class="o">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">9600</span><span class="p">);</span>
+  <span class="n">tft</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="mi">135</span><span class="p">,</span> <span class="mi">240</span><span class="p">);</span>
+  <span class="n">tft</span><span class="o">.</span><span class="n">fillScreen</span><span class="p">(</span><span class="n">ST77XX_BLACK</span><span class="p">);</span>
+  <span class="n">tft</span><span class="o">.</span><span class="n">setRotation</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">void</span> <span class="n">loop</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">current_millis</span> <span class="o">=</span> <span class="n">millis</span><span class="p">();</span>
+  <span class="n">val</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">analogRead</span><span class="p">(</span><span class="n">potpin</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1023</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">180</span><span class="p">);</span>     <span class="o">//</span> <span class="n">scale</span> <span class="n">it</span> <span class="n">to</span> <span class="n">use</span> <span class="n">it</span> <span class="k">with</span> <span class="n">the</span> <span class="n">servo</span> <span class="p">(</span><span class="n">value</span> <span class="n">between</span> <span class="mi">0</span> <span class="ow">and</span> <span class="mi">180</span><span class="p">)</span>
+  <span class="n">myservo</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">val</span><span class="p">);</span>                  <span class="o">//</span> <span class="n">sets</span> <span class="n">the</span> <span class="n">servo</span> <span class="n">position</span> <span class="n">according</span> <span class="n">to</span> <span class="n">the</span> <span class="n">scaled</span> <span class="n">value</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">current_millis</span> <span class="o">-</span> <span class="n">previous_millis</span> <span class="o">&gt;=</span> <span class="n">update_interval</span><span class="p">){</span>
+    <span class="n">TFTwrite</span><span class="p">(</span><span class="n">pos_print</span><span class="p">,</span> <span class="n">ST77XX_BLACK</span><span class="p">);</span>
+    <span class="n">String</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">String</span><span class="p">(</span><span class="n">val</span><span class="p">);</span>
+    <span class="n">pos</span><span class="o">.</span><span class="n">toCharArray</span><span class="p">(</span><span class="n">pos_print</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
+    <span class="n">TFTwrite</span><span class="p">(</span><span class="n">pos_print</span><span class="p">,</span> <span class="n">ST77XX_WHITE</span><span class="p">);</span>
+    <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">pos_print</span><span class="p">);</span>
+    <span class="n">previous_millis</span> <span class="o">=</span> <span class="n">current_millis</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">void</span> <span class="n">TFTwrite</span><span class="p">(</span><span class="n">char</span> <span class="o">*</span><span class="n">text</span><span class="p">,</span> <span class="n">uint16_t</span> <span class="n">color</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">tft</span><span class="o">.</span><span class="n">setCursor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="n">tft</span><span class="o">.</span><span class="n">setTextColor</span><span class="p">(</span><span class="n">color</span><span class="p">);</span>
+  <span class="n">tft</span><span class="o">.</span><span class="n">setTextSize</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+  <span class="n">tft</span><span class="o">.</span><span class="n">setTextWrap</span><span class="p">(</span><span class="n">true</span><span class="p">);</span>
+  <span class="n">tft</span><span class="o">.</span><span class="k">print</span><span class="p">(</span><span class="n">text</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div><p><img src="images/week7-io/smooth.gif" alt="Smooth movement."></p>
+<p>As you can see, this works much better: the servo rotation is smooth and responsive, and the screen is perfectly readable. Prior result shown again for comparison:</p>
+<p><img src="images/week7-io/jerky.gif" alt="Jerky movement."></p>
+
+          </article>
+
+          <div class="pagination">
+            
+              <a href="https://aspartate.github.io/personal_website/blog/telescope/">&laquo; Astro-Imaging Telescope</a>
+            
+            
+          </div>
+        </section>
+        <br>
+        <section class="disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname == "localhost")
+        return;
+      var disqus_shortname = '';
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view comments powered by <a href="http://disqus.com/?ref_noscript">Disqus</a>.</noscript>
+</section>
+
+      </section>
+
+    </main>
+    <footer class="row middle-xs center-xs">
+  <div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-facebook"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href="https://github.com/aspartate/personal_website"><i class="icon icon-github"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-linkedin"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-stackoverflow"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-twitter"></i></a>
+    </div>
+  <div class="col-xs-12">
+      <small>
+      
+      Copyright &copy; 2021 Andrew Zhang
+      
+      
+      </small>
+    </div>
+</footer>
+
+    
+
+
+
+
+
+
+  <script src="https://aspartate.github.io/personal_website/js/bundle.min.fbd35181a0fd0238360575e6a25942746d4e73c615f852efe3b975ea70829339.js" type="text/javascript"></script>
+  <script>handleNavBar( false )</script>
+
+  </body>
+</html>
