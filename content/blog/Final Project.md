@@ -43,3 +43,76 @@ First, to get an idea of how the change in resistance is affected by the speed a
 
 ![Code 2 SM.](images/avatarm/code-2-SM.png)
 ![Code 2.](images/avatarm/code-2.png)
+
+I realized the sign of `delta_pot` indicates the direction of motion, so there was no need for an if statement in the code. In fact, the structure could be greatly simplified to the following:
+
+```python
+#include <Stepper.h> // Include the header file
+
+// change this to the number of steps on your motor
+#define STEPS 32
+
+// create an instance of the stepper class using the steps and pins
+Stepper stepper(STEPS, 8, 10, 9, 11);
+
+float pot_old = 0;
+float pot_new = 0;
+int stepsize = 1;
+float delta_pot = 0;
+
+void setup() {
+  Serial.begin(9600);
+  stepper.setSpeed(500);
+}
+
+void loop() {
+
+pot_new = analogRead(A0);
+delta_pot = pot_new - pot_old;
+
+stepper.step(int(stepsize*delta_pot));
+pot_old = pot_new;
+
+Serial.println(delta_pot); //for debugging
+}
+```
+
+![Try 2.](images/avatarm/try-2.gif)
+
+Indeed, this simple script worked much better than what I had before. In hindsight this should have been rather obvious from the start haha. However, now I came across the second challenge: the noise in the potentiometer reading was causing the motor to vibrate in place. Though I tried filtering `delta_pot` to values above a certain magnitude, I ultimately could not eliminate the vibrations. It was around this time that I also started considering the GPIO capacity of the Metro M0 Express: with only 14 digital pins, I could control a maximum of 3 steppers since the drivers I was using required 4 pins each. This was problematic as I hoped to achieve at least 4 degrees of freedom in my Avatarm. Moreover, I found that the steppers tend to get worryingly hot after a while, whether moving or not.
+
+At this point servos seemed like a more and more attractive option. They only needed one control pin each, and some preliminary testing verified that the "vibrating-in-place" symptom plaguing my steppers was nearly absent in my SG90 servos. My preconceptions about the torque of servos compared to steppers were shattered when I found that servos can have even larger torque than steppers, especially larger metal-geared servos such as the MG996r. This is probably why the vast majority of hobby robot arms use servos...sigh. Well, at least I learned something, and I'll find another use for my 28-BYJ48 steppers soon enough.
+
+It was fairly trivial to implement the same functionality as above using servos, especially with **[abundant online tutorials](https://www.arduino.cc/en/tutorial/knob)**:
+
+```python
+#include <Servo.h>
+
+Servo myservo;  // create servo object to control a servo
+
+int potpin = A0;  // analog pin used to connect the potentiometer
+int val;    // variable to read the value from the analog pin
+
+void setup() {
+  myservo.attach(9);  // attaches the servo on pin 9 to the servo object
+}
+
+void loop() {
+  val = analogRead(potpin);            // reads the value of the potentiometer (value between 0 and 1023)
+  val = map(val, 0, 1023, 0, 180);     // scale it to use it with the servo (value between 0 and 180)
+  myservo.write(val);                  // sets the servo position according to the scaled value
+  delay(15);                           // waits for the servo to get there
+```
+
+![Try 3.](images/avatarm/try-3.gif)
+
+
+
+The next step is to achieve this wirelessly, over a WiFi server if possible or at least 2.4 GHz radio. I found **[here](https://www.homemade-circuits.com/wireless-servo-motor-control-using/)** a nice tutorial on how to achieve the latter with Arduino Unos and some NRF24L01 modules, but I didn't have either component handy and I really wanted the ability to be able to control the Avatarm from anywhere in the world with WiFi. Since I had 2 WiFi-enabled ESP32 boards, the Huzzah and the ESP32-CAM, I figured they would be able to make this happen. (It is worth noting that ESP-NOW, a non-WiFi communications protocol for ESP32s, already has an impressive range of 480 meters, so in case the WiFi server did not work out this would be my backup plan.)
+
+Various helpful links:
+* https://www.youtube.com/watch?v=uEd2B7fS8Eg
+* https://www.youtube.com/watch?v=zxBC1ivOVfM
+* https://www.youtube.com/watch?v=GC0gRdBpylw
+* https://www.instructables.com/Wireless-Servo-Control/
+* https://dronebotworkshop.com/esp32-servo/

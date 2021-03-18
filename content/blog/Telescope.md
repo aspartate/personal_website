@@ -45,11 +45,16 @@ It's a tad rusty but that's all right. I needed to cut the can in half: one half
 
 ![Cut can.](images/telescope/can_cut.jpg)
 
-I think the part with the handle would do well as the base of the telescope, since that's where the center of mass (CoM) is at and it would be convenient to pick up.
-
-I also took apart the tripod and got 6 nice aluminum supports about 3 feet long. These can be arranged to form a truss structure.
+I also took apart the tripod and got 6 nice aluminum supports about 3 feet long. These would be arranged to form a truss structure.
 
 ![Aluminum tubes.](images/telescope/trusses.jpg)
+
+At this point, I measured the maximum length of the truss tube I could build with the two paint can halves and the aluminum supports, and found that it was only 30". The distance required between the secondary and primary mirror had to be in the ballpark of 32", since the primary has a focal length of 36" and the focal plane can't be too far away from the secondary. Oopsie.
+
+After a bit of soul-searching, I decided to instead build the frame of the telescope with a single pole. I found a broomstick in the garage which looked strong enough, and was the right length. Basically, there would be nothing between the primary and secondary except for the broomstick. Paint-can scope was now broomstick scope! I had high hopes.
+
+Why was I so confident in the integrity of a single broomstick? Physics dictates that
+
 
 
 To be continued!
