@@ -6,7 +6,17 @@
     <description>Recent content in Blogs on Andrew Zhang</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Thu, 11 Mar 2021 16:50:16 -0500</lastBuildDate><atom:link href="https://aspartate.github.io/personal_website/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 18 Mar 2021 16:53:56 -0500</lastBuildDate><atom:link href="https://aspartate.github.io/personal_website/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>OTA with Huzzah32</title>
+      <link>https://aspartate.github.io/personal_website/blog/huzzah32-ota-upload/</link>
+      <pubDate>Thu, 18 Mar 2021 16:53:56 -0500</pubDate>
+      
+      <guid>https://aspartate.github.io/personal_website/blog/huzzah32-ota-upload/</guid>
+      <description>Annoyed with having to connect cables to your computer every time you want to push a code update to your Huzzah32? Well, there&amp;rsquo;s this wonderful thing called Arduino OTA (over-the-air) which allows you to upload wirelessly from your home network. This would come in especially handy if, for example, your board is sealed inside some contraption you just 3D-printed.
+One of the disadvantages of OTA is that you have to include the code for OTA as part of every sketch you upload.</description>
+    </item>
+    
     <item>
       <title>Week 7 - Input/Output</title>
       <link>https://aspartate.github.io/personal_website/blog/week-7-input-output/</link>
