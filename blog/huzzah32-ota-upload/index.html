@@ -322,7 +322,7 @@
 <span class="p">}</span>
 </code></pre></div><p>After saving, go to &ldquo;Sketch&rdquo; &gt; &ldquo;Export compiled Binary&rdquo;. Then go to &ldquo;Sketch&rdquo; &gt; &ldquo;Show Sketch Folder&rdquo; to see if the binary file (.BIN) is there. Upload the binary file into the upload page in your browser, and click &ldquo;Update&rdquo;.</p>
 <p><img src="images/huzzah32-ota/uploading.png" alt="Uploading."></p>
-<p>When the progress bar reaches 100%, your code has been successfully uploaded. If your Huzzah32 isn&rsquo;t doing anything, double-check that your pin definitions are correct. The helpful diagram below is courtesy of the <strong><a href="https://makeabilitylab.github.io/physcomp/esp32/pot-fade.html#the-code">Makeability Lab</a></strong>:</p>
+<p>When the progress bar reaches 100%, your code has been successfully uploaded. If your Huzzah32 isn&rsquo;t doing anything, double-check that your pin definitions are correct. Refer to the helpful diagram below, courtesy of the <strong><a href="https://makeabilitylab.github.io/physcomp/esp32/pot-fade.html#the-code">Makeability Lab</a></strong>:</p>
 <p><img src="images/huzzah32-ota/huzzah32-pins.png" alt="Huzzah32 Pin Definitions."></p>
 <p>For all code updates in the future, just make a copy of the entire Arduino sketch folder (make sure to include the OTA.h file, though you can delete the binary file) and change the custom code part in the main tab. One caveat to be mindful of: <strong>always</strong> use <code>millis()</code> instead of <code>delay()</code>, because the latter will interfere with the WiFi.</p>
 <p>Enjoy your new wireless Huzzah32! From now on, as long as it is powered on and within range of the stored network, you can upload code through the browser portal.</p>
