@@ -6,7 +6,7 @@ draft: false
 
 Annoyed with having to connect cables to your computer every time you want to push a code update to your Huzzah32? Well, there's this wonderful thing called Arduino OTA (over-the-air) which allows you to upload wirelessly from your home network. This would come in especially handy if, for example, your board is sealed inside some contraption you just 3D-printed.
 
-One of the disadvantages of OTA is that you have to include the code for OTA as part of every sketch you upload. This allows OTA functionality to be used for the next sketch. However, this means that anything you want to upload, even a simple blink sketch, is cluttered up by over 100 lines of rather messy functions and CSS styling. I combined **[this tutorial](https://lastminuteengineers.com/esp32-ota-web-updater-arduino-ide/)** and **[this video](https://www.youtube.com/watch?v=1pwqS_NUG7Q)** to make a (hopefully) comprehensive and simplified workflow for OTA on the Huzzah32 board.
+One of the disadvantages of OTA is that you have to include the code for OTA as part of every sketch you upload. This allows OTA functionality to be used for the next sketch. However, this typically means that anything you want to upload, even a simple blink sketch, is cluttered up by over 100 lines of rather messy functions and CSS styling. I combined **[this tutorial](https://lastminuteengineers.com/esp32-ota-web-updater-arduino-ide/)** and **[this video](https://www.youtube.com/watch?v=1pwqS_NUG7Q)** to make an improved and simplified workflow for OTA on the Huzzah32 board.
 
 
 ### 1. First Upload.
