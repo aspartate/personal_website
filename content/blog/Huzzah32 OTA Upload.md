@@ -238,7 +238,7 @@ After saving, go to "Sketch" > "Export compiled Binary". Then go to "Sketch" > "
 
 ![Uploading.](images/huzzah32-ota/uploading.png)
 
-When the progress bar reaches 100%, your code has been successfully uploaded. If your Huzzah32 isn't doing anything, double-check that your pin definitions are correct. The helpful diagram below is courtesy of the **[Makeability Lab](https://makeabilitylab.github.io/physcomp/esp32/pot-fade.html#the-code)**:
+When the progress bar reaches 100%, your code has been successfully uploaded. If your Huzzah32 isn't doing anything, double-check that your pin definitions are correct. Refer to the helpful diagram below, courtesy of the **[Makeability Lab](https://makeabilitylab.github.io/physcomp/esp32/pot-fade.html#the-code)**:
 
 ![Huzzah32 Pin Definitions.](images/huzzah32-ota/huzzah32-pins.png)
 
