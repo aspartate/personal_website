@@ -6,7 +6,16 @@
     <description>Recent content on Andrew Zhang</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Tue, 23 Mar 2021 12:59:58 -0400</lastBuildDate><atom:link href="https://aspartate.github.io/personal_website/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 25 Mar 2021 16:11:36 -0400</lastBuildDate><atom:link href="https://aspartate.github.io/personal_website/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Firebase</title>
+      <link>https://aspartate.github.io/personal_website/blog/firebase/</link>
+      <pubDate>Thu, 25 Mar 2021 16:11:36 -0400</pubDate>
+      
+      <guid>https://aspartate.github.io/personal_website/blog/firebase/</guid>
+      <description>PHYSCI 70: Introduction to Digital Fabrication   Turn On  Turn Off      // Your web app&#39;s Firebase configuration // For Firebase JS SDK v7.20.0 and later, measurementId is optional var firebaseConfig = { apiKey: &#34;AIzaSyCfqsFi41WknoyTyvnW0BGOX3-uHSuAALU&#34;, authDomain: &#34;esp32-led-51dcb.firebaseapp.com&#34;, databaseURL: &#34;https://esp32-led-51dcb-default-rtdb.firebaseio.com&#34;, projectId: &#34;esp32-led-51dcb&#34;, storageBucket: &#34;esp32-led-51dcb.appspot.com&#34;, messagingSenderId: &#34;614832026734&#34;, appId: &#34;1:614832026734:web:9d786c0df8bd51acaca27f&#34;, measurementId: &#34;G-X213GJ9XJ6&#34; }; // Initialize Firebase firebase.initializeApp(firebaseConfig); firebase.analytics(); // Get a database reference to our blog var ref = firebase.</description>
+    </item>
+    
     <item>
       <title>ESP-NOW Servo Control</title>
       <link>https://aspartate.github.io/personal_website/blog/espnow/</link>
