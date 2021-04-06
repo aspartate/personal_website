@@ -127,3 +127,5 @@ void motorRun() {
 ![Finished closed-loop stepper.](images/week10-stepper/finished-2.gif)
 
 ![Finished closed-loop stepper wiring.](images/week10-stepper/wiring.jpg)
+
+As you can see, the proof-of-concept works fairly well. I plan to develop this further, by integrating the potentiometer with the body of the motor via a 3D-printed gearbox. The total cost of such a closed-loop stepper system will be less than $2.
