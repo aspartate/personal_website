@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+  
+
+  
+
+  <title>
+    
+    Week 9 - The Cloud | Andrew Zhang
+  </title>
+
+  <meta name="title" content="Week 9 - The Cloud | Andrew Zhang">
+
+  <meta charset="utf-8">
+  
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer-when-downgrade">
+  <base href="https://aspartate.github.io/personal_website/">
+
+  <meta name="description" content="my personal website">
+
+  <meta name="author" content="aspartate">
+
+  
+
+  <meta property="og:title" content="Week 9 - The Cloud | Andrew Zhang">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://aspartate.github.io/personal_website/">
+
+  <meta property="og:image" content="https://aspartate.github.io/personal_website/images/osprey-delight.png">
+
+  <meta property="og:description" content="my personal website">
+
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <meta name="theme-color" content="#0097a7">
+
+  <link rel="canonical" href="https://aspartate.github.io/personal_website/blog/week-9-cloud/">
+  
+  
+
+  <link rel="stylesheet" href="https://aspartate.github.io/personal_website/style.9ff615c48229657d182d4c0c716ebf5f26645eff21662abca5e094e2b245bfeb.css" type="text/css">
+
+  <script type="application/ld+json">
+  {"@context":"http://www.schema.org","@type":"Person","@id":"https://aspartate.github.io/personal_website/","name":"aspartate","url":"https://aspartate.github.io/personal_website/","description":"my personal website","sameAs":["","https://github.com/aspartate/personal_website","","",""]}
+  </script>
+
+  <style>.lazyload{opacity:.0001;}.logo .lazyload{min-width:10em;}</style>
+    <script src="https://aspartate.github.io/personal_website/js/vendor/lazysizes.min.js" async></script>
+</head>
+
+  <body>
+    
+
+
+
+
+
+<nav class="row middle-xs center-xs">
+  <div class="col-xs-6 col-sm-1 logo">
+    <a href="/personal_website/#"><img data-src="favicon.png" class="lazyload" lazyload="on" alt="Andrew Zhang"></a>
+  </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#about">About</a></h3>
+      </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#work">Work</a></h3>
+      </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#blog">Blog</a></h3>
+      </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#contact">Contact</a></h3>
+      </div>
+    
+  <div class="col-xs-6 col-sm-1 nav-toggle">
+      <a href="" class="nav-icon" onclick="return false">
+        <i id="open" class="icon icon-2x icon-menu"></i>
+      </a>
+  </div>
+</nav>
+
+<section class="nav-full row middle-xs center-xs">
+  <div class="col-xs-12">
+    <div class="row middle-xs center-xs">
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#about">About</a></h1></div>
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#work">Work</a></h1></div>
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#blog">Blog</a></h1></div>
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#contact">Contact</a></h1></div>
+      
+    </div>
+  </div>
+</section>
+
+    <main>
+
+      <section class="container">
+        <section class="content">
+          <h1> Week 9 - The Cloud </h1>
+
+            <div class="sub-header">
+              March 25, 2021 · 9 minutes read
+            </div>
+
+          <article class="entry-content">
+            <p>The assignment this week was to control a microcontroller over Bluetooth or Wifi. This was a perfect opportunity to make progress on my final project (the Avatarm) since my goal was to achieve remote control of the robot arm from anywhere in the world with WiFi. In lab, we learned how to control an LED on a Huzzah from a web portal via a Firebase real-time database.</p>
+<p><img src="images/week9-cloud/LED-demo.gif" alt="Firebase LED demo."></p>
+<p>I really liked how intuitive and reliable Firebase was, so I decided to build on it and see if I could 1) control a servo instead of an LED and 2) send commands from another microcontroller instead of a web portal. At the time, however, I only had two WiFi-enabled microcontrollers: the Huzzah32 and ESP32-CAM from the kit. As evidenced by my previous posts, the ESP32-CAM gave me more than its fair share of trouble. Besides the need to use an FTDI programmer and manually flash the code every time, the WiFi library on the ESP32-CAM does not play nice with <code>analogRead</code> or <code>digitalWrite</code>, which is rather inconvenient for my purposes.</p>
+<p>I foresaw many more hours of painful debugging in the future if I were to keep using the CAM, so I instead purchased several ESP8266 NodeMCUs (v1.0). These were less than $4 each, a small price to pay for not having to deal with the ESP32-CAM any more. The NodeMCUs have a microUSB interface with automatic code flashing and many pins to work with, replicating most of the functionality of the Huzzah32 but at a much cheaper price. The only downside that I knew of was the presence of only one analog-to-digital converter (ADC) pin on the NodeMCU (see below pinout courtesy of <strong><a href="https://randomnerdtutorials.com/esp8266-pinout-reference-gpios/">RandomNerd</a></strong>), which means that reading from multiple sensors is a bit more complicated. However, I came across a tutorial to multiplex this single pin so that reading from two (or more) potentiometers is possible. I&rsquo;ll get into the strategy later; it&rsquo;s really cool.</p>
+<p><img src="images/week9-cloud/nodemcu-pinout.png" alt="NodeMCU pinout."></p>
+<p>Now that I had a couple of NodeMCUs, I thought I might as well use it for both the sender and the receiver. So I lightly tweaked the LED code to make sure that the NodeMCU could talk to Firebase. One issue I ran into was if I moved the NodeMCU to a different part of the house, it would disconnect from the WiFi network. This is because my room gets WiFi from an extender with its own network SSID. I tried using the WifiMulti example sketch to enable the NodeMCU to memorize different networks, but it didn&rsquo;t work. However, I came across this fantastic workaround posted by user J-M-L on the <strong><a href="https://forum.arduino.cc/index.php?topic=455414.0">Arduino forums</a></strong>, based on the WifiScan example sketch. It basically stores a list of known SSIDs and passwords and compares it against the results of a scan for available networks, then connects to a matched network. This means that every time I turn on the NodeMCU (or press RESET), it would connect to an available network, as long as that network was previously stored on the device.</p>
+<p>Because the code was a bit bulky to include in the body of the Arduino script, I packaged it into a header file that can be included as a separate tab and called with the function <code>wifiConnect()</code>. In addition, I wanted a visual indication of when the NodeMCU was scanning for networks as well as when it was connected. From <strong><a href="https://lowvoltage.github.io/2017/07/09/Onboard-LEDs-NodeMCU-Got-Two">this blog post</a></strong>, I found that the NodeMCU has 2 onboard LEDs (which made me like this board even more), attached to pins 2 and 6. Moreover, they are powered by inverse logic, meaning that the LED is lit when the corresponding pin is OFF and vice versa. Therefore, I made one of the LEDs light up when initializing and searching and attached a second yellow LED which turns on when the network is connected. The below header file needs to be placed into the same folder as the main script, and included with <code>#include &quot;wifiConnect.h&quot;</code>. The function can be called with <code>wifiConnect()</code> in the <code>setup()</code> portion of the code.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="o">//</span> <span class="n">This</span> <span class="n">code</span> <span class="ow">is</span> <span class="n">adapted</span> <span class="kn">from</span> <span class="nn">user</span> <span class="nn">J</span><span class="o">-</span><span class="n">M</span><span class="o">-</span><span class="n">L</span> <span class="n">at</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">forum</span><span class="o">.</span><span class="n">arduino</span><span class="o">.</span><span class="n">cc</span><span class="o">/</span><span class="n">index</span><span class="o">.</span><span class="n">php</span><span class="err">?</span><span class="n">topic</span><span class="o">=</span><span class="mf">455414.0</span>
+
+<span class="c1">#include &#34;ESP8266WiFi.h&#34;</span>
+
+<span class="nb">int</span> <span class="n">pin_builtinLEDchip</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="nb">int</span> <span class="n">pin_builtinLEDusb</span> <span class="o">=</span> <span class="mi">16</span><span class="p">;</span>
+
+<span class="o">//</span> <span class="n">DEFINE</span> <span class="n">HERE</span> <span class="n">THE</span> <span class="n">KNOWN</span> <span class="n">NETWORKS</span>
+<span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="n">KNOWN_SSID</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+                            <span class="s2">&#34;XXXXXXXXX&#34;</span><span class="p">,</span>
+                            <span class="s2">&#34;XXXXXXXXX&#34;</span><span class="p">,</span> 
+                            <span class="s2">&#34;XXXXXXXXX&#34;</span>
+                            <span class="p">};</span>
+<span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="n">KNOWN_PASSWORD</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+                                <span class="s2">&#34;XXXXXXXXX&#34;</span><span class="p">,</span> 
+                                <span class="s2">&#34;XXXXXXXXX&#34;</span><span class="p">,</span> 
+                                <span class="s2">&#34;XXXXXXXXX&#34;</span>
+                                <span class="p">};</span>
+
+<span class="o">//</span> <span class="n">DON</span><span class="s1">&#39;T TOUCH THE BELOW CODE</span>
+<span class="n">const</span> <span class="nb">int</span>   <span class="n">KNOWN_SSID_COUNT</span> <span class="o">=</span> <span class="n">sizeof</span><span class="p">(</span><span class="n">KNOWN_SSID</span><span class="p">)</span> <span class="o">/</span> <span class="n">sizeof</span><span class="p">(</span><span class="n">KNOWN_SSID</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span> <span class="o">//</span> <span class="n">number</span> <span class="n">of</span> <span class="n">known</span> <span class="n">networks</span>
+
+<span class="n">void</span> <span class="n">wifiConnect</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">pin_builtinLEDusb</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
+  <span class="n">boolean</span> <span class="n">wifiFound</span> <span class="o">=</span> <span class="n">false</span><span class="p">;</span>
+  <span class="nb">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">;</span>
+
+  <span class="n">Serial</span><span class="o">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">74800</span><span class="p">);</span>
+
+  <span class="o">//</span> <span class="o">----------------------------------------------------------------</span>
+  <span class="o">//</span> <span class="n">Set</span> <span class="n">WiFi</span> <span class="n">to</span> <span class="n">station</span> <span class="n">mode</span> <span class="ow">and</span> <span class="n">disconnect</span> <span class="kn">from</span> <span class="nn">an</span> <span class="nn">AP</span> <span class="nn">if</span> <span class="nn">it</span> <span class="nn">was</span> <span class="nn">previously</span> <span class="nn">connected</span>
+  <span class="o">//</span> <span class="o">----------------------------------------------------------------</span>
+  <span class="n">WiFi</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="n">WIFI_STA</span><span class="p">);</span>
+  <span class="n">WiFi</span><span class="o">.</span><span class="n">disconnect</span><span class="p">();</span>
+
+  <span class="o">//</span> <span class="o">----------------------------------------------------------------</span>
+  <span class="o">//</span> <span class="n">WiFi</span><span class="o">.</span><span class="n">scanNetworks</span> <span class="n">will</span> <span class="k">return</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">networks</span> <span class="n">found</span>
+  <span class="o">//</span> <span class="o">----------------------------------------------------------------</span>
+  <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">F</span><span class="p">(</span><span class="s2">&#34;Scanning for networks...&#34;</span><span class="p">));</span>
+  <span class="nb">int</span> <span class="n">nbVisibleNetworks</span> <span class="o">=</span> <span class="n">WiFi</span><span class="o">.</span><span class="n">scanNetworks</span><span class="p">();</span>
+  <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">F</span><span class="p">(</span><span class="s2">&#34;Scan complete.&#34;</span><span class="p">));</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">nbVisibleNetworks</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">F</span><span class="p">(</span><span class="s2">&#34;No networks found. Hang in there, I&#39;m trying again.&#34;</span><span class="p">));</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">true</span><span class="p">);</span> <span class="o">//</span> <span class="n">Auto</span> <span class="n">launch</span> <span class="n">the</span> <span class="n">Soft</span> <span class="n">WDT</span> <span class="n">reset</span> <span class="n">via</span> <span class="n">infinite</span> <span class="k">while</span> <span class="n">loop</span>
+  <span class="p">}</span>
+
+  <span class="o">//</span> <span class="o">----------------------------------------------------------------</span>
+  <span class="o">//</span> <span class="k">if</span> <span class="n">you</span> <span class="n">arrive</span> <span class="n">here</span> <span class="n">at</span> <span class="n">least</span> <span class="n">some</span> <span class="n">networks</span> <span class="n">are</span> <span class="n">visible</span>
+  <span class="o">//</span> <span class="o">----------------------------------------------------------------</span>
+  <span class="n">Serial</span><span class="o">.</span><span class="k">print</span><span class="p">(</span><span class="n">nbVisibleNetworks</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="s2">&#34; network(s) found.&#34;</span><span class="p">);</span>
+  
+
+  <span class="o">//</span> <span class="o">----------------------------------------------------------------</span>
+  <span class="o">//</span> <span class="n">check</span> <span class="k">if</span> <span class="n">we</span> <span class="n">recognize</span> <span class="n">one</span> <span class="n">by</span> <span class="n">comparing</span> <span class="n">the</span> <span class="n">visible</span> <span class="n">networks</span>
+  <span class="o">//</span> <span class="n">one</span> <span class="n">by</span> <span class="n">one</span> <span class="k">with</span> <span class="n">our</span> <span class="nb">list</span> <span class="n">of</span> <span class="n">known</span> <span class="n">networks</span>
+  <span class="o">//</span> <span class="o">----------------------------------------------------------------</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nbVisibleNetworks</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Serial</span><span class="o">.</span><span class="k">print</span><span class="p">(</span><span class="s2">&#34;Testing &#34;</span><span class="p">);</span>
+    <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">WiFi</span><span class="o">.</span><span class="n">SSID</span><span class="p">(</span><span class="n">i</span><span class="p">));</span> <span class="o">//</span> <span class="n">Print</span> <span class="n">current</span> <span class="n">SSID</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">n</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="n">KNOWN_SSID_COUNT</span><span class="p">;</span> <span class="n">n</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span> <span class="o">//</span> <span class="n">walk</span> <span class="n">through</span> <span class="n">the</span> <span class="nb">list</span> <span class="n">of</span> <span class="n">known</span> <span class="n">SSID</span> <span class="ow">and</span> <span class="n">check</span> <span class="k">for</span> <span class="n">a</span> <span class="n">match</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">strcmp</span><span class="p">(</span><span class="n">KNOWN_SSID</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="n">WiFi</span><span class="o">.</span><span class="n">SSID</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">c_str</span><span class="p">()))</span> <span class="p">{</span>
+        <span class="n">Serial</span><span class="o">.</span><span class="k">print</span><span class="p">(</span><span class="n">F</span><span class="p">(</span><span class="s2">&#34;Not matching &#34;</span><span class="p">));</span>  <span class="o">//</span> <span class="ow">not</span> <span class="n">sure</span> <span class="n">what</span> <span class="n">this</span> <span class="n">line</span> <span class="n">does</span>
+        <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">KNOWN_SSID</span><span class="p">[</span><span class="n">n</span><span class="p">]);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="o">//</span> <span class="n">we</span> <span class="n">got</span> <span class="n">a</span> <span class="n">match</span>
+        <span class="n">wifiFound</span> <span class="o">=</span> <span class="n">true</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span> <span class="o">//</span> <span class="n">n</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">network</span> <span class="n">index</span> <span class="n">we</span> <span class="n">found</span>
+      <span class="p">}</span>
+    <span class="p">}</span> <span class="o">//</span> <span class="n">end</span> <span class="k">for</span> <span class="n">each</span> <span class="n">known</span> <span class="n">wifi</span> <span class="n">SSID</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">wifiFound</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span> <span class="o">//</span> <span class="k">break</span> <span class="kn">from</span> <span class="nn">the</span> <span class="s2">&#34;for each visible network&#34;</span> <span class="n">loop</span>
+  <span class="p">}</span> <span class="o">//</span> <span class="n">end</span> <span class="k">for</span> <span class="n">each</span> <span class="n">visible</span> <span class="n">network</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="err">!</span><span class="n">wifiFound</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">F</span><span class="p">(</span><span class="s2">&#34;No known networks found. Hang in there, I&#39;m trying again.&#34;</span><span class="p">));</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">true</span><span class="p">);</span> <span class="o">//</span> <span class="n">Auto</span> <span class="n">launch</span> <span class="n">the</span> <span class="n">Soft</span> <span class="n">WDT</span> <span class="n">reset</span> <span class="n">via</span> <span class="n">infinite</span> <span class="k">while</span> <span class="n">loop</span>
+  <span class="p">}</span>
+
+  <span class="o">//</span> <span class="o">----------------------------------------------------------------</span>
+  <span class="o">//</span> <span class="k">if</span> <span class="n">you</span> <span class="n">arrive</span> <span class="n">here</span> <span class="n">you</span> <span class="n">found</span> <span class="mi">1</span> <span class="n">known</span> <span class="n">SSID</span>
+  <span class="o">//</span> <span class="o">----------------------------------------------------------------</span>
+  <span class="n">Serial</span><span class="o">.</span><span class="k">print</span><span class="p">(</span><span class="n">F</span><span class="p">(</span><span class="s2">&#34;</span><span class="se">\n</span><span class="s2">Connecting to &#34;</span><span class="p">));</span>
+  <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">KNOWN_SSID</span><span class="p">[</span><span class="n">n</span><span class="p">]);</span>
+
+  <span class="o">//</span> <span class="o">----------------------------------------------------------------</span>
+  <span class="o">//</span> <span class="n">We</span> <span class="k">try</span> <span class="n">to</span> <span class="n">connect</span> <span class="n">to</span> <span class="n">the</span> <span class="n">WiFi</span> <span class="n">network</span> <span class="n">we</span> <span class="n">found</span>
+  <span class="o">//</span> <span class="o">----------------------------------------------------------------</span>
+  <span class="n">WiFi</span><span class="o">.</span><span class="n">begin</span><span class="p">(</span><span class="n">KNOWN_SSID</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="n">KNOWN_PASSWORD</span><span class="p">[</span><span class="n">n</span><span class="p">]);</span>
+
+  <span class="k">while</span> <span class="p">(</span><span class="n">WiFi</span><span class="o">.</span><span class="n">status</span><span class="p">()</span> <span class="o">!=</span> <span class="n">WL_CONNECTED</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">delay</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+    <span class="n">Serial</span><span class="o">.</span><span class="k">print</span><span class="p">(</span><span class="s2">&#34;.&#34;</span><span class="p">);</span>
+    <span class="n">digitalWrite</span><span class="p">(</span><span class="n">pin_builtinLEDusb</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>  <span class="o">//</span> <span class="n">Turn</span> <span class="n">on</span> <span class="n">builtin</span> <span class="n">USB</span> 
+  <span class="p">}</span>
+  <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="s2">&#34;&#34;</span><span class="p">);</span>
+
+  <span class="o">//</span> <span class="o">----------------------------------------------------------------</span>
+  <span class="o">//</span> <span class="n">SUCCESS</span><span class="p">,</span> <span class="n">you</span> <span class="n">are</span> <span class="n">connected</span> <span class="n">to</span> <span class="n">the</span> <span class="n">known</span> <span class="n">WiFi</span> <span class="n">network</span>
+  <span class="o">//</span> <span class="o">----------------------------------------------------------------</span>
+  <span class="n">Serial</span><span class="o">.</span><span class="k">print</span><span class="p">(</span><span class="n">F</span><span class="p">(</span><span class="s2">&#34;WiFi connected, your IP address is: &#34;</span><span class="p">));</span>
+  <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">WiFi</span><span class="o">.</span><span class="n">localIP</span><span class="p">());</span>
+
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">pin_builtinLEDusb</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div><p>The next step was to get multiplexing to work. Pin A0 is the only ADC pin on the NodeMCU, and I wanted to be able to control my robot arm with multiple potentiometers, one for each joint. I found <strong><a href="https://create.arduino.cc/projecthub/e_s_c/how-to-read-multiple-analog-values-using-one-analog-pin-f5f6db">this tutorial</a></strong> which presented a surprisingly elegant solution: connecting the middle pin of both potentiometers to A0 and reading from each one in rapid succession. Reading each potentiometer individually was possible because power is supplied by one of the GPIO pins, so each potentiometer could be &ldquo;switched on&rdquo; or &ldquo;switched off&rdquo; by driving its corresponding pin to HIGH or LOW. This happens fast enough that the two potentiometers are essentially being read simultaneously. There is one subtlety, however: in order to avoid current from one potentiometer traveling back up the other potentiometer and creating a short, a diode is placed between each of the center pins and pin A0. Here is the diagram from the tutorial:</p>
+<p><img src="images/week9-cloud/ADC-multiplex.png" alt="ADC multiplexing on the NodeMCU."></p>
+<p>In order to upload the positional information from each potentiometer, all I needed to do was use <code>Firebase.set()</code> to write it to the corresponding directory (&quot;/POT_1&quot; or &ldquo;/POT_2&rdquo;). Here is my code:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1">#include &lt;FirebaseESP8266.h&gt;                        // firebase library</span>
+<span class="c1">#include &#34;wifiConnect.h&#34;</span>
+
+<span class="c1">#define FIREBASE_HOST &#34;XXXXXXXXXXXXXXXXX&#34;  // the project name address from firebase id</span>
+<span class="c1">#define FIREBASE_AUTH &#34;XXXXXXXXXXXXXXX&#34;    // the secret key generated from firebase</span>
+
+<span class="nb">int</span> <span class="n">pin_3V_pot1</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+<span class="nb">int</span> <span class="n">pin_3V_pot2</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+
+<span class="nb">int</span> <span class="n">val_pot1</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>                                          <span class="o">//</span> <span class="n">value</span> <span class="n">of</span> <span class="n">potentiometer</span> <span class="n">reading</span>
+<span class="nb">int</span> <span class="n">val_pot2</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="nb">int</span> <span class="n">pin_input_pot</span> <span class="o">=</span> <span class="n">A0</span><span class="p">;</span>                                         <span class="o">//</span> <span class="n">This</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">only</span> <span class="n">ADC</span> <span class="n">pin</span> <span class="n">available</span> <span class="n">on</span> <span class="n">the</span> <span class="n">ESP8266</span> <span class="n">NodeMCU</span>
+
+<span class="o">//</span><span class="n">Define</span> <span class="n">FirebaseESP32</span> <span class="n">data</span> <span class="nb">object</span>
+<span class="n">FirebaseData</span> <span class="n">firebaseData</span><span class="p">;</span>
+
+<span class="n">void</span> <span class="n">setup</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">pin_3V_pot1</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">pin_3V_pot2</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
+  
+  <span class="n">wifiConnect</span><span class="p">();</span>  <span class="o">//</span> <span class="n">Calls</span> <span class="n">the</span> <span class="n">wifiConnect</span><span class="o">.</span><span class="n">h</span> <span class="n">header</span>
+
+  <span class="n">Firebase</span><span class="o">.</span><span class="n">begin</span><span class="p">(</span><span class="n">FIREBASE_HOST</span><span class="p">,</span> <span class="n">FIREBASE_AUTH</span><span class="p">);</span>                  <span class="o">//</span> <span class="n">connect</span> <span class="n">to</span> <span class="n">firebase</span>
+  <span class="n">Firebase</span><span class="o">.</span><span class="n">reconnectWiFi</span><span class="p">(</span><span class="n">true</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">void</span> <span class="n">loop</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">pin_3V_pot1</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span> <span class="o">//</span> <span class="n">Turn</span> <span class="n">D1</span> <span class="n">On</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">pin_3V_pot2</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span> <span class="o">//</span> <span class="n">Turn</span> <span class="n">D2</span> <span class="n">Off</span>
+  <span class="n">val_pot1</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">analogRead</span><span class="p">(</span><span class="n">pin_input_pot</span><span class="p">),</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">850</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">180</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+  
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">pin_3V_pot2</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span> <span class="o">//</span> <span class="n">Turn</span> <span class="n">D1</span> <span class="n">On</span>
+  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">pin_3V_pot1</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span> <span class="o">//</span> <span class="n">Turn</span> <span class="n">D2</span> <span class="n">Off</span>
+  <span class="n">val_pot2</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">analogRead</span><span class="p">(</span><span class="n">pin_input_pot</span><span class="p">),</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">850</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">180</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+  
+  <span class="n">Firebase</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">firebaseData</span><span class="p">,</span> <span class="s2">&#34;/POT_1&#34;</span><span class="p">,</span> <span class="n">val_pot1</span><span class="p">);</span>             
+  <span class="n">Firebase</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">firebaseData</span><span class="p">,</span> <span class="s2">&#34;/POT_2&#34;</span><span class="p">,</span> <span class="n">val_pot2</span><span class="p">);</span>  
+
+  <span class="n">Serial</span><span class="o">.</span><span class="k">print</span><span class="p">(</span><span class="s2">&#34;POT_1 = &#34;</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">val_pot1</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="o">.</span><span class="k">print</span><span class="p">(</span><span class="s2">&#34;POT_2 = &#34;</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">val_pot2</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div><p>Next, I needed to build the receiving end of the system, also controlled by a NodeMCU. This was actually simpler, as the microcontroller just needed to read the data from the correct Firebase directory and write it to a servo. I purchased MG996R servos (about $4 each) for the Avatarm, because they seemed to provide a good amount of torque (listed 12 kg/cm), about ten times as much as the small SG90 servos. I used the &ldquo;Servo.h&rdquo; library to drive the servos, and it was fairly straightforward. For WiFi, I just had to include the same header file as above.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1">#include &lt;FirebaseESP8266.h&gt;                        // firebase library</span>
+<span class="c1">#include &#34;wifiConnect.h&#34;</span>
+
+<span class="c1">#include &lt;Servo.h&gt;</span>
+
+<span class="c1">#define FIREBASE_HOST &#34;XXXXXXXXXXXXXx&#34;  // the project name address from firebase id</span>
+<span class="c1">#define FIREBASE_AUTH &#34;XXXXXXXXXXXXXx&#34;  // the secret key generated from firebase</span>
+
+<span class="nb">int</span> <span class="n">pos_servo1</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>                                          <span class="o">//</span> <span class="n">value</span> <span class="n">of</span> <span class="n">potentiometer</span> <span class="n">reading</span>
+<span class="nb">int</span> <span class="n">pos_servo2</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="nb">int</span> <span class="n">pin_servo1</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+<span class="nb">int</span> <span class="n">pin_servo2</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+
+<span class="n">Servo</span> <span class="n">servo1</span><span class="p">;</span>
+<span class="n">Servo</span> <span class="n">servo2</span><span class="p">;</span>
+
+<span class="o">//</span><span class="n">Define</span> <span class="n">FirebaseESP32</span> <span class="n">data</span> <span class="nb">object</span>
+<span class="n">FirebaseData</span> <span class="n">firebaseData</span><span class="p">;</span>
+
+<span class="n">void</span> <span class="n">setup</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">pin_servo1</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">pin_servo2</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
+  <span class="n">servo1</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">pin_servo1</span><span class="p">);</span>
+  <span class="n">servo2</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">pin_servo2</span><span class="p">);</span>
+
+  <span class="n">wifiConnect</span><span class="p">();</span>  <span class="o">//</span> <span class="n">Calls</span> <span class="n">the</span> <span class="n">wifiConnect</span><span class="o">.</span><span class="n">h</span> <span class="n">header</span>
+  
+  <span class="n">Firebase</span><span class="o">.</span><span class="n">begin</span><span class="p">(</span><span class="n">FIREBASE_HOST</span><span class="p">,</span> <span class="n">FIREBASE_AUTH</span><span class="p">);</span>                  <span class="o">//</span> <span class="n">connect</span> <span class="n">to</span> <span class="n">firebase</span>
+  <span class="n">Firebase</span><span class="o">.</span><span class="n">reconnectWiFi</span><span class="p">(</span><span class="n">true</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">void</span> <span class="n">loop</span><span class="p">()</span> <span class="p">{</span>
+
+  <span class="n">Firebase</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">firebaseData</span><span class="p">,</span> <span class="s2">&#34;/POT_1&#34;</span><span class="p">);</span>                  
+  <span class="n">pos_servo1</span> <span class="o">=</span> <span class="n">firebaseData</span><span class="o">.</span><span class="n">intData</span><span class="p">();</span>
+  <span class="n">servo1</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">180</span><span class="o">-</span><span class="n">pos_servo1</span><span class="p">);</span>
+
+  <span class="n">Firebase</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">firebaseData</span><span class="p">,</span> <span class="s2">&#34;/POT_2&#34;</span><span class="p">);</span>                    
+  <span class="n">pos_servo2</span> <span class="o">=</span> <span class="n">firebaseData</span><span class="o">.</span><span class="n">intData</span><span class="p">();</span>
+  <span class="n">servo2</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">180</span><span class="o">-</span><span class="n">pos_servo2</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div><p>Indeed, it works! To see if the servos can perform well under load, I cobbled together an &ldquo;arm&rdquo; using binder clips and some extra parts from the laser-cut kit. I was pleased with how well the WiFi indicators worked. However, there is a somewhat inconsistent lag. It seems to depend on the quality of my internet connection, but in the best-case scenario I was able to shave this lag down to less than a second.</p>
+<p><img src="images/week9-cloud/testing.gif" alt="Testing."></p>
+<p>I present to you my greatest invention: the Dueling Chair. Perfect for professors who need to fend off hordes of sleep-deprived students during office hours!</p>
+<p><img src="images/week9-cloud/dueling-chair.gif" alt="Dueling chair."></p>
+
+          </article>
+
+          <div class="pagination">
+            
+              <a href="https://aspartate.github.io/personal_website/blog/week-8-espnow/">&laquo; Week 8 - ESP-NOW Servo Control</a>
+            
+            
+              <a href="https://aspartate.github.io/personal_website/blog/week-10-closed-loop-stepper/">Week 10 - DIY Closed-Loop Stepper &raquo;</a>
+            
+          </div>
+        </section>
+        <br>
+        <section class="disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname == "localhost")
+        return;
+      var disqus_shortname = '';
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view comments powered by <a href="http://disqus.com/?ref_noscript">Disqus</a>.</noscript>
+</section>
+
+      </section>
+
+    </main>
+    <footer class="row middle-xs center-xs">
+  <div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-facebook"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href="https://github.com/aspartate/personal_website"><i class="icon icon-github"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-linkedin"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-stackoverflow"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-twitter"></i></a>
+    </div>
+  <div class="col-xs-12">
+      <small>
+      
+      Copyright &copy; 2021 Andrew Zhang
+      
+      
+      </small>
+    </div>
+</footer>
+
+    
+
+
+
+
+
+
+  <script src="https://aspartate.github.io/personal_website/js/bundle.min.fbd35181a0fd0238360575e6a25942746d4e73c615f852efe3b975ea70829339.js" type="text/javascript"></script>
+  <script>handleNavBar( false )</script>
+
+  </body>
+</html>
