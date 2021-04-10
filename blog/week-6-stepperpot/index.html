@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+  
+
+  
+
+  <title>
+    
+    Week 6 - Playing with Potentiometers | Andrew Zhang
+  </title>
+
+  <meta name="title" content="Week 6 - Playing with Potentiometers | Andrew Zhang">
+
+  <meta charset="utf-8">
+  
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer-when-downgrade">
+  <base href="https://aspartate.github.io/personal_website/">
+
+  <meta name="description" content="my personal website">
+
+  <meta name="author" content="aspartate">
+
+  
+
+  <meta property="og:title" content="Week 6 - Playing with Potentiometers | Andrew Zhang">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://aspartate.github.io/personal_website/">
+
+  <meta property="og:image" content="https://aspartate.github.io/personal_website/images/osprey-delight.png">
+
+  <meta property="og:description" content="my personal website">
+
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <meta name="theme-color" content="#0097a7">
+
+  <link rel="canonical" href="https://aspartate.github.io/personal_website/blog/week-6-stepperpot/">
+  
+  
+
+  <link rel="stylesheet" href="https://aspartate.github.io/personal_website/style.9ff615c48229657d182d4c0c716ebf5f26645eff21662abca5e094e2b245bfeb.css" type="text/css">
+
+  <script type="application/ld+json">
+  {"@context":"http://www.schema.org","@type":"Person","@id":"https://aspartate.github.io/personal_website/","name":"aspartate","url":"https://aspartate.github.io/personal_website/","description":"my personal website","sameAs":["","https://github.com/aspartate/personal_website","","",""]}
+  </script>
+
+  <style>.lazyload{opacity:.0001;}.logo .lazyload{min-width:10em;}</style>
+    <script src="https://aspartate.github.io/personal_website/js/vendor/lazysizes.min.js" async></script>
+</head>
+
+  <body>
+    
+
+
+
+
+
+<nav class="row middle-xs center-xs">
+  <div class="col-xs-6 col-sm-1 logo">
+    <a href="/personal_website/#"><img data-src="favicon.png" class="lazyload" lazyload="on" alt="Andrew Zhang"></a>
+  </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#about">About</a></h3>
+      </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#work">Work</a></h3>
+      </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#blog">Blog</a></h3>
+      </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#contact">Contact</a></h3>
+      </div>
+    
+  <div class="col-xs-6 col-sm-1 nav-toggle">
+      <a href="" class="nav-icon" onclick="return false">
+        <i id="open" class="icon icon-2x icon-menu"></i>
+      </a>
+  </div>
+</nav>
+
+<section class="nav-full row middle-xs center-xs">
+  <div class="col-xs-12">
+    <div class="row middle-xs center-xs">
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#about">About</a></h1></div>
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#work">Work</a></h1></div>
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#blog">Blog</a></h1></div>
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#contact">Contact</a></h1></div>
+      
+    </div>
+  </div>
+</section>
+
+    <main>
+
+      <section class="container">
+        <section class="content">
+          <h1> Week 6 - Playing with Potentiometers </h1>
+
+            <div class="sub-header">
+              March 7, 2021 · 5 minutes read
+            </div>
+
+          <article class="entry-content">
+            <p>For my final project (<strong><a href="https://aspartate.github.io/personal_website/blog/avatar/">link to documentation</a></strong>), I am building a robot arm. Therefore this week I wanted to learn how to control motors using a potentiometer. This was the beginning of a rather convoluted journey, but I learned a lot along the way&hellip;</p>
+<p>I wanted to start with one stepper, controlled by one potentiometer. I found a <strong><a href="https://circuitdigest.com/microcontroller-projects/stepper-motor-control-with-potentiometer-arduino">tutorial</a></strong> online for achieving this, and it used an interesting method of continuously checking for changes in the resistance of the potentiometer and applying a step in the same direction as the change. Immediately, I saw a problem with this setup. Because the speed of the stepper is fixed, it cannot vary to match the speed at which the potentiometer turns. Theoretically, if the sampling rate was infinite, this would not be a problem. But with a limited sampling rate I could see errors compounding over time, making precise control impossible.</p>
+<p>Nonetheless, I figured it couldn&rsquo;t hurt to try:</p>
+<p><img src="images/avatarm/code-1.png" alt="Initial code.">
+<img src="images/avatarm/first-try.gif" alt="First try.">
+<img src="images/avatarm/code-1-SM.gif" alt="Serial plotter."></p>
+<p>As you can see, my hypothesis about the speed was correct. The speed at which the stepper moved did change with the speed of the potentiometer. In addition, I noticed via the serial plotter that the potentiometer that even when held still, there were tiny fluctuations in resistance which caused the motor to vibrate in place. And finally, for some reason the maximum resistance would only go up to 500 and turning the potentiometer past that point would not do anything to the motor. A lot of problems for sure, but let&rsquo;s tackle them one by one.</p>
+<p>The most important issue is the speed control. Currently, the speed of the motor is fixed at 200. Apparently that is the maximum speed for the motor I&rsquo;m using. In addition, the number of steps per sample is fixed at 5 steps in either direction, depending on the sign of the change in resistance. So every time we sample, we need the change in resistance to be positively correlated with either the step size or the motor speed. The step size is easier to change, so let&rsquo;s do that.</p>
+<p>First, to get an idea of how the change in resistance is affected by the speed at which I rotate the potentiometer, I defined a new variable <code>delta_pot</code>. I also renamed the variables to more sensible names, changed them to floats, and remapped the potentiometer reading from 0 to 1024 (instead of 500) for maximum resolution. I then plotted <code>delta_pot</code> as I rotated the potentiometer at various speeds and directions. As expected, I got different <code>delta_pot</code> values for different speeds. This suggests that <code>delta_pot</code> could be used to control <code>stepsize</code>.</p>
+<p><img src="images/avatarm/code-2-SM.png" alt="Code 2 SM.">
+<img src="images/avatarm/code-2.png" alt="Code 2."></p>
+<p>I realized the sign of <code>delta_pot</code> indicates the direction of motion, so there was no need for an if statement in the code. In fact, the structure could be greatly simplified to the following:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1">#include &lt;Stepper.h&gt; // Include the header file</span>
+
+<span class="o">//</span> <span class="n">change</span> <span class="n">this</span> <span class="n">to</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">steps</span> <span class="n">on</span> <span class="n">your</span> <span class="n">motor</span>
+<span class="c1">#define STEPS 32</span>
+
+<span class="o">//</span> <span class="n">create</span> <span class="n">an</span> <span class="n">instance</span> <span class="n">of</span> <span class="n">the</span> <span class="n">stepper</span> <span class="k">class</span> <span class="nc">using</span> <span class="n">the</span> <span class="n">steps</span> <span class="ow">and</span> <span class="n">pins</span>
+<span class="n">Stepper</span> <span class="n">stepper</span><span class="p">(</span><span class="n">STEPS</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">11</span><span class="p">);</span>
+
+<span class="nb">float</span> <span class="n">pot_old</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="nb">float</span> <span class="n">pot_new</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="nb">int</span> <span class="n">stepsize</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="nb">float</span> <span class="n">delta_pot</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="n">void</span> <span class="n">setup</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">Serial</span><span class="o">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">9600</span><span class="p">);</span>
+  <span class="n">stepper</span><span class="o">.</span><span class="n">setSpeed</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">void</span> <span class="n">loop</span><span class="p">()</span> <span class="p">{</span>
+
+<span class="n">pot_new</span> <span class="o">=</span> <span class="n">analogRead</span><span class="p">(</span><span class="n">A0</span><span class="p">);</span>
+<span class="n">delta_pot</span> <span class="o">=</span> <span class="n">pot_new</span> <span class="o">-</span> <span class="n">pot_old</span><span class="p">;</span>
+
+<span class="n">stepper</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">stepsize</span><span class="o">*</span><span class="n">delta_pot</span><span class="p">));</span>
+<span class="n">pot_old</span> <span class="o">=</span> <span class="n">pot_new</span><span class="p">;</span>
+
+<span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">delta_pot</span><span class="p">);</span> <span class="o">//</span><span class="k">for</span> <span class="n">debugging</span>
+<span class="p">}</span>
+</code></pre></div><p><img src="images/avatarm/try-2.gif" alt="Try 2."></p>
+<p>Indeed, this simple script worked much better than what I had before. In hindsight this should have been rather obvious from the start haha. However, now I came across the second challenge: the noise in the potentiometer reading was causing the motor to vibrate in place. Though I tried filtering <code>delta_pot</code> to values above a certain magnitude, I ultimately could not eliminate the vibrations.</p>
+<p>It was around this time that I also started considering the GPIO capacity of the Metro M0 Express: with only 14 digital pins, I could control a maximum of 3 steppers since the drivers I was using required 4 pins each. This was problematic as I hoped to achieve at least 4 degrees of freedom in my Avatarm. Moreover, I found that the steppers tend to get worryingly hot after a while, whether moving or not.</p>
+<p>At this point servos seemed like a more and more attractive option. They only needed one control pin each, and some preliminary testing verified that the &ldquo;vibrating-in-place&rdquo; symptom plaguing my steppers was nearly absent in my SG90 servos. My preconceptions about the torque of servos compared to steppers were shattered when I found that servos can have even larger torque than steppers, especially larger metal-geared servos such as the MG996r. This is probably why the vast majority of hobby robot arms use servos&hellip;sigh. Well, at least I learned something, and I&rsquo;ll find another use for my 28-BYJ48 steppers soon enough.</p>
+<p>It was fairly trivial to implement the same functionality as above using servos, especially with <strong><a href="https://www.arduino.cc/en/tutorial/knob">abundant online tutorials</a></strong>:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1">#include &lt;Servo.h&gt;</span>
+
+<span class="n">Servo</span> <span class="n">myservo</span><span class="p">;</span>  <span class="o">//</span> <span class="n">create</span> <span class="n">servo</span> <span class="nb">object</span> <span class="n">to</span> <span class="n">control</span> <span class="n">a</span> <span class="n">servo</span>
+
+<span class="nb">int</span> <span class="n">potpin</span> <span class="o">=</span> <span class="n">A0</span><span class="p">;</span>  <span class="o">//</span> <span class="n">analog</span> <span class="n">pin</span> <span class="n">used</span> <span class="n">to</span> <span class="n">connect</span> <span class="n">the</span> <span class="n">potentiometer</span>
+<span class="nb">int</span> <span class="n">val</span><span class="p">;</span>    <span class="o">//</span> <span class="n">variable</span> <span class="n">to</span> <span class="n">read</span> <span class="n">the</span> <span class="n">value</span> <span class="kn">from</span> <span class="nn">the</span> <span class="nn">analog</span> <span class="nn">pin</span>
+
+<span class="n">void</span> <span class="n">setup</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">myservo</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="mi">9</span><span class="p">);</span>  <span class="o">//</span> <span class="n">attaches</span> <span class="n">the</span> <span class="n">servo</span> <span class="n">on</span> <span class="n">pin</span> <span class="mi">9</span> <span class="n">to</span> <span class="n">the</span> <span class="n">servo</span> <span class="nb">object</span>
+<span class="p">}</span>
+
+<span class="n">void</span> <span class="n">loop</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">val</span> <span class="o">=</span> <span class="n">analogRead</span><span class="p">(</span><span class="n">potpin</span><span class="p">);</span>            <span class="o">//</span> <span class="n">reads</span> <span class="n">the</span> <span class="n">value</span> <span class="n">of</span> <span class="n">the</span> <span class="n">potentiometer</span> <span class="p">(</span><span class="n">value</span> <span class="n">between</span> <span class="mi">0</span> <span class="ow">and</span> <span class="mi">1023</span><span class="p">)</span>
+  <span class="n">val</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1023</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">180</span><span class="p">);</span>     <span class="o">//</span> <span class="n">scale</span> <span class="n">it</span> <span class="n">to</span> <span class="n">use</span> <span class="n">it</span> <span class="k">with</span> <span class="n">the</span> <span class="n">servo</span> <span class="p">(</span><span class="n">value</span> <span class="n">between</span> <span class="mi">0</span> <span class="ow">and</span> <span class="mi">180</span><span class="p">)</span>
+  <span class="n">myservo</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">val</span><span class="p">);</span>                  <span class="o">//</span> <span class="n">sets</span> <span class="n">the</span> <span class="n">servo</span> <span class="n">position</span> <span class="n">according</span> <span class="n">to</span> <span class="n">the</span> <span class="n">scaled</span> <span class="n">value</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">15</span><span class="p">);</span>                           <span class="o">//</span> <span class="n">waits</span> <span class="k">for</span> <span class="n">the</span> <span class="n">servo</span> <span class="n">to</span> <span class="n">get</span> <span class="n">there</span>
+</code></pre></div><p><img src="images/avatarm/try-3.gif" alt="Try 3."></p>
+
+          </article>
+
+          <div class="pagination">
+            
+              <a href="https://aspartate.github.io/personal_website/blog/week-5-photogrammetry/">&laquo; Week 5 - Photogrammetry</a>
+            
+            
+              <a href="https://aspartate.github.io/personal_website/blog/week-6-sensors/">Week 6 - Capacitive Sensing &raquo;</a>
+            
+          </div>
+        </section>
+        <br>
+        <section class="disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname == "localhost")
+        return;
+      var disqus_shortname = '';
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view comments powered by <a href="http://disqus.com/?ref_noscript">Disqus</a>.</noscript>
+</section>
+
+      </section>
+
+    </main>
+    <footer class="row middle-xs center-xs">
+  <div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-facebook"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href="https://github.com/aspartate/personal_website"><i class="icon icon-github"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-linkedin"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-stackoverflow"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-twitter"></i></a>
+    </div>
+  <div class="col-xs-12">
+      <small>
+      
+      Copyright &copy; 2021 Andrew Zhang
+      
+      
+      </small>
+    </div>
+</footer>
+
+    
+
+
+
+
+
+
+  <script src="https://aspartate.github.io/personal_website/js/bundle.min.fbd35181a0fd0238360575e6a25942746d4e73c615f852efe3b975ea70829339.js" type="text/javascript"></script>
+  <script>handleNavBar( false )</script>
+
+  </body>
+</html>
