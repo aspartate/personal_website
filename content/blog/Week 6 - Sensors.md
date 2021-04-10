@@ -1,5 +1,5 @@
 ---
-title: "Week 6 - Sensors"
+title: "Week 6 - Capacitive Sensing"
 date: 2021-03-07T21:15:31-05:00
 draft: false
 ---
