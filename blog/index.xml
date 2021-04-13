@@ -6,13 +6,23 @@
     <description>Recent content in Blogs on Andrew Zhang</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Fri, 09 Apr 2021 02:40:45 -0500</lastBuildDate><atom:link href="https://aspartate.github.io/personal_website/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 11 Apr 2021 23:56:10 -0400</lastBuildDate><atom:link href="https://aspartate.github.io/personal_website/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Week 11 - USB Communication</title>
+      <link>https://aspartate.github.io/personal_website/blog/week-11-usb-communication/</link>
+      <pubDate>Sun, 11 Apr 2021 23:56:10 -0400</pubDate>
+      
+      <guid>https://aspartate.github.io/personal_website/blog/week-11-usb-communication/</guid>
+      <description>This assignment this week was to get a microcontroller to communicate with a controller over USB. A popular way of visualizing sensor input from a microcontroller is p5, which is a Javascript-based software that can run in the browser. Because I was brand new to p5 at the time, I decided to start with a bare-bones tutorial:
+   This tutorial involved controlling a shape drawn in the Chrome browser using a button connected to a microcontroller.</description>
+    </item>
+    
     <item>
       <title>Final Project</title>
-      <link>https://aspartate.github.io/personal_website/blog/avatar/</link>
+      <link>https://aspartate.github.io/personal_website/blog/avatarm/</link>
       <pubDate>Fri, 09 Apr 2021 02:40:45 -0500</pubDate>
       
-      <guid>https://aspartate.github.io/personal_website/blog/avatar/</guid>
+      <guid>https://aspartate.github.io/personal_website/blog/avatarm/</guid>
       <description>This post will continuously document progress on my final project for PS70.
 Have you seen the video where a doctor performed surgery on a grape via robot?
    Though this came out more than a decade ago, I am fascinated by the concept of a remotely-controlled &amp;ldquo;avatar&amp;rdquo; robot. Particularly in the field of healthcare, I think such robots will transform telemedicine and help bring much-needed treatment capabilities to regions with few trained physicians.</description>
@@ -65,6 +75,15 @@ One of the disadvantages of OTA is that you have to include the code for OTA as 
       <guid>https://aspartate.github.io/personal_website/blog/week-7-input-output/</guid>
       <description>The assignment this week was to create an input-output system, preferably using millis() for timing. Since we recently learned to use the Adafruit TFT display in lab, I decided to build upon my work for the final project to have the TFT display the motor angle. This turned out to be not as simple as simply mashing together the TFT code from here with the servo code from here.
 I wanted the display to update at a certain framerate (10 Hz) so the numbers are actually visible on screen for an appreciable amount of time.</description>
+    </item>
+    
+    <item>
+      <title>Week 7 - TFT Display</title>
+      <link>https://aspartate.github.io/personal_website/blog/week-7-tft-display/</link>
+      <pubDate>Thu, 11 Mar 2021 10:36:10 -0400</pubDate>
+      
+      <guid>https://aspartate.github.io/personal_website/blog/week-7-tft-display/</guid>
+      <description>#include &amp;lt;Adafruit_GFX.h&amp;gt; // Core graphics library #include &amp;lt;Adafruit_ST7735.h&amp;gt; // Hardware-specific library for ST7735 #include &amp;lt;Adafruit_ST7789.h&amp;gt; // Hardware-specific library for ST7789 #include &amp;lt;SPI.h&amp;gt; #define TFT_CS 10 #define TFT_RST -1 // Or set to -1 and connect to Arduino RESET pin #define TFT_DC 8 // OPTION 1 (recommended) is to use the HARDWARE SPI pins, which are unique // to each board and not reassignable. For Arduino Uno: MOSI = pin 11 and // SCLK = pin 13.</description>
     </item>
     
     <item>

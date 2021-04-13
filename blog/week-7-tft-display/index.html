@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+  
+
+  
+
+  <title>
+    
+    Week 7 - TFT Display | Andrew Zhang
+  </title>
+
+  <meta name="title" content="Week 7 - TFT Display | Andrew Zhang">
+
+  <meta charset="utf-8">
+  
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer-when-downgrade">
+  <base href="https://aspartate.github.io/personal_website/">
+
+  <meta name="description" content="my personal website">
+
+  <meta name="author" content="aspartate">
+
+  
+
+  <meta property="og:title" content="Week 7 - TFT Display | Andrew Zhang">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://aspartate.github.io/personal_website/">
+
+  <meta property="og:image" content="https://aspartate.github.io/personal_website/images/osprey-delight.png">
+
+  <meta property="og:description" content="my personal website">
+
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <meta name="theme-color" content="#0097a7">
+
+  <link rel="canonical" href="https://aspartate.github.io/personal_website/blog/week-7-tft-display/">
+  
+  
+
+  <link rel="stylesheet" href="https://aspartate.github.io/personal_website/style.9ff615c48229657d182d4c0c716ebf5f26645eff21662abca5e094e2b245bfeb.css" type="text/css">
+
+  <script type="application/ld+json">
+  {"@context":"http://www.schema.org","@type":"Person","@id":"https://aspartate.github.io/personal_website/","name":"aspartate","url":"https://aspartate.github.io/personal_website/","description":"my personal website","sameAs":["","https://github.com/aspartate/personal_website","","",""]}
+  </script>
+
+  <style>.lazyload{opacity:.0001;}.logo .lazyload{min-width:10em;}</style>
+    <script src="https://aspartate.github.io/personal_website/js/vendor/lazysizes.min.js" async></script>
+</head>
+
+  <body>
+    
+
+
+
+
+
+<nav class="row middle-xs center-xs">
+  <div class="col-xs-6 col-sm-1 logo">
+    <a href="/personal_website/#"><img data-src="favicon.png" class="lazyload" lazyload="on" alt="Andrew Zhang"></a>
+  </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#about">About</a></h3>
+      </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#work">Work</a></h3>
+      </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#blog">Blog</a></h3>
+      </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#contact">Contact</a></h3>
+      </div>
+    
+  <div class="col-xs-6 col-sm-1 nav-toggle">
+      <a href="" class="nav-icon" onclick="return false">
+        <i id="open" class="icon icon-2x icon-menu"></i>
+      </a>
+  </div>
+</nav>
+
+<section class="nav-full row middle-xs center-xs">
+  <div class="col-xs-12">
+    <div class="row middle-xs center-xs">
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#about">About</a></h1></div>
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#work">Work</a></h1></div>
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#blog">Blog</a></h1></div>
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#contact">Contact</a></h1></div>
+      
+    </div>
+  </div>
+</section>
+
+    <main>
+
+      <section class="container">
+        <section class="content">
+          <h1> Week 7 - TFT Display </h1>
+
+            <div class="sub-header">
+              March 11, 2021 · 5 minutes read
+            </div>
+
+          <article class="entry-content">
+            <pre><code>#include &lt;Adafruit_GFX.h&gt;    // Core graphics library
+#include &lt;Adafruit_ST7735.h&gt; // Hardware-specific library for ST7735
+#include &lt;Adafruit_ST7789.h&gt; // Hardware-specific library for ST7789
+#include &lt;SPI.h&gt;
+
+
+#define TFT_CS        10
+#define TFT_RST        -1 // Or set to -1 and connect to Arduino RESET pin
+#define TFT_DC         8
+
+// OPTION 1 (recommended) is to use the HARDWARE SPI pins, which are unique
+// to each board and not reassignable. For Arduino Uno: MOSI = pin 11 and
+// SCLK = pin 13. This is the fastest mode of operation and is required if
+// using the breakout board's microSD card.
+
+// For 1.44&quot; and 1.8&quot; TFT with ST7735 use:
+// Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
+
+// For 1.14&quot;, 1.3&quot;, 1.54&quot;, and 2.0&quot; TFT with ST7789:
+Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);
+
+
+// OPTION 2 lets you interface the display using ANY TWO or THREE PINS,
+// tradeoff being that performance is not as fast as hardware SPI above.
+//#define TFT_MOSI 11  // Data out
+//#define TFT_SCLK 13  // Clock out
+
+// For ST7735-based displays, we will use this call
+//Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_MOSI, TFT_SCLK, TFT_RST);
+
+// OR for the ST7789-based displays, we will use this call
+//Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_MOSI, TFT_SCLK, TFT_RST);
+
+
+float p = 3.1415926;
+
+void setup(void) {
+  Serial.begin(9600);
+  Serial.print(F(&quot;Hello! ST77xx TFT Test&quot;));
+
+  // Use this initializer if using a 1.8&quot; TFT screen:
+  // tft.initR(INITR_BLACKTAB);      // Init ST7735S chip, black tab
+
+  // OR use this initializer if using a 1.8&quot; TFT screen with offset such as WaveShare:
+  // tft.initR(INITR_GREENTAB);      // Init ST7735S chip, green tab
+
+  // OR use this initializer (uncomment) if using a 1.44&quot; TFT:
+  //tft.initR(INITR_144GREENTAB); // Init ST7735R chip, green tab
+
+  // OR use this initializer (uncomment) if using a 0.96&quot; 160x80 TFT:
+  //tft.initR(INITR_MINI160x80);  // Init ST7735S mini display
+
+  // OR use this initializer (uncomment) if using a 1.3&quot; or 1.54&quot; 240x240 TFT:
+  //tft.init(240, 240);           // Init ST7789 240x240
+
+  // OR use this initializer (uncomment) if using a 2.0&quot; 320x240 TFT:
+  //tft.init(240, 320);           // Init ST7789 320x240
+
+  // OR use this initializer (uncomment) if using a 1.14&quot; 240x135 TFT:
+  tft.init(135, 240);           // Init ST7789 240x135
+  
+  // SPI speed defaults to SPI_DEFAULT_FREQ defined in the library, you can override it here
+  // Note that speed allowable depends on chip and quality of wiring, if you go too fast, you
+  // may end up with a black screen some times, or all the time.
+  //tft.setSPISpeed(40000000);
+
+  Serial.println(F(&quot;Initialized&quot;));
+
+  uint16_t time = millis();
+  tft.fillScreen(ST77XX_BLACK);
+  time = millis() - time;
+
+  Serial.println(time, DEC);
+  delay(500);
+
+  // large block of text
+  tft.fillScreen(ST77XX_BLACK);
+  testdrawtext(&quot;Bruh.&quot;, ST77XX_WHITE);
+  delay(10000);
+
+  // tft print function!
+  tftPrintTest();
+  delay(4000);
+
+  // a single pixel
+  tft.drawPixel(tft.width()/2, tft.height()/2, ST77XX_GREEN);
+  delay(500);
+
+  // line draw test
+  testlines(ST77XX_YELLOW);
+  delay(500);
+
+  // optimized lines
+  testfastlines(ST77XX_RED, ST77XX_BLUE);
+  delay(500);
+
+  testdrawrects(ST77XX_GREEN);
+  delay(500);
+
+  testfillrects(ST77XX_YELLOW, ST77XX_MAGENTA);
+  delay(500);
+
+  tft.fillScreen(ST77XX_BLACK);
+  testfillcircles(10, ST77XX_BLUE);
+  testdrawcircles(10, ST77XX_WHITE);
+  delay(500);
+
+  testroundrects();
+  delay(500);
+
+  testtriangles();
+  delay(500);
+
+  mediabuttons();
+  delay(500);
+
+  Serial.println(&quot;done&quot;);
+  delay(1000);
+}
+
+void loop() {
+  tft.invertDisplay(true);
+  delay(500);
+  tft.invertDisplay(false);
+  delay(500);
+}
+
+void testlines(uint16_t color) {
+  tft.fillScreen(ST77XX_BLACK);
+  for (int16_t x=0; x &lt; tft.width(); x+=6) {
+    tft.drawLine(0, 0, x, tft.height()-1, color);
+    delay(0);
+  }
+  for (int16_t y=0; y &lt; tft.height(); y+=6) {
+    tft.drawLine(0, 0, tft.width()-1, y, color);
+    delay(0);
+  }
+
+  tft.fillScreen(ST77XX_BLACK);
+  for (int16_t x=0; x &lt; tft.width(); x+=6) {
+    tft.drawLine(tft.width()-1, 0, x, tft.height()-1, color);
+    delay(0);
+  }
+  for (int16_t y=0; y &lt; tft.height(); y+=6) {
+    tft.drawLine(tft.width()-1, 0, 0, y, color);
+    delay(0);
+  }
+
+  tft.fillScreen(ST77XX_BLACK);
+  for (int16_t x=0; x &lt; tft.width(); x+=6) {
+    tft.drawLine(0, tft.height()-1, x, 0, color);
+    delay(0);
+  }
+  for (int16_t y=0; y &lt; tft.height(); y+=6) {
+    tft.drawLine(0, tft.height()-1, tft.width()-1, y, color);
+    delay(0);
+  }
+
+  tft.fillScreen(ST77XX_BLACK);
+  for (int16_t x=0; x &lt; tft.width(); x+=6) {
+    tft.drawLine(tft.width()-1, tft.height()-1, x, 0, color);
+    delay(0);
+  }
+  for (int16_t y=0; y &lt; tft.height(); y+=6) {
+    tft.drawLine(tft.width()-1, tft.height()-1, 0, y, color);
+    delay(0);
+  }
+}
+
+void testdrawtext(char *text, uint16_t color) {
+  tft.setCursor(0, 0);
+  tft.setTextColor(color);
+  tft.setTextWrap(true);
+  tft.print(text);
+}
+
+void testfastlines(uint16_t color1, uint16_t color2) {
+  tft.fillScreen(ST77XX_BLACK);
+  for (int16_t y=0; y &lt; tft.height(); y+=5) {
+    tft.drawFastHLine(0, y, tft.width(), color1);
+  }
+  for (int16_t x=0; x &lt; tft.width(); x+=5) {
+    tft.drawFastVLine(x, 0, tft.height(), color2);
+  }
+}
+
+void testdrawrects(uint16_t color) {
+  tft.fillScreen(ST77XX_BLACK);
+  for (int16_t x=0; x &lt; tft.width(); x+=6) {
+    tft.drawRect(tft.width()/2 -x/2, tft.height()/2 -x/2 , x, x, color);
+  }
+}
+
+void testfillrects(uint16_t color1, uint16_t color2) {
+  tft.fillScreen(ST77XX_BLACK);
+  for (int16_t x=tft.width()-1; x &gt; 6; x-=6) {
+    tft.fillRect(tft.width()/2 -x/2, tft.height()/2 -x/2 , x, x, color1);
+    tft.drawRect(tft.width()/2 -x/2, tft.height()/2 -x/2 , x, x, color2);
+  }
+}
+
+void testfillcircles(uint8_t radius, uint16_t color) {
+  for (int16_t x=radius; x &lt; tft.width(); x+=radius*2) {
+    for (int16_t y=radius; y &lt; tft.height(); y+=radius*2) {
+      tft.fillCircle(x, y, radius, color);
+    }
+  }
+}
+
+void testdrawcircles(uint8_t radius, uint16_t color) {
+  for (int16_t x=0; x &lt; tft.width()+radius; x+=radius*2) {
+    for (int16_t y=0; y &lt; tft.height()+radius; y+=radius*2) {
+      tft.drawCircle(x, y, radius, color);
+    }
+  }
+}
+
+void testtriangles() {
+  tft.fillScreen(ST77XX_BLACK);
+  uint16_t color = 0xF800;
+  int t;
+  int w = tft.width()/2;
+  int x = tft.height()-1;
+  int y = 0;
+  int z = tft.width();
+  for(t = 0 ; t &lt;= 15; t++) {
+    tft.drawTriangle(w, y, y, x, z, x, color);
+    x-=4;
+    y+=4;
+    z-=4;
+    color+=100;
+  }
+}
+
+void testroundrects() {
+  tft.fillScreen(ST77XX_BLACK);
+  uint16_t color = 100;
+  int i;
+  int t;
+  for(t = 0 ; t &lt;= 4; t+=1) {
+    int x = 0;
+    int y = 0;
+    int w = tft.width()-2;
+    int h = tft.height()-2;
+    for(i = 0 ; i &lt;= 16; i+=1) {
+      tft.drawRoundRect(x, y, w, h, 5, color);
+      x+=2;
+      y+=3;
+      w-=4;
+      h-=6;
+      color+=1100;
+    }
+    color+=100;
+  }
+}
+
+void tftPrintTest() {
+  tft.setTextWrap(false);
+  tft.fillScreen(ST77XX_BLACK);
+  tft.setCursor(0, 30);
+  tft.setTextColor(ST77XX_RED);
+  tft.setTextSize(1);
+  tft.println(&quot;Hello World!&quot;);
+  tft.setTextColor(ST77XX_YELLOW);
+  tft.setTextSize(2);
+  tft.println(&quot;Hello World!&quot;);
+  tft.setTextColor(ST77XX_GREEN);
+  tft.setTextSize(3);
+  tft.println(&quot;Hello World!&quot;);
+  tft.setTextColor(ST77XX_BLUE);
+  tft.setTextSize(4);
+  tft.print(1234.567);
+  delay(1500);
+  tft.setCursor(0, 0);
+  tft.fillScreen(ST77XX_BLACK);
+  tft.setTextColor(ST77XX_WHITE);
+  tft.setTextSize(0);
+  tft.println(&quot;Hello World!&quot;);
+  tft.setTextSize(1);
+  tft.setTextColor(ST77XX_GREEN);
+  tft.print(p, 6);
+  tft.println(&quot; Want pi?&quot;);
+  tft.println(&quot; &quot;);
+  tft.print(8675309, HEX); // print 8,675,309 out in HEX!
+  tft.println(&quot; Print HEX!&quot;);
+  tft.println(&quot; &quot;);
+  tft.setTextColor(ST77XX_WHITE);
+  tft.println(&quot;Sketch has been&quot;);
+  tft.println(&quot;running for: &quot;);
+  tft.setTextColor(ST77XX_MAGENTA);
+  tft.print(millis() / 1000);
+  tft.setTextColor(ST77XX_WHITE);
+  tft.print(&quot; seconds.&quot;);
+}
+
+void mediabuttons() {
+  // play
+  tft.fillScreen(ST77XX_BLACK);
+  tft.fillRoundRect(25, 10, 78, 60, 8, ST77XX_WHITE);
+  tft.fillTriangle(42, 20, 42, 60, 90, 40, ST77XX_RED);
+  delay(500);
+  // pause
+  tft.fillRoundRect(25, 90, 78, 60, 8, ST77XX_WHITE);
+  tft.fillRoundRect(39, 98, 20, 45, 5, ST77XX_GREEN);
+  tft.fillRoundRect(69, 98, 20, 45, 5, ST77XX_GREEN);
+  delay(500);
+  // play color
+  tft.fillTriangle(42, 20, 42, 60, 90, 40, ST77XX_BLUE);
+  delay(50);
+  // pause color
+  tft.fillRoundRect(39, 98, 20, 45, 5, ST77XX_RED);
+  tft.fillRoundRect(69, 98, 20, 45, 5, ST77XX_RED);
+  // play color
+  tft.fillTriangle(42, 20, 42, 60, 90, 40, ST77XX_GREEN);
+}
+</code></pre>
+          </article>
+
+          <div class="pagination">
+            
+              <a href="https://aspartate.github.io/personal_website/blog/telescope/">&laquo; Astro-Imaging Telescope</a>
+            
+            
+              <a href="https://aspartate.github.io/personal_website/blog/week-7-input-output/">Week 7 - Input/Output &raquo;</a>
+            
+          </div>
+        </section>
+        <br>
+        <section class="disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname == "localhost")
+        return;
+      var disqus_shortname = '';
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view comments powered by <a href="http://disqus.com/?ref_noscript">Disqus</a>.</noscript>
+</section>
+
+      </section>
+
+    </main>
+    <footer class="row middle-xs center-xs">
+  <div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-facebook"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href="https://github.com/aspartate/personal_website"><i class="icon icon-github"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-linkedin"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-stackoverflow"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-twitter"></i></a>
+    </div>
+  <div class="col-xs-12">
+      <small>
+      
+      Copyright &copy; 2021 Andrew Zhang
+      
+      
+      </small>
+    </div>
+</footer>
+
+    
+
+
+
+
+
+
+  <script src="https://aspartate.github.io/personal_website/js/bundle.min.fbd35181a0fd0238360575e6a25942746d4e73c615f852efe3b975ea70829339.js" type="text/javascript"></script>
+  <script>handleNavBar( false )</script>
+
+  </body>
+</html>

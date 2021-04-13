@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+  
+
+  
+
+  <title>
+    
+    Week 11 - USB Communication | Andrew Zhang
+  </title>
+
+  <meta name="title" content="Week 11 - USB Communication | Andrew Zhang">
+
+  <meta charset="utf-8">
+  
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer-when-downgrade">
+  <base href="https://aspartate.github.io/personal_website/">
+
+  <meta name="description" content="my personal website">
+
+  <meta name="author" content="aspartate">
+
+  
+
+  <meta property="og:title" content="Week 11 - USB Communication | Andrew Zhang">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://aspartate.github.io/personal_website/">
+
+  <meta property="og:image" content="https://aspartate.github.io/personal_website/images/osprey-delight.png">
+
+  <meta property="og:description" content="my personal website">
+
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <meta name="theme-color" content="#0097a7">
+
+  <link rel="canonical" href="https://aspartate.github.io/personal_website/blog/week-11-usb-communication/">
+  
+  
+
+  <link rel="stylesheet" href="https://aspartate.github.io/personal_website/style.9ff615c48229657d182d4c0c716ebf5f26645eff21662abca5e094e2b245bfeb.css" type="text/css">
+
+  <script type="application/ld+json">
+  {"@context":"http://www.schema.org","@type":"Person","@id":"https://aspartate.github.io/personal_website/","name":"aspartate","url":"https://aspartate.github.io/personal_website/","description":"my personal website","sameAs":["","https://github.com/aspartate/personal_website","","",""]}
+  </script>
+
+  <style>.lazyload{opacity:.0001;}.logo .lazyload{min-width:10em;}</style>
+    <script src="https://aspartate.github.io/personal_website/js/vendor/lazysizes.min.js" async></script>
+</head>
+
+  <body>
+    
+
+
+
+
+
+<nav class="row middle-xs center-xs">
+  <div class="col-xs-6 col-sm-1 logo">
+    <a href="/personal_website/#"><img data-src="favicon.png" class="lazyload" lazyload="on" alt="Andrew Zhang"></a>
+  </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#about">About</a></h3>
+      </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#work">Work</a></h3>
+      </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#blog">Blog</a></h3>
+      </div>
+    
+      <div class="col-xs-3 col-sm-2 nav-item">
+        <h3><a href="/personal_website/#contact">Contact</a></h3>
+      </div>
+    
+  <div class="col-xs-6 col-sm-1 nav-toggle">
+      <a href="" class="nav-icon" onclick="return false">
+        <i id="open" class="icon icon-2x icon-menu"></i>
+      </a>
+  </div>
+</nav>
+
+<section class="nav-full row middle-xs center-xs">
+  <div class="col-xs-12">
+    <div class="row middle-xs center-xs">
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#about">About</a></h1></div>
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#work">Work</a></h1></div>
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#blog">Blog</a></h1></div>
+      
+        <div class="col-xs-12"><h1><a href="/personal_website/#contact">Contact</a></h1></div>
+      
+    </div>
+  </div>
+</section>
+
+    <main>
+
+      <section class="container">
+        <section class="content">
+          <h1> Week 11 - USB Communication </h1>
+
+            <div class="sub-header">
+              April 11, 2021 · 7 minutes read
+            </div>
+
+          <article class="entry-content">
+            <p>This assignment this week was to get a microcontroller to communicate with a controller over USB. A popular way of visualizing sensor input from a microcontroller is p5, which is a Javascript-based software that can run in the browser. Because I was brand new to p5 at the time, I decided to start with a bare-bones tutorial:</p>
+<p>
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+  <iframe src="https://www.youtube.com/embed/feL_-clJQMs" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
+</div>
+
+
+</p>
+<p>This tutorial involved controlling a shape drawn in the Chrome browser using a button connected to a microcontroller. First, I implemented the circuit and code on the NodeMCU. In the tutorial, a manual pullup resistor was used but since most boards (including the NodeMCU) have internal pullup resistors available on certain pins, I used <code>pinMode(pin, INPUT_PULLUP)</code> instead to simplify the wiring. One caveat is that the NodeMCU only has internal pullup resistors on pins GPIO 0-15, while pin 16 (D0) only has a pull-down resistor. Additionally, GPIO 0 (D3), GPIO 2 (D4), and GPIO 15 (D8)have various limitations so it&rsquo;s best to avoid them. Therefore I connected one leg of a pushbutton switch to D1 and the other leg to GND. The code is very simple:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">const</span> <span class="nb">int</span> <span class="n">switchPin</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="nb">int</span> <span class="n">switchVal</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="n">void</span> <span class="n">setup</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">switchPin</span><span class="p">,</span> <span class="n">INPUT_PULLUP</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="o">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">74800</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">void</span> <span class="n">loop</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">switchVal</span> <span class="o">=</span> <span class="n">digitalRead</span><span class="p">(</span><span class="n">switchPin</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">switchVal</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div><p>Checking the serial monitor, I confirmed that pressing the button indeed changes the serial output from 1 to 0. The next step was to install the program p5.serialcontrol from <strong><a href="https://github.com/p5-serial/p5.serialcontrol/releases/tag/0.1.2">here</a></strong>, which establishes the connection between the browser and the serial monitor. The p5 code is available <strong><a href="https://editor.p5js.org/shfitz/sketches/Aongj2UK">here</a></strong>, as a bundle of 3 sketch files: index.html, sketch.js, and style.css. The only one that needs editing for the tutorial to work is sketch.js, where line 14 needs to be edited so the correct serial (COM) port is opened.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="o">//</span> <span class="n">serial</span> <span class="n">communication</span> <span class="n">between</span> <span class="n">a</span> <span class="n">microcontroller</span> <span class="k">with</span> <span class="n">a</span> <span class="n">switch</span> <span class="n">on</span> <span class="n">pin</span> <span class="mi">2</span>
+<span class="o">//</span> <span class="n">arduino</span> <span class="n">code</span> <span class="n">can</span> <span class="n">be</span> <span class="n">found</span> <span class="n">here</span> <span class="p">:</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">gist</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">shfitz</span><span class="o">/</span><span class="mi">7</span><span class="n">fd206b7db4e0e6416a443d61c8c988e</span>
+
+<span class="n">let</span> <span class="n">serial</span><span class="p">;</span> <span class="o">//</span> <span class="n">variable</span> <span class="k">for</span> <span class="n">the</span> <span class="n">serial</span> <span class="nb">object</span>
+<span class="n">let</span> <span class="n">latestData</span> <span class="o">=</span> <span class="s2">&#34;waiting for data&#34;</span><span class="p">;</span> <span class="o">//</span> <span class="n">variable</span> <span class="n">to</span> <span class="n">hold</span> <span class="n">the</span> <span class="n">data</span>
+
+<span class="n">function</span> <span class="n">setup</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">createCanvas</span><span class="p">(</span><span class="n">windowWidth</span><span class="p">,</span> <span class="n">windowHeight</span><span class="p">);</span>
+  <span class="o">//</span> <span class="n">serial</span> <span class="n">constructor</span>
+  <span class="n">serial</span> <span class="o">=</span> <span class="n">new</span> <span class="n">p5</span><span class="o">.</span><span class="n">SerialPort</span><span class="p">();</span>
+  <span class="o">//</span> <span class="n">get</span> <span class="n">a</span> <span class="nb">list</span> <span class="n">of</span> <span class="nb">all</span> <span class="n">connected</span> <span class="n">serial</span> <span class="n">devices</span>
+  <span class="n">serial</span><span class="o">.</span><span class="n">list</span><span class="p">();</span>
+  <span class="o">//</span> <span class="n">serial</span> <span class="n">port</span> <span class="n">to</span> <span class="n">use</span> <span class="o">-</span> <span class="n">you</span><span class="s1">&#39;ll need to change this</span>
+  <span class="n">serial</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;COM6&#39;</span><span class="p">);</span>
+  <span class="o">//</span> <span class="n">callback</span> <span class="k">for</span> <span class="n">when</span> <span class="n">the</span> <span class="n">sketchs</span> <span class="n">connects</span> <span class="n">to</span> <span class="n">the</span> <span class="n">server</span>
+  <span class="n">serial</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="s1">&#39;connected&#39;</span><span class="p">,</span> <span class="n">serverConnected</span><span class="p">);</span>
+  <span class="o">//</span> <span class="n">callback</span> <span class="n">to</span> <span class="k">print</span> <span class="n">the</span> <span class="nb">list</span> <span class="n">of</span> <span class="n">serial</span> <span class="n">devices</span>
+  <span class="n">serial</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="s1">&#39;list&#39;</span><span class="p">,</span> <span class="n">gotList</span><span class="p">);</span>
+  <span class="o">//</span> <span class="n">what</span> <span class="n">to</span> <span class="n">do</span> <span class="n">when</span> <span class="n">we</span> <span class="n">get</span> <span class="n">serial</span> <span class="n">data</span>
+  <span class="n">serial</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">gotData</span><span class="p">);</span>
+  <span class="o">//</span> <span class="n">what</span> <span class="n">to</span> <span class="n">do</span> <span class="n">when</span> <span class="n">there</span><span class="s1">&#39;s an error</span>
+  <span class="n">serial</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="n">gotError</span><span class="p">);</span>
+  <span class="o">//</span> <span class="n">when</span> <span class="n">to</span> <span class="n">do</span> <span class="n">when</span> <span class="n">the</span> <span class="n">serial</span> <span class="n">port</span> <span class="n">opens</span>
+  <span class="n">serial</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="s1">&#39;open&#39;</span><span class="p">,</span> <span class="n">gotOpen</span><span class="p">);</span>
+  <span class="o">//</span> <span class="n">what</span> <span class="n">to</span> <span class="n">do</span> <span class="n">when</span> <span class="n">the</span> <span class="n">port</span> <span class="n">closes</span>
+  <span class="n">serial</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="s1">&#39;close&#39;</span><span class="p">,</span> <span class="n">gotClose</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">function</span> <span class="n">serverConnected</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">print</span><span class="p">(</span><span class="s2">&#34;Connected to Server&#34;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="o">//</span> <span class="nb">list</span> <span class="n">the</span> <span class="n">ports</span>
+<span class="n">function</span> <span class="n">gotList</span><span class="p">(</span><span class="n">thelist</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">print</span><span class="p">(</span><span class="s2">&#34;List of Serial Ports:&#34;</span><span class="p">);</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="n">let</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">thelist</span><span class="o">.</span><span class="n">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="s2">&#34; &#34;</span> <span class="o">+</span> <span class="n">thelist</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">function</span> <span class="n">gotOpen</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">print</span><span class="p">(</span><span class="s2">&#34;Serial Port is Open&#34;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">function</span> <span class="n">gotClose</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">print</span><span class="p">(</span><span class="s2">&#34;Serial Port is Closed&#34;</span><span class="p">);</span>
+  <span class="n">latestData</span> <span class="o">=</span> <span class="s2">&#34;Serial Port is Closed&#34;</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">function</span> <span class="n">gotError</span><span class="p">(</span><span class="n">theerror</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">print</span><span class="p">(</span><span class="n">theerror</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="o">//</span> <span class="n">when</span> <span class="n">data</span> <span class="ow">is</span> <span class="n">received</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">serial</span> <span class="nb">buffer</span>
+
+<span class="n">function</span> <span class="n">gotData</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">let</span> <span class="n">currentString</span> <span class="o">=</span> <span class="n">serial</span><span class="o">.</span><span class="n">readLine</span><span class="p">();</span> <span class="o">//</span> <span class="n">store</span> <span class="n">the</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">variable</span>
+  <span class="n">trim</span><span class="p">(</span><span class="n">currentString</span><span class="p">);</span> <span class="o">//</span> <span class="n">get</span> <span class="n">rid</span> <span class="n">of</span> <span class="n">whitespace</span>
+  <span class="k">if</span> <span class="p">(</span><span class="err">!</span><span class="n">currentString</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span> <span class="o">//</span> <span class="k">if</span> <span class="n">there</span><span class="s1">&#39;s nothing in there, ignore it</span>
+  <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">currentString</span><span class="p">);</span> <span class="o">//</span> <span class="k">print</span> <span class="n">it</span> <span class="n">out</span>
+  <span class="n">latestData</span> <span class="o">=</span> <span class="n">currentString</span><span class="p">;</span> <span class="o">//</span> <span class="n">save</span> <span class="n">it</span> <span class="n">to</span> <span class="n">the</span> <span class="k">global</span> <span class="n">variable</span>
+<span class="p">}</span>
+
+<span class="n">function</span> <span class="n">draw</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">background</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">);</span>
+  <span class="n">fill</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="n">text</span><span class="p">(</span><span class="n">latestData</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span> <span class="o">//</span> <span class="k">print</span> <span class="n">the</span> <span class="n">data</span> <span class="n">to</span> <span class="n">the</span> <span class="n">sketch</span>
+
+  <span class="o">//</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">example</span><span class="p">,</span> <span class="n">we</span> <span class="n">are</span> <span class="n">reciving</span> <span class="n">a</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">a</span> <span class="mi">1</span>
+  <span class="o">//</span> <span class="k">if</span> <span class="n">the</span> <span class="n">button</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">pressed</span> <span class="n">we</span> <span class="n">get</span> <span class="n">a</span> <span class="mi">0</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">latestData</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">ellipse</span><span class="p">(</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="o">//</span> <span class="k">if</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">pressed</span><span class="p">,</span> <span class="n">we</span> <span class="n">get</span> <span class="n">a</span> <span class="mi">1</span>
+    <span class="n">rectMode</span><span class="p">(</span><span class="n">CENTER</span><span class="p">);</span>
+    <span class="n">rect</span><span class="p">(</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><p>After getting all the code ready and opening the COM port in p5.serialcontrol, the sketch didn&rsquo;t work. I realized that this was because my NodeMCU communicates at 74800 baud, whereas p5.serialcontrol runs at 9600 baud. As far as I&rsquo;m aware, neither of these are easily changed. The easiest solution was to reupload the code to another board at 9600 baud, and I used the Metro M0 Express with pin 2 as the input pin. This made the p5 sketch run successfully.</p>
+<p><img src="images/week11-usb/simpletutorial.gif" alt="Simple tutorial."></p>
+<p>Next, I wanted to try a different input sensor. I&rsquo;ve always wanted to experiment with flex sensors, but they are pretty expensive. Thankfully, people have figured out how to make flex sensors with Velostat, which is a conductive carbon-infused plastic film that changes resistance when pressure is applied. Several tutorials exist for these DIY flex sensors, an example being <strong><a href="https://www.instructables.com/DIY-Bend-Sensor-Using-only-Velostat-and-Masking-T/">this one</a></strong>. I adapted the instructions from the tutorial to make an even simpler version using duct tape, aluminum foil, and a single strip of Velostat.</p>
+<p>First, cut a 1 cm-wide strip of Velostat. It can be any length, but mine was around 10 cm. Then cut 2 pieces of aluminum foil that are slightly shorter and thinner than the Velostat strip. Then cut 2 pieces of duct tape that are longer and wider than the Velostat strip. Exact dimensions don&rsquo;t matter. Finally, strip the ends of 2 wires. I used a Dupont wire so it can be easily plugged into a breadboard.</p>
+<p><img src="images/week11-usb/step1.jpg" alt="Step 1."></p>
+<p>Assemble the tape, foil, and wires like so:</p>
+<p><img src="images/week11-usb/step2.jpg" alt="Step 2."></p>
+<p>Place the Velostat over one of the tape assemblies, making sure to completely cover the foil strip. No part of the foil should be exposed.</p>
+<p><img src="images/week11-usb/step3.jpg" alt="Step 3."></p>
+<p>Finally, sandwich the two tape assemblies together and trim the edges with a pair of scissors (but don&rsquo;t trim all the way to the Velostat). Your flex sensor is complete! You can test it out by hooking it up to a multimeter in resistance mode and bending it around.</p>
+<p><img src="images/week11-usb/done.jpg" alt="Done."></p>
+<p>In order to get readings from a microcontroller, the flex sensor can&rsquo;t simply be hooked up with one end in an ADC pin and the other end in 3V. It needs to be in a voltage divider orientation, so we need 3 &ldquo;legs&rdquo; (like a potentiometer). Follow the below diagram, courtesy of <strong><a href="https://learn.sparkfun.com/tutorials/flex-sensor-hookup-guide/all">Sparkfun</a></strong>. The yellow wire is the one that should be connected to the ADC pin on your microcontroller.</p>
+<p><img src="images/week11-usb/flex-wiring.png" alt="Wiring."></p>
+<p>Now, using a simple sketch like the one below, we can visualize the flex sensor readings in the serial plotter:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">const</span> <span class="nb">int</span> <span class="n">inputPin</span> <span class="o">=</span> <span class="n">A0</span><span class="p">;</span>
+<span class="nb">int</span> <span class="n">value</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="n">void</span> <span class="n">setup</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">inputPin</span><span class="p">,</span> <span class="n">INPUT</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="o">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">9600</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">void</span> <span class="n">loop</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">value</span> <span class="o">=</span> <span class="n">analogRead</span><span class="p">(</span><span class="n">inputPin</span><span class="p">);</span>
+
+  <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+
+  <span class="n">delay</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div><p><img src="images/week11-usb/flex-data.gif" alt="Flex sensor data."></p>
+<p>Now that our flex sensor works, we can adapt the p5 sketch.js to visualize the data in the browser:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="o">//</span> <span class="n">serial</span> <span class="n">communication</span> <span class="n">between</span> <span class="n">a</span> <span class="n">microcontroller</span> <span class="k">with</span> <span class="n">a</span> <span class="n">switch</span> <span class="n">on</span> <span class="n">pin</span> <span class="mi">2</span>
+<span class="o">//</span> <span class="n">arduino</span> <span class="n">code</span> <span class="n">can</span> <span class="n">be</span> <span class="n">found</span> <span class="n">here</span> <span class="p">:</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">gist</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">shfitz</span><span class="o">/</span><span class="mi">7</span><span class="n">fd206b7db4e0e6416a443d61c8c988e</span>
+
+<span class="n">let</span> <span class="n">serial</span><span class="p">;</span> <span class="o">//</span> <span class="n">variable</span> <span class="k">for</span> <span class="n">the</span> <span class="n">serial</span> <span class="nb">object</span>
+<span class="n">let</span> <span class="n">latestData</span> <span class="o">=</span> <span class="s2">&#34;waiting for data&#34;</span><span class="p">;</span> <span class="o">//</span> <span class="n">variable</span> <span class="n">to</span> <span class="n">hold</span> <span class="n">the</span> <span class="n">data</span>
+
+<span class="n">function</span> <span class="n">setup</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">createCanvas</span><span class="p">(</span><span class="n">windowWidth</span><span class="p">,</span> <span class="n">windowHeight</span><span class="p">);</span>
+  <span class="o">//</span> <span class="n">serial</span> <span class="n">constructor</span>
+  <span class="n">serial</span> <span class="o">=</span> <span class="n">new</span> <span class="n">p5</span><span class="o">.</span><span class="n">SerialPort</span><span class="p">();</span>
+  <span class="o">//</span> <span class="n">get</span> <span class="n">a</span> <span class="nb">list</span> <span class="n">of</span> <span class="nb">all</span> <span class="n">connected</span> <span class="n">serial</span> <span class="n">devices</span>
+  <span class="n">serial</span><span class="o">.</span><span class="n">list</span><span class="p">();</span>
+  <span class="o">//</span> <span class="n">serial</span> <span class="n">port</span> <span class="n">to</span> <span class="n">use</span> <span class="o">-</span> <span class="n">you</span><span class="s1">&#39;ll need to change this</span>
+  <span class="n">serial</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;COM6&#39;</span><span class="p">);</span>
+  <span class="o">//</span> <span class="n">callback</span> <span class="k">for</span> <span class="n">when</span> <span class="n">the</span> <span class="n">sketchs</span> <span class="n">connects</span> <span class="n">to</span> <span class="n">the</span> <span class="n">server</span>
+  <span class="n">serial</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="s1">&#39;connected&#39;</span><span class="p">,</span> <span class="n">serverConnected</span><span class="p">);</span>
+  <span class="o">//</span> <span class="n">callback</span> <span class="n">to</span> <span class="k">print</span> <span class="n">the</span> <span class="nb">list</span> <span class="n">of</span> <span class="n">serial</span> <span class="n">devices</span>
+  <span class="n">serial</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="s1">&#39;list&#39;</span><span class="p">,</span> <span class="n">gotList</span><span class="p">);</span>
+  <span class="o">//</span> <span class="n">what</span> <span class="n">to</span> <span class="n">do</span> <span class="n">when</span> <span class="n">we</span> <span class="n">get</span> <span class="n">serial</span> <span class="n">data</span>
+  <span class="n">serial</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">gotData</span><span class="p">);</span>
+  <span class="o">//</span> <span class="n">what</span> <span class="n">to</span> <span class="n">do</span> <span class="n">when</span> <span class="n">there</span><span class="s1">&#39;s an error</span>
+  <span class="n">serial</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="n">gotError</span><span class="p">);</span>
+  <span class="o">//</span> <span class="n">when</span> <span class="n">to</span> <span class="n">do</span> <span class="n">when</span> <span class="n">the</span> <span class="n">serial</span> <span class="n">port</span> <span class="n">opens</span>
+  <span class="n">serial</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="s1">&#39;open&#39;</span><span class="p">,</span> <span class="n">gotOpen</span><span class="p">);</span>
+  <span class="o">//</span> <span class="n">what</span> <span class="n">to</span> <span class="n">do</span> <span class="n">when</span> <span class="n">the</span> <span class="n">port</span> <span class="n">closes</span>
+  <span class="n">serial</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="s1">&#39;close&#39;</span><span class="p">,</span> <span class="n">gotClose</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">function</span> <span class="n">serverConnected</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">print</span><span class="p">(</span><span class="s2">&#34;Connected to Server&#34;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="o">//</span> <span class="nb">list</span> <span class="n">the</span> <span class="n">ports</span>
+<span class="n">function</span> <span class="n">gotList</span><span class="p">(</span><span class="n">thelist</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">print</span><span class="p">(</span><span class="s2">&#34;List of Serial Ports:&#34;</span><span class="p">);</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="n">let</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">thelist</span><span class="o">.</span><span class="n">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="s2">&#34; &#34;</span> <span class="o">+</span> <span class="n">thelist</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">function</span> <span class="n">gotOpen</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">print</span><span class="p">(</span><span class="s2">&#34;Serial Port is Open&#34;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">function</span> <span class="n">gotClose</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">print</span><span class="p">(</span><span class="s2">&#34;Serial Port is Closed&#34;</span><span class="p">);</span>
+  <span class="n">latestData</span> <span class="o">=</span> <span class="s2">&#34;Serial Port is Closed&#34;</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">function</span> <span class="n">gotError</span><span class="p">(</span><span class="n">theerror</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">print</span><span class="p">(</span><span class="n">theerror</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="o">//</span> <span class="n">when</span> <span class="n">data</span> <span class="ow">is</span> <span class="n">received</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">serial</span> <span class="nb">buffer</span>
+
+<span class="n">function</span> <span class="n">gotData</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">let</span> <span class="n">currentString</span> <span class="o">=</span> <span class="n">serial</span><span class="o">.</span><span class="n">readLine</span><span class="p">();</span> <span class="o">//</span> <span class="n">store</span> <span class="n">the</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">variable</span>
+  <span class="n">trim</span><span class="p">(</span><span class="n">currentString</span><span class="p">);</span> <span class="o">//</span> <span class="n">get</span> <span class="n">rid</span> <span class="n">of</span> <span class="n">whitespace</span>
+  <span class="k">if</span> <span class="p">(</span><span class="err">!</span><span class="n">currentString</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span> <span class="o">//</span> <span class="k">if</span> <span class="n">there</span><span class="s1">&#39;s nothing in there, ignore it</span>
+  <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">currentString</span><span class="p">);</span> <span class="o">//</span> <span class="k">print</span> <span class="n">it</span> <span class="n">out</span>
+  <span class="n">latestData</span> <span class="o">=</span> <span class="n">currentString</span><span class="p">;</span> <span class="o">//</span> <span class="n">save</span> <span class="n">it</span> <span class="n">to</span> <span class="n">the</span> <span class="k">global</span> <span class="n">variable</span>
+<span class="p">}</span>
+
+<span class="n">function</span> <span class="n">draw</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">background</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">);</span>
+  <span class="n">fill</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="n">text</span><span class="p">(</span><span class="n">latestData</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span> <span class="o">//</span> <span class="k">print</span> <span class="n">the</span> <span class="n">data</span> <span class="n">to</span> <span class="n">the</span> <span class="n">sketch</span>
+  <span class="n">ellipse</span><span class="p">(</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">latestData</span><span class="p">,</span> <span class="n">latestData</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div><p><img src="images/week11-usb/flex-p5.gif" alt="Flex sensor in browser."></p>
+
+          </article>
+
+          <div class="pagination">
+            
+              <a href="https://aspartate.github.io/personal_website/blog/avatarm/">&laquo; Final Project</a>
+            
+            
+          </div>
+        </section>
+        <br>
+        <section class="disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname == "localhost")
+        return;
+      var disqus_shortname = '';
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view comments powered by <a href="http://disqus.com/?ref_noscript">Disqus</a>.</noscript>
+</section>
+
+      </section>
+
+    </main>
+    <footer class="row middle-xs center-xs">
+  <div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-facebook"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href="https://github.com/aspartate/personal_website"><i class="icon icon-github"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-linkedin"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-stackoverflow"></i></a>
+    </div><div class="col-xs-2">
+      <a target="_blank" rel="noopener" href=""><i class="icon icon-twitter"></i></a>
+    </div>
+  <div class="col-xs-12">
+      <small>
+      
+      Copyright &copy; 2021 Andrew Zhang
+      
+      
+      </small>
+    </div>
+</footer>
+
+    
+
+
+
+
+
+
+  <script src="https://aspartate.github.io/personal_website/js/bundle.min.fbd35181a0fd0238360575e6a25942746d4e73c615f852efe3b975ea70829339.js" type="text/javascript"></script>
+  <script>handleNavBar( false )</script>
+
+  </body>
+</html>
