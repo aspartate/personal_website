@@ -6,7 +6,17 @@
     <description>Recent content on Andrew Zhang</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Sun, 11 Apr 2021 23:56:10 -0400</lastBuildDate><atom:link href="https://aspartate.github.io/personal_website/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 19 Apr 2021 19:21:42 -0400</lastBuildDate><atom:link href="https://aspartate.github.io/personal_website/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Week 12 - Casting</title>
+      <link>https://aspartate.github.io/personal_website/blog/week-12-casting/</link>
+      <pubDate>Mon, 19 Apr 2021 19:21:42 -0400</pubDate>
+      
+      <guid>https://aspartate.github.io/personal_website/blog/week-12-casting/</guid>
+      <description>The assignment this week was to cast something using a mold made from Sorta-Clear 37, a food-safe 2-part silicone rubber. I wanted to make some chocolate coins, since this only required a small 1-sided mold and I wanted to keep some of the Sorta-Clear for some soft robotics experiments in the future.
+First, I made a dam with some scrap paper and tape to contain the silicone. I put a half-dollar inside, tail side up (I wanted to cast the tail because it has more detail).</description>
+    </item>
+    
     <item>
       <title>Week 11 - USB Communication</title>
       <link>https://aspartate.github.io/personal_website/blog/week-11-usb-communication/</link>
