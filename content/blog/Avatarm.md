@@ -280,15 +280,36 @@ Time to make this look spiffy!
 
 ### 3. CAD.
 
-Now that I had the control system down, it was up to my CAD skills to 
+Now that I had the control system down, it was up to my CAD skills to turn this into a proper robot arm. I've always really liked the aesthetic of KUKA robotics, and I found **[a 1:10 scale model of the KUKA KR150 on Thingiverse](https://www.thingiverse.com/thing:1629341)**, by user BlacklightShaman. This model was incredibly detailed, and I wanted to make it actually function. This would involve modifying the parts to actually fit servos and the microcontroller.
 
+![.](images/avatarm/thingiverse.png)
+
+I first scaled imported the major components of the arm to TinkerCAD and scaled them up to 150%. There were 4 major parts: the base, part A, part B, and part C (where A, B, C, are the movable parts of the arm from bottom to top). I decided on 150% scale after making measurements of the MG996R servo and finding a size at which a servo could comfortable fit at each joint.
+
+![.](images/avatarm/tinkercad-import.png)
+
+To mount the servo at each joint, I needed to make a custom 
+
+
+Part A had a cavity on one side in which a faux stepper motor was meant to be printed and glued on. The geometry of this cavity made it difficult to work with, so I got rid of it in Meshmixer by deleting the polygons around the rim and healing using the Inspector tool.
 
 ![.](images/avatarm/fill-hole.png)
 ![.](images/avatarm/hole-filled.png)
 
+I had to make servo mounts in line with the axis of rotation at each joint. To find the center of each joint, I made a transparent cylinder and did my best to line it up with existing circular features on the joint. I could then center-align other objects to this cylinder, meaning that they would be also aligned to the axis of rotation. 
+
 ![.](images/avatarm/alignment.png)
 
+To part C, I added a couple of cable management rings which were extracted from part B.
+
 ![.](images/avatarm/cable-management-ring.png)
+
+
+### 4. Future Plans
+
+As of today (4/27), I am approximately 2 weeks away from the final presentation. I plan to leave a week for making the promo video and polishing up my documentation, so I need to finish building by May 7th. I plan to finish the output arm by the end this Friday, and work on the input arm (which will be simpler and incorporate the potentiometers) through the weekend. This would conclude the minimal viable product, which is a robot arm that can be remotely controlled via a teaching arm.
+
+Depending on how well I meet this timeline, there are 2 potential upgrades I plan to make to this project. One is to figure out a way to record the position of the arm over a duration of time and replay them, so the arm can be "taught". Another is to use gyroscope/accelerometer sensors (such as the MPU6050) to detect the orientation of various joints of my own arm and use that information to control the orientation of the Avatarm.
 
 
 ### Photo Gallery.
