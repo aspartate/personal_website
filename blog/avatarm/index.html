@@ -110,7 +110,7 @@
           <h1> Final Project </h1>
 
             <div class="sub-header">
-              April 26, 2021 · 8 minutes read
+              April 26, 2021 · 10 minutes read
             </div>
 
           <article class="entry-content">
@@ -370,11 +370,21 @@
 <p><img src="images/avatarm/ESPNOW-demo.gif" alt="A boring robot arm."></p>
 <p>Time to make this look spiffy!</p>
 <h3 id="3-cad">3. CAD.</h3>
-<p>Now that I had the control system down, it was up to my CAD skills to</p>
+<p>Now that I had the control system down, it was up to my CAD skills to turn this into a proper robot arm. I&rsquo;ve always really liked the aesthetic of KUKA robotics, and I found <strong><a href="https://www.thingiverse.com/thing:1629341">a 1:10 scale model of the KUKA KR150 on Thingiverse</a></strong>, by user BlacklightShaman. This model was incredibly detailed, and I wanted to make it actually function. This would involve modifying the parts to actually fit servos and the microcontroller.</p>
+<p><img src="images/avatarm/thingiverse.png" alt="."></p>
+<p>I first scaled imported the major components of the arm to TinkerCAD and scaled them up to 150%. There were 4 major parts: the base, part A, part B, and part C (where A, B, C, are the movable parts of the arm from bottom to top). I decided on 150% scale after making measurements of the MG996R servo and finding a size at which a servo could comfortable fit at each joint.</p>
+<p><img src="images/avatarm/tinkercad-import.png" alt="."></p>
+<p>To mount the servo at each joint, I needed to make a custom</p>
+<p>Part A had a cavity on one side in which a faux stepper motor was meant to be printed and glued on. The geometry of this cavity made it difficult to work with, so I got rid of it in Meshmixer by deleting the polygons around the rim and healing using the Inspector tool.</p>
 <p><img src="images/avatarm/fill-hole.png" alt=".">
 <img src="images/avatarm/hole-filled.png" alt="."></p>
+<p>I had to make servo mounts in line with the axis of rotation at each joint. To find the center of each joint, I made a transparent cylinder and did my best to line it up with existing circular features on the joint. I could then center-align other objects to this cylinder, meaning that they would be also aligned to the axis of rotation.</p>
 <p><img src="images/avatarm/alignment.png" alt="."></p>
+<p>To part C, I added a couple of cable management rings which were extracted from part B.</p>
 <p><img src="images/avatarm/cable-management-ring.png" alt="."></p>
+<h3 id="4-future-plans">4. Future Plans</h3>
+<p>As of today (4/27), I am approximately 2 weeks away from the final presentation. I plan to leave a week for making the promo video and polishing up my documentation, so I need to finish building by May 7th. I plan to finish the output arm by the end this Friday, and work on the input arm (which will be simpler and incorporate the potentiometers) through the weekend. This would conclude the minimal viable product, which is a robot arm that can be remotely controlled via a teaching arm.</p>
+<p>Depending on how well I meet this timeline, there are 2 potential upgrades I plan to make to this project. One is to figure out a way to record the position of the arm over a duration of time and replay them, so the arm can be &ldquo;taught&rdquo;. Another is to use gyroscope/accelerometer sensors (such as the MPU6050) to detect the orientation of various joints of my own arm and use that information to control the orientation of the Avatarm.</p>
 <h3 id="photo-gallery">Photo Gallery.</h3>
 <p><img src="images/avatarm/A-unfinished-back.jpg" alt=".">
 <img src="images/avatarm/A-unfinished-front.jpg" alt=".">
