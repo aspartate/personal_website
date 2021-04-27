@@ -1,6 +1,6 @@
 ---
 title: "Final Project"
-date: 2021-04-09T02:40:45-05:00
+date: 2021-04-26T02:40:45-05:00
 draft: false
 ---
 
@@ -39,7 +39,290 @@ I initially wanted to implement this over a cloud database (Firebase) which woul
 
 ![Testing.](images/week9-cloud/testing.gif)
 
-As a result, I ultimately decided to go with the ESP-NOW protocol for direct board-to-board radio communication without WiFi. This was preliminarily demonstrated in **[Week 8](https://aspartate.github.io/personal_website/blog/week-8-espnow/)**
+As a result, I ultimately decided to go with the ESP-NOW protocol for direct board-to-board radio communication without WiFi. This was preliminarily demonstrated in **[Week 8](https://aspartate.github.io/personal_website/blog/week-8-espnow/)**. Although I was ultimately able to successfully achieve wireless servo control over ESP-NOW between the ESP32-CAM and Huzzah32, this required several rounds of debugging and a rather fussy workaround due to inherent limitations of the ESP32-CAM. Therefore I replicated this functionality on the NodeMCUs (using a tutorial from **[RandomNerd](https://RandomNerdTutorials.com/esp-now-esp8266-nodemcu-arduino-ide/)**), for a total of 4 servos all multiplexed to the single A0 ADC pin.
+
+Here is the code on the transmitter side, and the wiring:
+
+```python
+/*
+  Rui Santos
+  Complete project details at https://RandomNerdTutorials.com/esp-now-esp8266-nodemcu-arduino-ide/
+  
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files.
+  
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+*/
+
+#include <ESP8266WiFi.h>
+#include <espnow.h>
+
+// REPLACE WITH RECEIVER MAC Address
+uint8_t broadcastAddress[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+// Structure example to send data
+// Must match the receiver structure
+typedef struct struct_message {
+  int val_1;
+  int val_2;
+  int val_3;
+  int val_4;
+} struct_message;
+
+// Create a struct_message called myData
+struct_message myData;
+
+int val_pot1 = 0;
+int val_pot2 = 0;
+int val_pot3 = 0;
+int val_pot4 = 0;
+
+unsigned long lastTime = 0;  
+unsigned long timerDelay = 50;  // send readings timer
+
+// Callback when data is sent
+void OnDataSent(uint8_t *mac_addr, uint8_t sendStatus) {
+  Serial.print("Last Packet Send Status: ");
+  if (sendStatus == 0){
+    Serial.println("Delivery success");
+  }
+  else{
+    Serial.println("Delivery fail");
+  }
+}
+ 
+void setup() {
+  // Init Serial Monitor
+  Serial.begin(74880);
+    
+  pinMode(D1, OUTPUT);
+  pinMode(D2, OUTPUT);
+  pinMode(D3, OUTPUT);
+  pinMode(D4, OUTPUT);
+  
+  // Set device as a Wi-Fi Station
+  WiFi.mode(WIFI_STA);
+
+  // Init ESP-NOW
+  if (esp_now_init() != 0) {
+    Serial.println("Error initializing ESP-NOW");
+    return;
+  }
+
+  // Once ESPNow is successfully Init, we will register for Send CB to
+  // get the status of Trasnmitted packet
+  esp_now_set_self_role(ESP_NOW_ROLE_CONTROLLER);
+  esp_now_register_send_cb(OnDataSent);
+  
+  // Register peer
+  esp_now_add_peer(broadcastAddress, ESP_NOW_ROLE_SLAVE, 1, NULL, 0);
+}
+ 
+void loop() {
+  digitalWrite(D1, HIGH);
+  digitalWrite(D2, LOW);
+  digitalWrite(D3, LOW);
+  digitalWrite(D4, LOW);
+  val_pot1 = map(analogRead(A0), 0, 1024, 0, 180);
+  delay(5);
+
+  digitalWrite(D1, LOW);
+  digitalWrite(D2, HIGH);
+  digitalWrite(D3, LOW);
+  digitalWrite(D4, LOW);
+  val_pot2 = map(analogRead(A0), 0, 1024, 0, 180);
+  delay(5);
+
+  digitalWrite(D1, LOW);
+  digitalWrite(D2, LOW);
+  digitalWrite(D3, HIGH);
+  digitalWrite(D4, LOW);
+  val_pot3 = map(analogRead(A0), 0, 1024, 0, 180);
+  delay(5);
+
+  digitalWrite(D1, LOW);
+  digitalWrite(D2, LOW);
+  digitalWrite(D3, LOW);
+  digitalWrite(D4, HIGH);
+  val_pot4 = map(analogRead(A0), 0, 1024, 0, 180);
+  delay(5);
+
+//  Serial.println(val_pot1);
+//  Serial.println(val_pot2);
+//  Serial.println(val_pot3);
+//  Serial.println(val_pot4);
+
+  if ((millis() - lastTime) > timerDelay) {
+    // Set values to send
+    myData.val_1 = val_pot1;
+    myData.val_2 = val_pot2;
+    myData.val_3 = val_pot3;
+    myData.val_4 = val_pot4;
+
+    // Send message via ESP-NOW
+    esp_now_send(broadcastAddress, (uint8_t *) &myData, sizeof(myData));
+
+    lastTime = millis();
+  }
+}
+```
+![Transmitter wiring.](images/avatarm/transmitter-1.jpg)
+![Transmitter wiring.](images/avatarm/transmitter-2.jpg)
+
+
+Here is the code on the receiver side, and the wiring:
+
+```python
+/*
+  Rui Santos
+  Complete project details at https://RandomNerdTutorials.com/esp-now-esp8266-nodemcu-arduino-ide/
+  
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files.
+  
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+*/
+
+#include <ESP8266WiFi.h>
+#include <espnow.h>
+#include <Servo.h>
+
+int val_pot1;
+int val_pot2;
+int val_pot3;
+int val_pot4;
+
+int pin_servo1 = D1;
+int pin_servo2 = D2;
+int pin_servo3 = D3;
+int pin_servo4 = D4;
+
+Servo servo1;
+Servo servo2;
+Servo servo3;
+Servo servo4;
+
+// Structure example to receive data must match the sender structure
+typedef struct struct_message {
+  int val_1;
+  int val_2;
+  int val_3;
+  int val_4;
+} struct_message;
+
+// Create a struct_message called myData
+struct_message myData;
+
+// Callback function that will be executed when data is received
+void OnDataRecv(uint8_t * mac, uint8_t *incomingData, uint8_t len) {
+  memcpy(&myData, incomingData, sizeof(myData));
+  val_pot1 = myData.val_1;
+  val_pot2 = myData.val_2;
+  val_pot3 = myData.val_3;
+  val_pot4 = myData.val_4;
+  
+  servo1.write(180 - val_pot1);
+  servo2.write(180 - val_pot2);
+  servo3.write(180 - val_pot3);
+  servo4.write(180 - val_pot4);
+  
+  Serial.println(val_pot1);
+  Serial.println(val_pot2);
+  Serial.println(val_pot3);
+  Serial.println(val_pot4);
+}
+ 
+void setup() {
+  // Initialize Serial Monitor
+  Serial.begin(74880);
+
+  pinMode(pin_servo1, OUTPUT);
+  servo1.attach(pin_servo1);
+  pinMode(pin_servo2, OUTPUT);
+  servo2.attach(pin_servo2);
+  pinMode(pin_servo3, OUTPUT);
+  servo3.attach(pin_servo3);
+  pinMode(pin_servo4, OUTPUT);
+  servo4.attach(pin_servo4);
+
+  Serial.print("ESP8266 Board MAC Address:  ");
+  Serial.println(WiFi.macAddress());
+  
+  // Set device as a Wi-Fi Station
+  WiFi.mode(WIFI_STA);
+
+  // Init ESP-NOW
+  if (esp_now_init() != 0) {
+    Serial.println("Error initializing ESP-NOW");
+    return;
+  }
+  
+  // Once ESPNow is successfully Init, we will register for recv CB to get recv packer info
+  esp_now_set_self_role(ESP_NOW_ROLE_SLAVE);
+  esp_now_register_recv_cb(OnDataRecv);
+}
+
+void loop() {
+  
+}
+```
+
+![Receiver wiring.](images/avatarm/receiver-1.jpg)
+![Receiver wiring.](images/avatarm/receiver-2.jpg)
+
+Now I have a functioning robot arm, with no lag! (Although it isn't very exciting...)
+
+![A boring robot arm.](images/avatarm/ESPNOW-demo.gif)
+
+Time to make this look spiffy!
+
+### 3. CAD.
+
+Now that I had the control system down, it was up to my CAD skills to 
+
+
+![.](images/avatarm/fill-hole.png)
+![.](images/avatarm/hole-filled.png)
+
+![.](images/avatarm/alignment.png)
+
+![.](images/avatarm/cable-management-ring.png)
+
+
+### Photo Gallery.
+
+![.](images/avatarm/A-unfinished-back.jpg)
+![.](images/avatarm/A-unfinished-front.jpg)
+![.](images/avatarm/A-finished-front.jpg)
+
+
+![.](images/avatarm/B-unfinished-back.jpg)
+![.](images/avatarm/B-unfinished-front.jpg)
+
+![.](images/avatarm/base-back.jpg)
+![.](images/avatarm/base-front.jpg)
+![.](images/avatarm/base-bottom.jpg)
+
+
+![.](images/avatarm/A-and-base.jpg)
+![.](images/avatarm/A-B-base-1.jpg)
+![.](images/avatarm/A-B-base-2.jpg)
+![.](images/avatarm/A-B-base-3.jpg)
+
+
+
+
+### 5. Bill of Materials.
+
+* [ESP8266 NodeMCU Development Board](https://www.amazon.com/dp/B07HF44GBT?psc=1&ref=ppx_yo2_dt_b_product_details): **$10 for 3**
+* [MG996R Metal Gear Servos](https://www.amazon.com/dp/B081JN7C4M?psc=1&ref=ppx_yo2_dt_b_product_details): **$19 for 5**
+* [SG90 Plastic Gear Servos](https://www.amazon.com/Micro-Helicopter-Airplane-Remote-Control/dp/B072V529YD/ref=sr_1_8?dchild=1&keywords=sg90+servo&qid=1619543945&sr=8-8): **$18 for 10** (these were kindly provided by the PS70 teaching staff)
+* [10K Potentiometers](https://www.amazon.com/gp/product/B07CZXCBWD/ref=ox_sc_saved_title_1?smid=ATHZ0BI0D2RLH&psc=1): **$6 for 10** (these were kindly provided by the PS70 teaching staff)
+* [Dupont Wire (M-M, M-F)](https://www.amazon.com/EDGELEC-Breadboard-Optional-Assorted-Multicolored/dp/B07GD2BWPY/ref=sr_1_3?dchild=1&keywords=dupont+cables&qid=1619543905&sr=8-3): **$6 for 120** (I had these laying around already)
+* [PLA Filament](https://www.amazon.com/Printer-Filament-SUNLU-Dimensional-Accuracy/dp/B07XG3RM58/ref=sr_1_3?dchild=1&keywords=pla%2Bfilament&qid=1619544207&sr=8-3&th=1): **$20 per kg roll** (I used white and black, probably 500g of plastic in total, so about $10 worth.)
+* Various assorted small screws: **Free** (I had a lot of tiny screws laying around from various electronics I've tried to fix over the years (some of them successfully...))
 
 
 Various helpful links:
