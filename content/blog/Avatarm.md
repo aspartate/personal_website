@@ -280,58 +280,126 @@ Time to make this look spiffy!
 
 ### 3. CAD.
 
-Now that I had the control system down, it was up to my CAD skills to turn this into a proper robot arm. I've always really liked the aesthetic of KUKA robotics, and I found **[a 1:10 scale model of the KUKA KR150 on Thingiverse](https://www.thingiverse.com/thing:1629341)**, by user BlacklightShaman. This model was incredibly detailed, and I wanted to make it actually function. This would involve modifying the parts to actually fit servos and the microcontroller.
+Now that I had the control system down, it was time to turn this into a proper robot arm. I've always really liked the aesthetic of KUKA robotics, and I found **[a 1:10 scale model of the KUKA KR150 on Thingiverse](https://www.thingiverse.com/thing:1629341)**, by user BlacklightShaman. This model was incredibly detailed, and I wanted to make it actually function. This would involve modifying the parts to actually fit servos and the microcontroller.
 
 ![.](images/avatarm/thingiverse.png)
 
-I first scaled imported the major components of the arm to TinkerCAD and scaled them up to 150%. There were 4 major parts: the base, part A, part B, and part C (where A, B, C, are the movable parts of the arm from bottom to top). I decided on 150% scale after making measurements of the MG996R servo and finding a size at which a servo could comfortable fit at each joint.
+I first scaled imported the major components of the arm to TinkerCAD and scaled them up to 150%. There were 4 major parts: the base, part A, part B, and part C (where A, B, C, are the movable parts of the arm from bottom to top). I decided on 150% scale after making measurements of the MG996R servo and finding a size at which a servo could comfortably fit at each joint. To help visualize the position of the servos at each joint, I downloaded a model of the MG996R servo from GrabCAD **[here](https://grabcad.com/library/servo-mg996r-3)**. Though the dimensions of the model did not match my servos exactly, it was still a big help in the design process.
 
 ![.](images/avatarm/tinkercad-import.png)
 
-To mount the servo at each joint, I needed to make a custom 
+To mount the servo at each joint, I needed to make an indentation for the gearbox on one side and an indentation for the circular servo horn on the other side. I knew that these mounts had to be perfectly sized in order for my joints to work, so I printed a few dummy test pieces to test the fit. By the third iteration of the test pieces, I had a functional mount for both the servo body and the horn.
 
+![.](images/avatarm/test-pieces-mg996r.jpg)
+
+Now it was just a matter of installing the mount into each of the parts of the arm. I had to align the servo axle with the axis of rotation at each joint. To find the center of each joint, I made a transparent cylinder and did my best to line it up with existing circular features on the joint. I could then center-align other objects to this cylinder, meaning that they would be also aligned to the axis of rotation.
+
+![.](images/avatarm/alignment.png)
 
 Part A had a cavity on one side in which a faux stepper motor was meant to be printed and glued on. The geometry of this cavity made it difficult to work with, so I got rid of it in Meshmixer by deleting the polygons around the rim and healing using the Inspector tool.
 
 ![.](images/avatarm/fill-hole.png)
 ![.](images/avatarm/hole-filled.png)
 
-I had to make servo mounts in line with the axis of rotation at each joint. To find the center of each joint, I made a transparent cylinder and did my best to line it up with existing circular features on the joint. I could then center-align other objects to this cylinder, meaning that they would be also aligned to the axis of rotation. 
+Part C also had some irregular features which I similarly flattened in Meshmixer.
 
-![.](images/avatarm/alignment.png)
+![.](images/avatarm/C-original.png)
+![.](images/avatarm/C-flattened.png)
 
-To part C, I added a couple of cable management rings which were extracted from part B.
+I made mounts for a total of 3 MG996R servos between the base, A, B, and C. This constituted a 3-axis arm, with a 2-axis shoulder (altitude and azimuth) and a 1-axis elbow. However, I wanted at a fourth axis (for wrist rotation), and potentially a fifth (to control a gripper). I chose to use SG90 servos for these because I was concerned that the MG996R servos may exert too much torque on the shoulder altitude joint. I decided to add only the wrist joint for now, with a gripper to be potentially added later. This meant I had to design and test a new mount for the SG90. Thanks to careful measurements with a caliper, I got a perfect fit on the first try!
 
-![.](images/avatarm/cable-management-ring.png)
+![.](images/avatarm/test-piece-sg90.jpg)
+
+Several more modifications to the base were needed. It was a rather large piece with lots of difficult overhangs, so I made it easier to print by trimming off each of the "feet" to be printed separately as well as the decorative features on the rear control box. I also wanted to make the control box serve its purpose by containing the NodeMCU as well as the tangle of wires that would inevitably emanate from it. I designed and tested a mount for the NodeMCU and hollowed out the control box until I had a decent-looking cavity for all the electronics.
+
+![.](images/avatarm/control-box-mods.png)
+![.](images/avatarm/test-piece-nodemcu.jpg)
+
+Now, it was on to printing and assembly! I printed the base using black PLA and installed the motor and NodeMCU.
+
+![.](images/avatarm/base-back.jpg)
+![.](images/avatarm/base-front.jpg)
+![.](images/avatarm/base-bottom.jpg)
+
+Part A followed. I painted the KUKA logo black using a toothpick and some nail polish. Looking good!
+
+![.](images/avatarm/A-unfinished-back.jpg)
+![.](images/avatarm/A-unfinished-front.jpg)
+![.](images/avatarm/A-finished-front.jpg)
+![.](images/avatarm/A-and-base.jpg)
+
+Next was Part B.
+
+![.](images/avatarm/B-unfinished-back.jpg)
+![.](images/avatarm/B-unfinished-front.jpg)
+![.](images/avatarm/A-B-base-1.jpg)
+![.](images/avatarm/A-B-base-2.jpg)
+![.](images/avatarm/A-B-base-3.jpg)
+
+All the cable management rings along Parts A and B definitely came in handy, even though they required lots of support to print. At this point I got excited by how it was starting to look like a proper robot arm and I wanted to see it move. This meant lots of wiring! The wiring diagram for the servos looks like this:
+
+![.](images/avatarm/servo-wiring.png)
+
+Since I could no longer use a breadboard with power and ground rails, I needed a way to split the single power and ground pins into 4 or 5 branches, one for each servo. I spliced together some male jumper cables with a female jumper cable to make 5-way splitters.
+
+![.](images/avatarm/pin-splitter.jpg)
+
+From then on it was relatively simple to connect the servos to the NodeMCU. Since this NodeMCU was the same one I used for the popsicle-stick prototype, it already had the code to receive signals from the transmitter module. Now that I had a proper robot arm, I figured I would have some fun with markers. Robot art, anyone?
+
+![Art.](images/avatarm/art.gif)
+
+As you can see, aside from missing the upper limb, the arm is not very intuitive to control using the potentiometers. But no worries, I have a plan to address this later. For now, I'll print and add on Part C:
+
+![.](images/avatarm/C-raw.jpg)
+
+Part C had a rough time with supports, with me having enlist the help of tape and poster tack to keep a tower of support material from toppling over. Nonetheless, the print came out fine and I installed it with no issues. At this point the servos were still holding up impressively well under the weight of the arm even when fully extended, but just to be safe I installed an extension spring at the shoulder joint to reduce stress on the adjacent servo. For years I've been saving random bits of hardware such as screws and springs from things I've taken apart over the years, thinking that I'd find a use for them someday. Well, that day has come!
+
+![.](images/avatarm/ABC-1.jpg)
+![.](images/avatarm/ABC-2.jpg)
+
+Although the Avatarm is nearing completion, it's still missing the wrist joint. On the real KUKA KR150, the wrist joint actually has two axes of rotation:
+
+![.](images/avatarm/wrist-model.png)
+
+I could control one axis with the SG90 that is currently attached to Part C, but I would need another motor for the second axis and then one more for an actual gripper. I didn't want to deal with that many additional motors just yet, so for now I decided to stick with making the proximal end of the wrist joint. User yddf24 on Thingiverse kindly posted an easier-to-print version of the wrist joint **[here](https://www.thingiverse.com/thing:2492934/files)**. I wanted the wrist to be modular to allow me to easily add attachments later, so I further split the joint into threaded pieces as well as modified the base of the joint to accept the SG90 servo horn.
+
+![.](images/avatarm/wrist-tinkercad.png)
+
+For now, I just printed and installed the base of the joint:
+
+![.](images/avatarm/wrist-base.jpg)
+
+Now that the Avatarm was essentially complete, I needed a better way to control it!
+
+### 4. The Control Arm.
+
+https://grabcad.com/library/10k-rotary-potentiometer-1
+
+
 
 
 ### 4. Future Plans
 
-As of today (4/27), I am approximately 2 weeks away from the final presentation. I plan to leave a week for making the promo video and polishing up my documentation, so I need to finish building by May 7th. I plan to finish the output arm by the end this Friday, and work on the input arm (which will be simpler and incorporate the potentiometers) through the weekend. This would conclude the minimal viable product, which is a robot arm that can be remotely controlled via a teaching arm.
+As of today (4/27), I am approximately 2 weeks away from the final presentation. I plan to leave a week for making the promo video and polishing up my documentation, so I need to finish building by May 7th. I plan to finish the output arm by the end of this Friday, and work on the input arm (which will be simpler and incorporate the potentiometers) through the weekend. This would conclude the minimal viable product, which is a robot arm that can be remotely controlled via a teaching arm.
 
 Depending on how well I meet this timeline, there are 2 potential upgrades I plan to make to this project. One is to figure out a way to record the position of the arm over a duration of time and replay them, so the arm can be "taught". Another is to use gyroscope/accelerometer sensors (such as the MPU6050) to detect the orientation of various joints of my own arm and use that information to control the orientation of the Avatarm.
 
 
 ### Photo Gallery.
 
-![.](images/avatarm/A-unfinished-back.jpg)
-![.](images/avatarm/A-unfinished-front.jpg)
-![.](images/avatarm/A-finished-front.jpg)
 
 
-![.](images/avatarm/B-unfinished-back.jpg)
-![.](images/avatarm/B-unfinished-front.jpg)
-
-![.](images/avatarm/base-back.jpg)
-![.](images/avatarm/base-front.jpg)
-![.](images/avatarm/base-bottom.jpg)
 
 
-![.](images/avatarm/A-and-base.jpg)
-![.](images/avatarm/A-B-base-1.jpg)
-![.](images/avatarm/A-B-base-2.jpg)
-![.](images/avatarm/A-B-base-3.jpg)
 
+
+
+
+
+
+### 6. Next Steps
+
+http://goldsequence.blogspot.com/2016/06/rotation-with-less-than-1-degree.html
 
 
 
