@@ -53,18 +53,6 @@ At this point, I measured the maximum length of the truss tube I could build wit
 
 After a bit of soul-searching, I decided to instead build the frame of the telescope with a single pole. I found a broomstick in the garage which looked strong enough, and was the right length. Basically, there would be nothing between the primary and secondary except for the broomstick. Paint-can scope was now broomstick scope! I had high hopes.
 
-Why was I so confident in the integrity of a single broomstick? Physics dictates that
-
-Melamine:
-* 0.75 x 15.75 x 97 $20
-* 0.75 x 23.75 x 48 $16
-* 0.75 x 48 x 96 $32
-* 0.625 x 15.75 x 48 $13
-
-MDF:
-* 
-
-
 To be continued!
 
 ### 2. Star tracking mount.

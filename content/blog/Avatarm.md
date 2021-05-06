@@ -310,7 +310,7 @@ I made mounts for a total of 3 MG996R servos between the base, A, B, and C. This
 
 ![.](images/avatarm/test-piece-sg90.jpg)
 
-Several more modifications to the base were needed. It was a rather large piece with lots of difficult overhangs, so I made it easier to print by trimming off each of the "feet" to be printed separately as well as the decorative features on the rear control box. I also wanted to make the control box serve its purpose by containing the NodeMCU as well as the tangle of wires that would inevitably emanate from it. I designed and tested a mount for the NodeMCU and hollowed out the control box until I had a decent-looking cavity for all the electronics.
+Several more modifications to the base were needed. It was a rather large piece with lots of difficult overhangs, so I made it easier to print by trimming off each of the "feet" to be printed separately as well as the decorative features on the rear control box. I also wanted to make the control box serve its purpose by containing the NodeMCU as well as the tangle of wires that would inevitably emanate from it. I designed and tested a mount for the NodeMCU and hollowed out the control box until I had a decent-looking cavity for all the electronics. A **[NodeMCU model from GrabCAD](https://grabcad.com/library/nodemcu-esp8266-esp-12e-1)**, by user leirbag4, helped me plan out the dimensions:
 
 ![.](images/avatarm/control-box-mods.png)
 ![.](images/avatarm/test-piece-nodemcu.jpg)
@@ -373,7 +373,47 @@ Now that the Avatarm was essentially complete, I needed a better way to control 
 
 ### 4. The Control Arm.
 
-https://grabcad.com/library/10k-rotary-potentiometer-1
+The basic idea was that the position of each joint of the arm would be encoded by a potentiometer. The easiest way to do this would be to use a potentiometer as the axis of rotation of each joint. I needed the relative proportions of the controller arm to roughly approximate the dimensions of the Avatarm, to achieve more natural control. I originally though about redesigning the same pieces as for the Avatarm but to fit potentiometers instead of servos, but was reluctant to print such large pieces again (the arm used a total of about 350 grams of filament, over 30 hours of print time total). I also realized that the joints would not be very structurally sound with these rather small potentiometers supporting the entire weight of the arm. The other option I considered was to make a simplified, abstract version of the arm with "popsicle-stick" representations of each joint, but I didn't like the aesthetics of that. Eventually, I decided to make a second, scaled-down version of the Avatarm, with potentiometers instead of servos at each joint. This arm is half the size of the Avatarm (i.e. 75% the size of the original model from Thingiverse). I downloaded model of a **[10K potentiometer from GrabCAD](https://grabcad.com/library/10k-rotary-potentiometer-1)** (by user Pierre Gleizes) to aid in designing the joints.
+
+![.](images/avatarm/control-arm-tinkercad.png)
+
+I needed the joints to be friction-fit onto the potentiometer knob, so I designed and printed a few test pieces again:
+
+![.](images/avatarm/potest.jpg)
+
+For the wrist axis, the standard 10K potentiometer was too big and heavy. I managed to find a smaller plastic potentiometer and designed a slot for it at the wrist joint:
+
+![.](images/avatarm/smallpot.png)
+
+After printing the pieces and painting the lettering with a toothpick, it was time to wire it up. Here is the wiring diagram:
+
+![.](images/avatarm/pot-wiring.png)
+
+Again, I needed two splitters. One would split the ground pin to connect all the potentiometers, and the other would split the A0 ADC pin. The ground pin needed just a simple splitter which I made the same way as before. The A0 splitter, however, needed diodes to prevent current from one potentiometer traveling back up another. I made this odd-looking diode pyramid and spliced wires to it:
+
+![.](images/avatarm/diode-pyramid.jpg)
+![.](images/avatarm/diode-splitter.jpg)
+
+I assembled the controller arm and transferred the wiring over from the breadboard with some Dupont cables, and made this monstrosity:
+
+![.](images/avatarm/rats-nest.jpg)
+
+I tested the controller, and it actually worked! However, the wires were really getting in the way and also falling off of their connections. The second problem was that the NodeMCU was just flopping around with nowhere to mount it. Since the base of this arm was not much bigger than the NodeMCU itself, I couldn't mount it at the location of the control box and so I had decided to remove the control box entirely. I reshaped that region to accomodate a modular platform for the NodeMCU, which looks like this:
+
+![.](images/avatarm/controller-nodemcu-mount.png)
+
+To solve the wiring problem, I realized that part of the issue was due to the Dupont cables being rather thick and unwieldy. I had some broken earbuds laying around, from which I was able to extract extremely thin wires. I replaced each of the Dupont cables with a headphone wire, and twisted them to make nice and tidy bundles. To connect the wires to the potentiometers, I made a twist connection at each leg and covered with heat-shrink tubing. I didn't solder anything because I wanted to just try things out for now.
+
+![.](images/avatarm/elbow-pot.jpg)
+![.](images/avatarm/wrist-pot.jpg)
+![.](images/avatarm/pot-wiring-progress1.jpg)
+![.](images/avatarm/pot-wiring-progress2.jpg)
+
+Now it looks much better! I made some more robot art to commemorate the occasion.
+
+![.](images/avatarm/art2.gif)
+
+However, there were still a couple of issues. One was that although the wiring was much more organized than before, I was still not satisfied with how tangled things were in the back. Additionally, my splices on the controller arm sometimes lost connection, causing the potentiometer to report incorrect values and thus unpredictable motion in the Avatarm. All these connections really should be on a PCB, but I didn't have time to learn PCB design. So instead I decided to transfer the connections to perfboard. I had never worked with perfboard before but it seemed straightforward enough. It was essentially a grid of solder points which can be connected to components and to each other. First, I designed a perfboard diagram for the controller, based on the wiring diagram of the potentiometers:
 
 
 
