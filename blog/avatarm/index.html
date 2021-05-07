@@ -110,7 +110,7 @@
           <h1> Final Project </h1>
 
             <div class="sub-header">
-              April 26, 2021 · 18 minutes read
+              April 26, 2021 · 15 minutes read
             </div>
 
           <article class="entry-content">
@@ -146,225 +146,12 @@
 <p><img src="images/week9-cloud/testing.gif" alt="Testing."></p>
 <p>As a result, I ultimately decided to go with the ESP-NOW protocol for direct board-to-board radio communication without WiFi. This was preliminarily demonstrated in <strong><a href="https://aspartate.github.io/personal_website/blog/week-8-espnow/">Week 8</a></strong>. Although I was ultimately able to successfully achieve wireless servo control over ESP-NOW between the ESP32-CAM and Huzzah32, this required several rounds of debugging and a rather fussy workaround due to inherent limitations of the ESP32-CAM. Therefore I replicated this functionality on the NodeMCUs (using a tutorial from <strong><a href="https://RandomNerdTutorials.com/esp-now-esp8266-nodemcu-arduino-ide/">RandomNerd</a></strong>), for a total of 4 servos all multiplexed to the single A0 ADC pin.</p>
 <p>Here is the code on the transmitter side, and the wiring:</p>
-<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="o">/*</span>
-  <span class="n">Rui</span> <span class="n">Santos</span>
-  <span class="n">Complete</span> <span class="n">project</span> <span class="n">details</span> <span class="n">at</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">RandomNerdTutorials</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">esp</span><span class="o">-</span><span class="n">now</span><span class="o">-</span><span class="n">esp8266</span><span class="o">-</span><span class="n">nodemcu</span><span class="o">-</span><span class="n">arduino</span><span class="o">-</span><span class="n">ide</span><span class="o">/</span>
-  
-  <span class="n">Permission</span> <span class="ow">is</span> <span class="n">hereby</span> <span class="n">granted</span><span class="p">,</span> <span class="n">free</span> <span class="n">of</span> <span class="n">charge</span><span class="p">,</span> <span class="n">to</span> <span class="nb">any</span> <span class="n">person</span> <span class="n">obtaining</span> <span class="n">a</span> <span class="n">copy</span>
-  <span class="n">of</span> <span class="n">this</span> <span class="n">software</span> <span class="ow">and</span> <span class="n">associated</span> <span class="n">documentation</span> <span class="n">files</span><span class="o">.</span>
-  
-  <span class="n">The</span> <span class="n">above</span> <span class="n">copyright</span> <span class="n">notice</span> <span class="ow">and</span> <span class="n">this</span> <span class="n">permission</span> <span class="n">notice</span> <span class="n">shall</span> <span class="n">be</span> <span class="n">included</span> <span class="ow">in</span> <span class="nb">all</span>
-  <span class="n">copies</span> <span class="ow">or</span> <span class="n">substantial</span> <span class="n">portions</span> <span class="n">of</span> <span class="n">the</span> <span class="n">Software</span><span class="o">.</span>
-<span class="o">*/</span>
-
-<span class="c1">#include &lt;ESP8266WiFi.h&gt;</span>
-<span class="c1">#include &lt;espnow.h&gt;</span>
-
-<span class="o">//</span> <span class="n">REPLACE</span> <span class="n">WITH</span> <span class="n">RECEIVER</span> <span class="n">MAC</span> <span class="n">Address</span>
-<span class="n">uint8_t</span> <span class="n">broadcastAddress</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">};</span>
-
-<span class="o">//</span> <span class="n">Structure</span> <span class="n">example</span> <span class="n">to</span> <span class="n">send</span> <span class="n">data</span>
-<span class="o">//</span> <span class="n">Must</span> <span class="n">match</span> <span class="n">the</span> <span class="n">receiver</span> <span class="n">structure</span>
-<span class="n">typedef</span> <span class="n">struct</span> <span class="n">struct_message</span> <span class="p">{</span>
-  <span class="nb">int</span> <span class="n">val_1</span><span class="p">;</span>
-  <span class="nb">int</span> <span class="n">val_2</span><span class="p">;</span>
-  <span class="nb">int</span> <span class="n">val_3</span><span class="p">;</span>
-  <span class="nb">int</span> <span class="n">val_4</span><span class="p">;</span>
-<span class="p">}</span> <span class="n">struct_message</span><span class="p">;</span>
-
-<span class="o">//</span> <span class="n">Create</span> <span class="n">a</span> <span class="n">struct_message</span> <span class="n">called</span> <span class="n">myData</span>
-<span class="n">struct_message</span> <span class="n">myData</span><span class="p">;</span>
-
-<span class="nb">int</span> <span class="n">val_pot1</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="nb">int</span> <span class="n">val_pot2</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="nb">int</span> <span class="n">val_pot3</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="nb">int</span> <span class="n">val_pot4</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-<span class="n">unsigned</span> <span class="nb">long</span> <span class="n">lastTime</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  
-<span class="n">unsigned</span> <span class="nb">long</span> <span class="n">timerDelay</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>  <span class="o">//</span> <span class="n">send</span> <span class="n">readings</span> <span class="n">timer</span>
-
-<span class="o">//</span> <span class="n">Callback</span> <span class="n">when</span> <span class="n">data</span> <span class="ow">is</span> <span class="n">sent</span>
-<span class="n">void</span> <span class="n">OnDataSent</span><span class="p">(</span><span class="n">uint8_t</span> <span class="o">*</span><span class="n">mac_addr</span><span class="p">,</span> <span class="n">uint8_t</span> <span class="n">sendStatus</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">Serial</span><span class="o">.</span><span class="k">print</span><span class="p">(</span><span class="s2">&#34;Last Packet Send Status: &#34;</span><span class="p">);</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">sendStatus</span> <span class="o">==</span> <span class="mi">0</span><span class="p">){</span>
-    <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="s2">&#34;Delivery success&#34;</span><span class="p">);</span>
-  <span class="p">}</span>
-  <span class="k">else</span><span class="p">{</span>
-    <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="s2">&#34;Delivery fail&#34;</span><span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">}</span>
- 
-<span class="n">void</span> <span class="n">setup</span><span class="p">()</span> <span class="p">{</span>
-  <span class="o">//</span> <span class="n">Init</span> <span class="n">Serial</span> <span class="n">Monitor</span>
-  <span class="n">Serial</span><span class="o">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">74880</span><span class="p">);</span>
-    
-  <span class="n">pinMode</span><span class="p">(</span><span class="n">D1</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
-  <span class="n">pinMode</span><span class="p">(</span><span class="n">D2</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
-  <span class="n">pinMode</span><span class="p">(</span><span class="n">D3</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
-  <span class="n">pinMode</span><span class="p">(</span><span class="n">D4</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
-  
-  <span class="o">//</span> <span class="n">Set</span> <span class="n">device</span> <span class="k">as</span> <span class="n">a</span> <span class="n">Wi</span><span class="o">-</span><span class="n">Fi</span> <span class="n">Station</span>
-  <span class="n">WiFi</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="n">WIFI_STA</span><span class="p">);</span>
-
-  <span class="o">//</span> <span class="n">Init</span> <span class="n">ESP</span><span class="o">-</span><span class="n">NOW</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">esp_now_init</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="s2">&#34;Error initializing ESP-NOW&#34;</span><span class="p">);</span>
-    <span class="k">return</span><span class="p">;</span>
-  <span class="p">}</span>
-
-  <span class="o">//</span> <span class="n">Once</span> <span class="n">ESPNow</span> <span class="ow">is</span> <span class="n">successfully</span> <span class="n">Init</span><span class="p">,</span> <span class="n">we</span> <span class="n">will</span> <span class="n">register</span> <span class="k">for</span> <span class="n">Send</span> <span class="n">CB</span> <span class="n">to</span>
-  <span class="o">//</span> <span class="n">get</span> <span class="n">the</span> <span class="n">status</span> <span class="n">of</span> <span class="n">Trasnmitted</span> <span class="n">packet</span>
-  <span class="n">esp_now_set_self_role</span><span class="p">(</span><span class="n">ESP_NOW_ROLE_CONTROLLER</span><span class="p">);</span>
-  <span class="n">esp_now_register_send_cb</span><span class="p">(</span><span class="n">OnDataSent</span><span class="p">);</span>
-  
-  <span class="o">//</span> <span class="n">Register</span> <span class="n">peer</span>
-  <span class="n">esp_now_add_peer</span><span class="p">(</span><span class="n">broadcastAddress</span><span class="p">,</span> <span class="n">ESP_NOW_ROLE_SLAVE</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">NULL</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-<span class="p">}</span>
- 
-<span class="n">void</span> <span class="n">loop</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">D1</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
-  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">D2</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
-  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">D3</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
-  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">D4</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
-  <span class="n">val_pot1</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">analogRead</span><span class="p">(</span><span class="n">A0</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">180</span><span class="p">);</span>
-  <span class="n">delay</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
-
-  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">D1</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
-  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">D2</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
-  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">D3</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
-  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">D4</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
-  <span class="n">val_pot2</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">analogRead</span><span class="p">(</span><span class="n">A0</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">180</span><span class="p">);</span>
-  <span class="n">delay</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
-
-  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">D1</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
-  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">D2</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
-  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">D3</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
-  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">D4</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
-  <span class="n">val_pot3</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">analogRead</span><span class="p">(</span><span class="n">A0</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">180</span><span class="p">);</span>
-  <span class="n">delay</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
-
-  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">D1</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
-  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">D2</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
-  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">D3</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
-  <span class="n">digitalWrite</span><span class="p">(</span><span class="n">D4</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
-  <span class="n">val_pot4</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">analogRead</span><span class="p">(</span><span class="n">A0</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">180</span><span class="p">);</span>
-  <span class="n">delay</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
-
-<span class="o">//</span>  <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">val_pot1</span><span class="p">);</span>
-<span class="o">//</span>  <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">val_pot2</span><span class="p">);</span>
-<span class="o">//</span>  <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">val_pot3</span><span class="p">);</span>
-<span class="o">//</span>  <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">val_pot4</span><span class="p">);</span>
-
-  <span class="k">if</span> <span class="p">((</span><span class="n">millis</span><span class="p">()</span> <span class="o">-</span> <span class="n">lastTime</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">timerDelay</span><span class="p">)</span> <span class="p">{</span>
-    <span class="o">//</span> <span class="n">Set</span> <span class="n">values</span> <span class="n">to</span> <span class="n">send</span>
-    <span class="n">myData</span><span class="o">.</span><span class="n">val_1</span> <span class="o">=</span> <span class="n">val_pot1</span><span class="p">;</span>
-    <span class="n">myData</span><span class="o">.</span><span class="n">val_2</span> <span class="o">=</span> <span class="n">val_pot2</span><span class="p">;</span>
-    <span class="n">myData</span><span class="o">.</span><span class="n">val_3</span> <span class="o">=</span> <span class="n">val_pot3</span><span class="p">;</span>
-    <span class="n">myData</span><span class="o">.</span><span class="n">val_4</span> <span class="o">=</span> <span class="n">val_pot4</span><span class="p">;</span>
-
-    <span class="o">//</span> <span class="n">Send</span> <span class="n">message</span> <span class="n">via</span> <span class="n">ESP</span><span class="o">-</span><span class="n">NOW</span>
-    <span class="n">esp_now_send</span><span class="p">(</span><span class="n">broadcastAddress</span><span class="p">,</span> <span class="p">(</span><span class="n">uint8_t</span> <span class="o">*</span><span class="p">)</span> <span class="o">&amp;</span><span class="n">myData</span><span class="p">,</span> <span class="n">sizeof</span><span class="p">(</span><span class="n">myData</span><span class="p">));</span>
-
-    <span class="n">lastTime</span> <span class="o">=</span> <span class="n">millis</span><span class="p">();</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><p><img src="images/avatarm/transmitter-1.jpg" alt="Transmitter wiring.">
+<p><strong><a href="files/avatarm/transmitter_code.txt">Click to view code</a></strong></p>
+<p><img src="images/avatarm/transmitter-1.jpg" alt="Transmitter wiring.">
 <img src="images/avatarm/transmitter-2.jpg" alt="Transmitter wiring."></p>
 <p>Here is the code on the receiver side, and the wiring:</p>
-<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="o">/*</span>
-  <span class="n">Rui</span> <span class="n">Santos</span>
-  <span class="n">Complete</span> <span class="n">project</span> <span class="n">details</span> <span class="n">at</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">RandomNerdTutorials</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">esp</span><span class="o">-</span><span class="n">now</span><span class="o">-</span><span class="n">esp8266</span><span class="o">-</span><span class="n">nodemcu</span><span class="o">-</span><span class="n">arduino</span><span class="o">-</span><span class="n">ide</span><span class="o">/</span>
-  
-  <span class="n">Permission</span> <span class="ow">is</span> <span class="n">hereby</span> <span class="n">granted</span><span class="p">,</span> <span class="n">free</span> <span class="n">of</span> <span class="n">charge</span><span class="p">,</span> <span class="n">to</span> <span class="nb">any</span> <span class="n">person</span> <span class="n">obtaining</span> <span class="n">a</span> <span class="n">copy</span>
-  <span class="n">of</span> <span class="n">this</span> <span class="n">software</span> <span class="ow">and</span> <span class="n">associated</span> <span class="n">documentation</span> <span class="n">files</span><span class="o">.</span>
-  
-  <span class="n">The</span> <span class="n">above</span> <span class="n">copyright</span> <span class="n">notice</span> <span class="ow">and</span> <span class="n">this</span> <span class="n">permission</span> <span class="n">notice</span> <span class="n">shall</span> <span class="n">be</span> <span class="n">included</span> <span class="ow">in</span> <span class="nb">all</span>
-  <span class="n">copies</span> <span class="ow">or</span> <span class="n">substantial</span> <span class="n">portions</span> <span class="n">of</span> <span class="n">the</span> <span class="n">Software</span><span class="o">.</span>
-<span class="o">*/</span>
-
-<span class="c1">#include &lt;ESP8266WiFi.h&gt;</span>
-<span class="c1">#include &lt;espnow.h&gt;</span>
-<span class="c1">#include &lt;Servo.h&gt;</span>
-
-<span class="nb">int</span> <span class="n">val_pot1</span><span class="p">;</span>
-<span class="nb">int</span> <span class="n">val_pot2</span><span class="p">;</span>
-<span class="nb">int</span> <span class="n">val_pot3</span><span class="p">;</span>
-<span class="nb">int</span> <span class="n">val_pot4</span><span class="p">;</span>
-
-<span class="nb">int</span> <span class="n">pin_servo1</span> <span class="o">=</span> <span class="n">D1</span><span class="p">;</span>
-<span class="nb">int</span> <span class="n">pin_servo2</span> <span class="o">=</span> <span class="n">D2</span><span class="p">;</span>
-<span class="nb">int</span> <span class="n">pin_servo3</span> <span class="o">=</span> <span class="n">D3</span><span class="p">;</span>
-<span class="nb">int</span> <span class="n">pin_servo4</span> <span class="o">=</span> <span class="n">D4</span><span class="p">;</span>
-
-<span class="n">Servo</span> <span class="n">servo1</span><span class="p">;</span>
-<span class="n">Servo</span> <span class="n">servo2</span><span class="p">;</span>
-<span class="n">Servo</span> <span class="n">servo3</span><span class="p">;</span>
-<span class="n">Servo</span> <span class="n">servo4</span><span class="p">;</span>
-
-<span class="o">//</span> <span class="n">Structure</span> <span class="n">example</span> <span class="n">to</span> <span class="n">receive</span> <span class="n">data</span> <span class="n">must</span> <span class="n">match</span> <span class="n">the</span> <span class="n">sender</span> <span class="n">structure</span>
-<span class="n">typedef</span> <span class="n">struct</span> <span class="n">struct_message</span> <span class="p">{</span>
-  <span class="nb">int</span> <span class="n">val_1</span><span class="p">;</span>
-  <span class="nb">int</span> <span class="n">val_2</span><span class="p">;</span>
-  <span class="nb">int</span> <span class="n">val_3</span><span class="p">;</span>
-  <span class="nb">int</span> <span class="n">val_4</span><span class="p">;</span>
-<span class="p">}</span> <span class="n">struct_message</span><span class="p">;</span>
-
-<span class="o">//</span> <span class="n">Create</span> <span class="n">a</span> <span class="n">struct_message</span> <span class="n">called</span> <span class="n">myData</span>
-<span class="n">struct_message</span> <span class="n">myData</span><span class="p">;</span>
-
-<span class="o">//</span> <span class="n">Callback</span> <span class="n">function</span> <span class="n">that</span> <span class="n">will</span> <span class="n">be</span> <span class="n">executed</span> <span class="n">when</span> <span class="n">data</span> <span class="ow">is</span> <span class="n">received</span>
-<span class="n">void</span> <span class="n">OnDataRecv</span><span class="p">(</span><span class="n">uint8_t</span> <span class="o">*</span> <span class="n">mac</span><span class="p">,</span> <span class="n">uint8_t</span> <span class="o">*</span><span class="n">incomingData</span><span class="p">,</span> <span class="n">uint8_t</span> <span class="nb">len</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">memcpy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">myData</span><span class="p">,</span> <span class="n">incomingData</span><span class="p">,</span> <span class="n">sizeof</span><span class="p">(</span><span class="n">myData</span><span class="p">));</span>
-  <span class="n">val_pot1</span> <span class="o">=</span> <span class="n">myData</span><span class="o">.</span><span class="n">val_1</span><span class="p">;</span>
-  <span class="n">val_pot2</span> <span class="o">=</span> <span class="n">myData</span><span class="o">.</span><span class="n">val_2</span><span class="p">;</span>
-  <span class="n">val_pot3</span> <span class="o">=</span> <span class="n">myData</span><span class="o">.</span><span class="n">val_3</span><span class="p">;</span>
-  <span class="n">val_pot4</span> <span class="o">=</span> <span class="n">myData</span><span class="o">.</span><span class="n">val_4</span><span class="p">;</span>
-  
-  <span class="n">servo1</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">180</span> <span class="o">-</span> <span class="n">val_pot1</span><span class="p">);</span>
-  <span class="n">servo2</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">180</span> <span class="o">-</span> <span class="n">val_pot2</span><span class="p">);</span>
-  <span class="n">servo3</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">180</span> <span class="o">-</span> <span class="n">val_pot3</span><span class="p">);</span>
-  <span class="n">servo4</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">180</span> <span class="o">-</span> <span class="n">val_pot4</span><span class="p">);</span>
-  
-  <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">val_pot1</span><span class="p">);</span>
-  <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">val_pot2</span><span class="p">);</span>
-  <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">val_pot3</span><span class="p">);</span>
-  <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">val_pot4</span><span class="p">);</span>
-<span class="p">}</span>
- 
-<span class="n">void</span> <span class="n">setup</span><span class="p">()</span> <span class="p">{</span>
-  <span class="o">//</span> <span class="n">Initialize</span> <span class="n">Serial</span> <span class="n">Monitor</span>
-  <span class="n">Serial</span><span class="o">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">74880</span><span class="p">);</span>
-
-  <span class="n">pinMode</span><span class="p">(</span><span class="n">pin_servo1</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
-  <span class="n">servo1</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">pin_servo1</span><span class="p">);</span>
-  <span class="n">pinMode</span><span class="p">(</span><span class="n">pin_servo2</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
-  <span class="n">servo2</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">pin_servo2</span><span class="p">);</span>
-  <span class="n">pinMode</span><span class="p">(</span><span class="n">pin_servo3</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
-  <span class="n">servo3</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">pin_servo3</span><span class="p">);</span>
-  <span class="n">pinMode</span><span class="p">(</span><span class="n">pin_servo4</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
-  <span class="n">servo4</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">pin_servo4</span><span class="p">);</span>
-
-  <span class="n">Serial</span><span class="o">.</span><span class="k">print</span><span class="p">(</span><span class="s2">&#34;ESP8266 Board MAC Address:  &#34;</span><span class="p">);</span>
-  <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">WiFi</span><span class="o">.</span><span class="n">macAddress</span><span class="p">());</span>
-  
-  <span class="o">//</span> <span class="n">Set</span> <span class="n">device</span> <span class="k">as</span> <span class="n">a</span> <span class="n">Wi</span><span class="o">-</span><span class="n">Fi</span> <span class="n">Station</span>
-  <span class="n">WiFi</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="n">WIFI_STA</span><span class="p">);</span>
-
-  <span class="o">//</span> <span class="n">Init</span> <span class="n">ESP</span><span class="o">-</span><span class="n">NOW</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">esp_now_init</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">Serial</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="s2">&#34;Error initializing ESP-NOW&#34;</span><span class="p">);</span>
-    <span class="k">return</span><span class="p">;</span>
-  <span class="p">}</span>
-  
-  <span class="o">//</span> <span class="n">Once</span> <span class="n">ESPNow</span> <span class="ow">is</span> <span class="n">successfully</span> <span class="n">Init</span><span class="p">,</span> <span class="n">we</span> <span class="n">will</span> <span class="n">register</span> <span class="k">for</span> <span class="n">recv</span> <span class="n">CB</span> <span class="n">to</span> <span class="n">get</span> <span class="n">recv</span> <span class="n">packer</span> <span class="n">info</span>
-  <span class="n">esp_now_set_self_role</span><span class="p">(</span><span class="n">ESP_NOW_ROLE_SLAVE</span><span class="p">);</span>
-  <span class="n">esp_now_register_recv_cb</span><span class="p">(</span><span class="n">OnDataRecv</span><span class="p">);</span>
-<span class="p">}</span>
-
-<span class="n">void</span> <span class="n">loop</span><span class="p">()</span> <span class="p">{</span>
-  
-<span class="p">}</span>
-</code></pre></div><p><img src="images/avatarm/receiver-1.jpg" alt="Receiver wiring.">
+<p><strong><a href="files/avatarm/receiver_code.txt">Click to view code</a></strong></p>
+<p><img src="images/avatarm/receiver-1.jpg" alt="Receiver wiring.">
 <img src="images/avatarm/receiver-2.jpg" alt="Receiver wiring."></p>
 <p>Now I have a functioning robot arm, with no lag! (Although it isn&rsquo;t very exciting&hellip;)</p>
 <p><img src="images/avatarm/ESPNOW-demo.gif" alt="A boring robot arm."></p>
@@ -436,7 +223,7 @@
 <img src="images/avatarm/diode-splitter.jpg" alt="."></p>
 <p>I assembled the controller arm and transferred the wiring over from the breadboard with some Dupont cables, and made this monstrosity:</p>
 <p><img src="images/avatarm/rats-nest.jpg" alt="."></p>
-<p>I tested the controller, and it actually worked! However, the wires were really getting in the way and also falling off of their connections. The second problem was that the NodeMCU was just flopping around with nowhere to mount it. Since the base of this arm was not much bigger than the NodeMCU itself, I couldn&rsquo;t mount it at the location of the control box and so I had decided to remove the control box entirely. I reshaped that region to accomodate a modular platform for the NodeMCU, which looks like this:</p>
+<p>I tested the controller, and it worked! However, the wires were really getting in the way and also falling off of their connections. The second problem was that the NodeMCU was just flopping around with nowhere to mount it. Since the base of this arm was not much bigger than the NodeMCU itself, I couldn&rsquo;t mount it at the location of the control box and so I had decided to remove the control box entirely. I reshaped that region to accomodate a modular platform for the NodeMCU, which looks like this:</p>
 <p><img src="images/avatarm/controller-nodemcu-mount.png" alt="."></p>
 <p>To solve the wiring problem, I realized that part of the issue was due to the Dupont cables being rather thick and unwieldy. I had some broken earbuds laying around, from which I was able to extract extremely thin wires. I replaced each of the Dupont cables with a headphone wire, and twisted them to make nice and tidy bundles. To connect the wires to the potentiometers, I made a twist connection at each leg and covered with heat-shrink tubing. I didn&rsquo;t solder anything because I wanted to just try things out for now.</p>
 <p><img src="images/avatarm/elbow-pot.jpg" alt=".">
@@ -445,11 +232,14 @@
 <img src="images/avatarm/pot-wiring-progress2.jpg" alt="."></p>
 <p>Now it looks much better! I made some more robot art to commemorate the occasion.</p>
 <p><img src="images/avatarm/art2.gif" alt="."></p>
-<p>However, there were still a couple of issues. One was that although the wiring was much more organized than before, I was still not satisfied with how tangled things were in the back. Additionally, my splices on the controller arm sometimes lost connection, causing the potentiometer to report incorrect values and thus unpredictable motion in the Avatarm. All these connections really should be on a PCB, but I didn&rsquo;t have time to learn PCB design. So instead I decided to transfer the connections to perfboard. I had never worked with perfboard before but it seemed straightforward enough. It was essentially a grid of solder points which can be connected to components and to each other. First, I designed a perfboard diagram for the controller, based on the wiring diagram of the potentiometers:</p>
-<h3 id="4-future-plans">4. Future Plans</h3>
-<p>As of today (4/27), I am approximately 2 weeks away from the final presentation. I plan to leave a week for making the promo video and polishing up my documentation, so I need to finish building by May 7th. I plan to finish the output arm by the end of this Friday, and work on the input arm (which will be simpler and incorporate the potentiometers) through the weekend. This would conclude the minimal viable product, which is a robot arm that can be remotely controlled via a teaching arm.</p>
-<p>Depending on how well I meet this timeline, there are 2 potential upgrades I plan to make to this project. One is to figure out a way to record the position of the arm over a duration of time and replay them, so the arm can be &ldquo;taught&rdquo;. Another is to use gyroscope/accelerometer sensors (such as the MPU6050) to detect the orientation of various joints of my own arm and use that information to control the orientation of the Avatarm.</p>
-<h3 id="photo-gallery">Photo Gallery.</h3>
+<p>However, there were still a couple of issues. One was that although the wiring was much more organized than before, I was still not satisfied with how tangled things were in the back. Additionally, my splices on the controller arm sometimes lost connection, causing the potentiometer to report incorrect values and thus unpredictable motion in the Avatarm. All these connections really should be on a PCB, but I didn&rsquo;t have time to learn PCB design. So instead I decided to transfer the connections to perfboard. I had never worked with perfboard before but it seemed straightforward enough. Perfboard is essentially a grid of solder points which can be connected to components and to each other. First, I sketched some perfboard diagrams, based on the wiring diagram of the potentiometers:</p>
+<p><img src="images/avatarm/.jpg" alt="."></p>
+<p>The design was complicated by overlapping wires as well as the need to make several connections through the board itself. After some rather hacky soldering, I had two functional circuit boards!</p>
+<p><img src="images/avatarm/cb-front.jpg" alt=".">
+<img src="images/avatarm/cb-back.jpg" alt="."></p>
+<p>Before &amp; after:</p>
+<p><img src="images/avatarm/tangled.jpg" alt=".">
+<img src="images/avatarm/cb-mounted.jpg" alt="."></p>
 <h3 id="6-next-steps">6. Next Steps</h3>
 <p><a href="http://goldsequence.blogspot.com/2016/06/rotation-with-less-than-1-degree.html">http://goldsequence.blogspot.com/2016/06/rotation-with-less-than-1-degree.html</a></p>
 <h3 id="5-bill-of-materials">5. Bill of Materials.</h3>
