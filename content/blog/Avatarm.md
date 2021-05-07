@@ -43,231 +43,15 @@ As a result, I ultimately decided to go with the ESP-NOW protocol for direct boa
 
 Here is the code on the transmitter side, and the wiring:
 
-```python
-/*
-  Rui Santos
-  Complete project details at https://RandomNerdTutorials.com/esp-now-esp8266-nodemcu-arduino-ide/
-  
-  Permission is hereby granted, free of charge, to any person obtaining a copy
-  of this software and associated documentation files.
-  
-  The above copyright notice and this permission notice shall be included in all
-  copies or substantial portions of the Software.
-*/
+**[Click to view code](files/avatarm/transmitter_code.txt)**
 
-#include <ESP8266WiFi.h>
-#include <espnow.h>
-
-// REPLACE WITH RECEIVER MAC Address
-uint8_t broadcastAddress[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-
-// Structure example to send data
-// Must match the receiver structure
-typedef struct struct_message {
-  int val_1;
-  int val_2;
-  int val_3;
-  int val_4;
-} struct_message;
-
-// Create a struct_message called myData
-struct_message myData;
-
-int val_pot1 = 0;
-int val_pot2 = 0;
-int val_pot3 = 0;
-int val_pot4 = 0;
-
-unsigned long lastTime = 0;  
-unsigned long timerDelay = 50;  // send readings timer
-
-// Callback when data is sent
-void OnDataSent(uint8_t *mac_addr, uint8_t sendStatus) {
-  Serial.print("Last Packet Send Status: ");
-  if (sendStatus == 0){
-    Serial.println("Delivery success");
-  }
-  else{
-    Serial.println("Delivery fail");
-  }
-}
- 
-void setup() {
-  // Init Serial Monitor
-  Serial.begin(74880);
-    
-  pinMode(D1, OUTPUT);
-  pinMode(D2, OUTPUT);
-  pinMode(D3, OUTPUT);
-  pinMode(D4, OUTPUT);
-  
-  // Set device as a Wi-Fi Station
-  WiFi.mode(WIFI_STA);
-
-  // Init ESP-NOW
-  if (esp_now_init() != 0) {
-    Serial.println("Error initializing ESP-NOW");
-    return;
-  }
-
-  // Once ESPNow is successfully Init, we will register for Send CB to
-  // get the status of Trasnmitted packet
-  esp_now_set_self_role(ESP_NOW_ROLE_CONTROLLER);
-  esp_now_register_send_cb(OnDataSent);
-  
-  // Register peer
-  esp_now_add_peer(broadcastAddress, ESP_NOW_ROLE_SLAVE, 1, NULL, 0);
-}
- 
-void loop() {
-  digitalWrite(D1, HIGH);
-  digitalWrite(D2, LOW);
-  digitalWrite(D3, LOW);
-  digitalWrite(D4, LOW);
-  val_pot1 = map(analogRead(A0), 0, 1024, 0, 180);
-  delay(5);
-
-  digitalWrite(D1, LOW);
-  digitalWrite(D2, HIGH);
-  digitalWrite(D3, LOW);
-  digitalWrite(D4, LOW);
-  val_pot2 = map(analogRead(A0), 0, 1024, 0, 180);
-  delay(5);
-
-  digitalWrite(D1, LOW);
-  digitalWrite(D2, LOW);
-  digitalWrite(D3, HIGH);
-  digitalWrite(D4, LOW);
-  val_pot3 = map(analogRead(A0), 0, 1024, 0, 180);
-  delay(5);
-
-  digitalWrite(D1, LOW);
-  digitalWrite(D2, LOW);
-  digitalWrite(D3, LOW);
-  digitalWrite(D4, HIGH);
-  val_pot4 = map(analogRead(A0), 0, 1024, 0, 180);
-  delay(5);
-
-//  Serial.println(val_pot1);
-//  Serial.println(val_pot2);
-//  Serial.println(val_pot3);
-//  Serial.println(val_pot4);
-
-  if ((millis() - lastTime) > timerDelay) {
-    // Set values to send
-    myData.val_1 = val_pot1;
-    myData.val_2 = val_pot2;
-    myData.val_3 = val_pot3;
-    myData.val_4 = val_pot4;
-
-    // Send message via ESP-NOW
-    esp_now_send(broadcastAddress, (uint8_t *) &myData, sizeof(myData));
-
-    lastTime = millis();
-  }
-}
-```
 ![Transmitter wiring.](images/avatarm/transmitter-1.jpg)
 ![Transmitter wiring.](images/avatarm/transmitter-2.jpg)
 
 
 Here is the code on the receiver side, and the wiring:
 
-```python
-/*
-  Rui Santos
-  Complete project details at https://RandomNerdTutorials.com/esp-now-esp8266-nodemcu-arduino-ide/
-  
-  Permission is hereby granted, free of charge, to any person obtaining a copy
-  of this software and associated documentation files.
-  
-  The above copyright notice and this permission notice shall be included in all
-  copies or substantial portions of the Software.
-*/
-
-#include <ESP8266WiFi.h>
-#include <espnow.h>
-#include <Servo.h>
-
-int val_pot1;
-int val_pot2;
-int val_pot3;
-int val_pot4;
-
-int pin_servo1 = D1;
-int pin_servo2 = D2;
-int pin_servo3 = D3;
-int pin_servo4 = D4;
-
-Servo servo1;
-Servo servo2;
-Servo servo3;
-Servo servo4;
-
-// Structure example to receive data must match the sender structure
-typedef struct struct_message {
-  int val_1;
-  int val_2;
-  int val_3;
-  int val_4;
-} struct_message;
-
-// Create a struct_message called myData
-struct_message myData;
-
-// Callback function that will be executed when data is received
-void OnDataRecv(uint8_t * mac, uint8_t *incomingData, uint8_t len) {
-  memcpy(&myData, incomingData, sizeof(myData));
-  val_pot1 = myData.val_1;
-  val_pot2 = myData.val_2;
-  val_pot3 = myData.val_3;
-  val_pot4 = myData.val_4;
-  
-  servo1.write(180 - val_pot1);
-  servo2.write(180 - val_pot2);
-  servo3.write(180 - val_pot3);
-  servo4.write(180 - val_pot4);
-  
-  Serial.println(val_pot1);
-  Serial.println(val_pot2);
-  Serial.println(val_pot3);
-  Serial.println(val_pot4);
-}
- 
-void setup() {
-  // Initialize Serial Monitor
-  Serial.begin(74880);
-
-  pinMode(pin_servo1, OUTPUT);
-  servo1.attach(pin_servo1);
-  pinMode(pin_servo2, OUTPUT);
-  servo2.attach(pin_servo2);
-  pinMode(pin_servo3, OUTPUT);
-  servo3.attach(pin_servo3);
-  pinMode(pin_servo4, OUTPUT);
-  servo4.attach(pin_servo4);
-
-  Serial.print("ESP8266 Board MAC Address:  ");
-  Serial.println(WiFi.macAddress());
-  
-  // Set device as a Wi-Fi Station
-  WiFi.mode(WIFI_STA);
-
-  // Init ESP-NOW
-  if (esp_now_init() != 0) {
-    Serial.println("Error initializing ESP-NOW");
-    return;
-  }
-  
-  // Once ESPNow is successfully Init, we will register for recv CB to get recv packer info
-  esp_now_set_self_role(ESP_NOW_ROLE_SLAVE);
-  esp_now_register_recv_cb(OnDataRecv);
-}
-
-void loop() {
-  
-}
-```
+**[Click to view code](files/avatarm/receiver_code.txt)**
 
 ![Receiver wiring.](images/avatarm/receiver-1.jpg)
 ![Receiver wiring.](images/avatarm/receiver-2.jpg)
@@ -398,7 +182,7 @@ I assembled the controller arm and transferred the wiring over from the breadboa
 
 ![.](images/avatarm/rats-nest.jpg)
 
-I tested the controller, and it actually worked! However, the wires were really getting in the way and also falling off of their connections. The second problem was that the NodeMCU was just flopping around with nowhere to mount it. Since the base of this arm was not much bigger than the NodeMCU itself, I couldn't mount it at the location of the control box and so I had decided to remove the control box entirely. I reshaped that region to accomodate a modular platform for the NodeMCU, which looks like this:
+I tested the controller, and it worked! However, the wires were really getting in the way and also falling off of their connections. The second problem was that the NodeMCU was just flopping around with nowhere to mount it. Since the base of this arm was not much bigger than the NodeMCU itself, I couldn't mount it at the location of the control box and so I had decided to remove the control box entirely. I reshaped that region to accomodate a modular platform for the NodeMCU, which looks like this:
 
 ![.](images/avatarm/controller-nodemcu-mount.png)
 
@@ -413,29 +197,22 @@ Now it looks much better! I made some more robot art to commemorate the occasion
 
 ![.](images/avatarm/art2.gif)
 
-However, there were still a couple of issues. One was that although the wiring was much more organized than before, I was still not satisfied with how tangled things were in the back. Additionally, my splices on the controller arm sometimes lost connection, causing the potentiometer to report incorrect values and thus unpredictable motion in the Avatarm. All these connections really should be on a PCB, but I didn't have time to learn PCB design. So instead I decided to transfer the connections to perfboard. I had never worked with perfboard before but it seemed straightforward enough. It was essentially a grid of solder points which can be connected to components and to each other. First, I designed a perfboard diagram for the controller, based on the wiring diagram of the potentiometers:
+However, there were still a couple of issues. One was that although the wiring was much more organized than before, I was still not satisfied with how tangled things were in the back. Additionally, my splices on the controller arm sometimes lost connection, causing the potentiometer to report incorrect values and thus unpredictable motion in the Avatarm. All these connections really should be on a PCB, but I didn't have time to learn PCB design. So instead I decided to transfer the connections to perfboard. I had never worked with perfboard before but it seemed straightforward enough. Perfboard is essentially a grid of solder points which can be connected to components and to each other. First, I sketched some perfboard diagrams, based on the wiring diagram of the potentiometers:
+
+![.](images/avatarm/.jpg)
+
+The design was complicated by overlapping wires as well as the need to make several connections through the board itself. After some rather hacky soldering, I had two functional circuit boards!
+
+![.](images/avatarm/cb-front.jpg)
+![.](images/avatarm/cb-back.jpg)
+
+Before & after:
+
+![.](images/avatarm/tangled.jpg)
+![.](images/avatarm/cb-mounted.jpg)
 
 
-
-
-### 4. Future Plans
-
-As of today (4/27), I am approximately 2 weeks away from the final presentation. I plan to leave a week for making the promo video and polishing up my documentation, so I need to finish building by May 7th. I plan to finish the output arm by the end of this Friday, and work on the input arm (which will be simpler and incorporate the potentiometers) through the weekend. This would conclude the minimal viable product, which is a robot arm that can be remotely controlled via a teaching arm.
-
-Depending on how well I meet this timeline, there are 2 potential upgrades I plan to make to this project. One is to figure out a way to record the position of the arm over a duration of time and replay them, so the arm can be "taught". Another is to use gyroscope/accelerometer sensors (such as the MPU6050) to detect the orientation of various joints of my own arm and use that information to control the orientation of the Avatarm.
-
-
-### Photo Gallery.
-
-
-
-
-
-
-
-
-
-
+[//]: # "As of today (4/27), I am approximately 2 weeks away from the final presentation. I plan to leave a week for making the promo video and polishing up my documentation, so I need to finish building by May 7th. I plan to finish the output arm by the end of this Friday, and work on the input arm (which will be simpler and incorporate the potentiometers) through the weekend. This would conclude the minimal viable product, which is a robot arm that can be remotely controlled via a teaching arm. Depending on how well I meet this timeline, there are 2 potential upgrades I plan to make to this project. One is to figure out a way to record the position of the arm over a duration of time and replay them, so the arm can be 'taught'. Another is to use gyroscope/accelerometer sensors (such as the MPU6050) to detect the orientation of various joints of my own arm and use that information to control the orientation of the Avatarm.)"
 
 ### 6. Next Steps
 
