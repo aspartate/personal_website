@@ -1,0 +1,97 @@
+/*
+  Rui Santos
+  Complete project details at https://RandomNerdTutorials.com/esp-now-esp8266-nodemcu-arduino-ide/
+  
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files.
+  
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+*/
+
+#include <ESP8266WiFi.h>
+#include <espnow.h>
+#include <Servo.h>
+
+int val_pot1 = 960;
+int val_pot2 = 1170;
+int val_pot3 = 1540;
+int val_pot4 = 1830;
+
+int pin_servo1 = D1;
+int pin_servo2 = D2;
+int pin_servo3 = D3;
+int pin_servo4 = D4;
+
+Servo servo1;
+Servo servo2;
+Servo servo3;
+Servo servo4;
+
+// Structure example to receive data must match the sender structure
+typedef struct struct_message {
+  int val_1;
+  int val_2;
+  int val_3;
+  int val_4;
+} struct_message;
+
+// Create a struct_message called myData
+struct_message myData;
+
+// Callback function that will be executed when data is received
+void OnDataRecv(uint8_t * mac, uint8_t *incomingData, uint8_t len) {
+  memcpy(&myData, incomingData, sizeof(myData));
+  val_pot1 = myData.val_1;
+  val_pot2 = myData.val_2;
+  val_pot3 = myData.val_3;
+  val_pot4 = myData.val_4;
+
+  int servo1_pos = map(val_pot1, 0, 1800, 544, 2400);
+  servo1.writeMicroseconds(servo1_pos);
+  int servo2_pos = map(val_pot2, 0, 1800, 544, 2400);  
+  servo2.writeMicroseconds(servo2_pos);
+  int servo3_pos = map(val_pot3, 0, 1800, 544, 2400);
+  servo3.writeMicroseconds(servo3_pos);
+  int servo4_pos = map(val_pot4, 0, 1800, 544, 2400);  
+  servo4.writeMicroseconds(servo4_pos);
+  
+  Serial.println(val_pot1);
+  Serial.println(val_pot2);
+  Serial.println(val_pot3);
+  Serial.println(val_pot4);
+}
+ 
+void setup() {
+  // Initialize Serial Monitor
+  Serial.begin(74880);
+
+  pinMode(pin_servo1, OUTPUT);
+  servo1.attach(pin_servo1);
+  pinMode(pin_servo2, OUTPUT);
+  servo2.attach(pin_servo2);
+  pinMode(pin_servo3, OUTPUT);
+  servo3.attach(pin_servo3);
+  pinMode(pin_servo4, OUTPUT);
+  servo4.attach(pin_servo4);
+
+  Serial.print("ESP8266 Board MAC Address:  ");
+  Serial.println(WiFi.macAddress());
+  
+  // Set device as a Wi-Fi Station
+  WiFi.mode(WIFI_STA);
+
+  // Init ESP-NOW
+  if (esp_now_init() != 0) {
+    Serial.println("Error initializing ESP-NOW");
+    return;
+  }
+  
+  // Once ESPNow is successfully Init, we will register for recv CB to get recv packer info
+  esp_now_set_self_role(ESP_NOW_ROLE_SLAVE);
+  esp_now_register_recv_cb(OnDataRecv);
+}
+
+void loop() {
+  
+}
