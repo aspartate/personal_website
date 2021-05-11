@@ -141,6 +141,9 @@ Part C had a rough time with supports, with me having enlist the help of tape an
 ![.](images/avatarm/ABC-1.jpg)
 ![.](images/avatarm/ABC-2.jpg)
 
+
+[//]: # "As of today (4/27), I am approximately 2 weeks away from the final presentation. I plan to leave a week for making the promo video and polishing up my documentation, so I need to finish building by May 7th. I plan to finish the output arm by the end of this Friday, and work on the input arm (which will be simpler and incorporate the potentiometers) through the weekend. This would conclude the minimal viable product, which is a robot arm that can be remotely controlled via a teaching arm. Depending on how well I meet this timeline, there are 2 potential upgrades I plan to make to this project. One is to figure out a way to record the position of the arm over a duration of time and replay them, so the arm can be 'taught'. Another is to use gyroscope/accelerometer sensors (such as the MPU6050) to detect the orientation of various joints of my own arm and use that information to control the orientation of the Avatarm.)"
+
 Although the Avatarm is nearing completion, it's still missing the wrist joint. On the real KUKA KR150, the wrist joint actually has two axes of rotation:
 
 ![.](images/avatarm/wrist-model.png)
@@ -197,7 +200,9 @@ Now it looks much better! I made some more robot art to commemorate the occasion
 
 ![.](images/avatarm/art2.gif)
 
-However, there were still a couple of issues. One was that although the wiring was much more organized than before, I was still not satisfied with how tangled things were in the back. Additionally, my splices on the controller arm sometimes lost connection, causing the potentiometer to report incorrect values and thus unpredictable motion in the Avatarm. All these connections really should be on a PCB, but I didn't have time to learn PCB design. So instead I decided to transfer the connections to perfboard. I had never worked with perfboard before but it seemed straightforward enough. Perfboard is essentially a grid of solder points which can be connected to components and to each other. First, I sketched some perfboard diagrams, based on the wiring diagram of the potentiometers:
+However, there were still a couple of issues. One was that although the wiring was much more organized than before, I was still not satisfied with how tangled things were in the back. Additionally, my splices on the controller arm sometimes lost connection, causing the potentiometer to report incorrect values and thus unpredictable motion in the Avatarm. All these connections really should be on a PCB, but I didn't have time to learn PCB design. So instead I decided to transfer the connections to perfboard.
+
+I had never worked with perfboard before but it seemed straightforward enough. Perfboard is essentially a grid of solderable points which can be connected to components and to each other. First, I sketched some designs based on the wiring diagrams above, with two modifications. Firstly, on each perfboard I placed pins for 6 potentiometers/servos even though I only have four now. These extra pins will allow me to easily add more servos later with only firmware changes needed. In addition, I added two buttons on the controller board which are mapped to pins D7 and D8 to allow for added functionality later.
 
 ![.](images/avatarm/.jpg)
 
@@ -211,31 +216,64 @@ Before & after:
 ![.](images/avatarm/tangled.jpg)
 ![.](images/avatarm/cb-mounted.jpg)
 
+In the process of re-mounting the cables, the potentiometer-servo mapping changed (i.e., Potentiometer 1 no longer controlled Servo 1, etc.). Fortunately, this was a quick firmware fix. All I needed to do was shuffle some variables around.
 
-[//]: # "As of today (4/27), I am approximately 2 weeks away from the final presentation. I plan to leave a week for making the promo video and polishing up my documentation, so I need to finish building by May 7th. I plan to finish the output arm by the end of this Friday, and work on the input arm (which will be simpler and incorporate the potentiometers) through the weekend. This would conclude the minimal viable product, which is a robot arm that can be remotely controlled via a teaching arm. Depending on how well I meet this timeline, there are 2 potential upgrades I plan to make to this project. One is to figure out a way to record the position of the arm over a duration of time and replay them, so the arm can be 'taught'. Another is to use gyroscope/accelerometer sensors (such as the MPU6050) to detect the orientation of various joints of my own arm and use that information to control the orientation of the Avatarm.)"
+**[Controller code](files/avatarm/controller_code.txt)**
 
-### 6. Next Steps
+**[Avatarm code](files/avatarm/avatarm_code.txt)**
 
-http://goldsequence.blogspot.com/2016/06/rotation-with-less-than-1-degree.html
+### 5. End Effector
+
+At this point, I had a functional robot arm that moved decently smoothly in four axes. However, the robot is still missing an end effector, and is not making much use of the wrist joint right now. First, I finished modifying and printing the other parts of the wrist joint:
+
+![.](images/avatarm/wrist-complete.jpg)
+
+The supinator-pronator joint is driven by the SG90 at the wrist, while the flexor-extensor joint is just held in place by a bolt. I embedded a hex nut at the end of the wrist, onto which various attachments can be screwed. In the picture above I've attached a simple decorative plate.  A way of mounting things (pens, scalpels, etc.) that doesn't involve duct tape is sorely needed. I modified user Dalek's **[pen mount for the Ender 3](https://www.thingiverse.com/thing:4100602)** to attach to the wrist and hold both writing and surgical implements (this is a surgery robot, after all).
+
+![.](images/avatarm/holder-assembly.jpg)
+![.](images/avatarm/holder-pen.jpg)
+![.](images/avatarm/holder-scalpel.jpg)
+
+I scaled down the wrist joint to fit the wrist potentiometer on the controller arm:
+
+![.](images/avatarm/controller-wrist.jpg)
+
+### 6. Firmware Calibration
+
+Finally, I went back to the firmware to make some changes. One was to increase the precision of the servo joints. The precision of each joint is currently 1 degree of motion, using the standard servo.write() command. **[It is theoretically possible to increase the angular resolution to 0.1 degree using the servo.writeMicroseconds() command](http://goldsequence.blogspot.com/2016/06/rotation-with-less-than-1-degree.html)**, which I think will help with very precise tasks such as grape surgery. I followed the above tutorial to implement this, which involved just a few changes:
+* The values sent from the potentiometer need to be from 0-1800 rather than 0-180. This simply meant adjusting the value on the map() function. 
+* The potentiometer reading can be mapped to the appropriate pulse frequency on the receiver end and written to the servo using the servo.writeMicroseconds() function. In the prior version the reading was written directly to the servo using servo.write().
+For practical purposes, this does not achieve anywhere near 0.1 degree precision due to the raw potentiometer reading only being 10-bit (0 to 1023) and the inherent sloppiness in the servo geartrains. However, there should be at least some performance improvement. I tested the resulting motion and it seemed maybe a little smoother, although I am highly susceptible to the placebo effect.
+
+The other change I made was calibrating the angle mapping on the potentiometer. The previous strategy of mapping raw values directly to angle values (i.e. 0 -> 0 and 1023 -> 1800) resulted in some subtle issues because neither the potentiometer nor servo had a perfect 180-degree range of motion. Moving a joint on the controller arm by 70 degrees, for example, would only move the joint on the Avatarm by 60-ish degrees. This wasn't hugely noticeable, but would probably prevent our surgery bot from getting FDA approval. So through some trial-and-error, I adjusted the values on each of the map() functions such that the Avatarm more accurately approximated the motion of the controller arm. If you check out the updated controller code below, you'll notice that the final range of output values is much wider than 0-1800.
+
+**[Updated controller code](files/avatarm/updated_controller_code.txt)**
+
+**[Updated Avatarm code](files/avatarm/updated_avatarm_code.txt)**
+
+### 7. Final Product and Photo Gallery
+
+![.](images/avatarm/done.jpg)
+
+More photos coming soon!
+
+### 8. Bill of Materials.
+
+A lot of materials I had laying around already, but I've included links where you could find compatible parts. I suggest recovering parts from old electronics circuitry whenever possible, since you're not only improving your (de)soldering skills but also helping address the growing problem of electronics waste.
+
+* ESP8266 NodeMCU Development Board: **[$10 for 3](https://www.amazon.com/dp/B07HF44GBT?psc=1&ref=ppx_yo2_dt_b_product_details)**. The reliability of these is kind of dodgy; I had a board fail on me. But otherwise they seem to be well-built.
+* MG996R Metal Gear Servos: **[$19 for 5](https://www.amazon.com/dp/B081JN7C4M?psc=1&ref=ppx_yo2_dt_b_product_details)**. These are rated for 12 kg-cm at 6V. I'm actually powering them off a 5V power bank but they still hold up well.
+* SG90 Plastic Gear Servos: **[$18 for 10](https://www.amazon.com/Micro-Helicopter-Airplane-Remote-Control/dp/B072V529YD/ref=sr_1_8?dchild=1&keywords=sg90+servo&qid=1619543945&sr=8-8)**. These were kindly provided by the PS70 teaching staff.
+* 10K Potentiometers: **[$6 for 10](https://www.amazon.com/gp/product/B07CZXCBWD/ref=ox_sc_saved_title_1?smid=ATHZ0BI0D2RLH&psc=1)**. These were kindly provided by the PS70 teaching staff.
+* Dupont Wire (M-M, M-F): **[$6 for 120](https://www.amazon.com/EDGELEC-Breadboard-Optional-Assorted-Multicolored/dp/B07GD2BWPY/ref=sr_1_3?dchild=1&keywords=dupont+cables&qid=1619543905&sr=8-3)**. I had these laying around already.
+* PLA Filament: **[$20 per kg roll](https://www.amazon.com/Printer-Filament-SUNLU-Dimensional-Accuracy/dp/B07XG3RM58/ref=sr_1_3?dchild=1&keywords=pla%2Bfilament&qid=1619544207&sr=8-3&th=1)**. I used white and black, probably 500g of plastic in total, so about $10 worth.
+* Various assorted small screws: **Free**. I had a lot of tiny screws laying around from various electronics I've taken apart and tried to fix over the years (some of them successfully...). If you have some unwanted electronics or toys laying around you can harvest screws from them.
+* Perfboard: **[13.99 for 30 pieces, plus a bunch of header connectors and other stuff](https://www.amazon.com/gp/product/B07CK3RCKS/ref=ppx_yo_dt_b_asin_title_o03_s00?ie=UTF8&psc=1)**. Be careful when cutting these! Fiberglass splinters are no fun.
+* Diodes, buttons, and solid-core wire: **Free**. These were kindly provided by the PS70 teaching staff. You could desolder these from pretty much any unwanted circuit board.
+
+### 9. STL Files
 
 
 
-### 5. Bill of Materials.
-
-* [ESP8266 NodeMCU Development Board](https://www.amazon.com/dp/B07HF44GBT?psc=1&ref=ppx_yo2_dt_b_product_details): **$10 for 3**
-* [MG996R Metal Gear Servos](https://www.amazon.com/dp/B081JN7C4M?psc=1&ref=ppx_yo2_dt_b_product_details): **$19 for 5**
-* [SG90 Plastic Gear Servos](https://www.amazon.com/Micro-Helicopter-Airplane-Remote-Control/dp/B072V529YD/ref=sr_1_8?dchild=1&keywords=sg90+servo&qid=1619543945&sr=8-8): **$18 for 10** (these were kindly provided by the PS70 teaching staff)
-* [10K Potentiometers](https://www.amazon.com/gp/product/B07CZXCBWD/ref=ox_sc_saved_title_1?smid=ATHZ0BI0D2RLH&psc=1): **$6 for 10** (these were kindly provided by the PS70 teaching staff)
-* [Dupont Wire (M-M, M-F)](https://www.amazon.com/EDGELEC-Breadboard-Optional-Assorted-Multicolored/dp/B07GD2BWPY/ref=sr_1_3?dchild=1&keywords=dupont+cables&qid=1619543905&sr=8-3): **$6 for 120** (I had these laying around already)
-* [PLA Filament](https://www.amazon.com/Printer-Filament-SUNLU-Dimensional-Accuracy/dp/B07XG3RM58/ref=sr_1_3?dchild=1&keywords=pla%2Bfilament&qid=1619544207&sr=8-3&th=1): **$20 per kg roll** (I used white and black, probably 500g of plastic in total, so about $10 worth.)
-* Various assorted small screws: **Free** (I had a lot of tiny screws laying around from various electronics I've tried to fix over the years (some of them successfully...))
-
-
-Various helpful links:
-* https://www.youtube.com/watch?v=uEd2B7fS8Eg
-* https://www.youtube.com/watch?v=zxBC1ivOVfM
-* https://www.youtube.com/watch?v=GC0gRdBpylw
-* https://www.instructables.com/Wireless-Servo-Control/
-* https://dronebotworkshop.com/esp32-servo/
-
+[//]: # "Various helpful links: https://www.youtube.com/watch?v=uEd2B7fS8Eg, https://www.youtube.com/watch?v=zxBC1ivOVfM, https://www.youtube.com/watch?v=GC0gRdBpylw, https://www.instructables.com/Wireless-Servo-Control/, https://dronebotworkshop.com/esp32-servo/"
 
