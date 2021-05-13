@@ -4,7 +4,8 @@ date: 2021-04-26T02:40:45-05:00
 draft: false
 ---
 
-This post will continuously document progress on my final project for PS70.
+{{< youtube id="fKCS6ebLzv4" >}}
+&NewLine;
 
 Have you seen the video where a doctor performed surgery on a grape via robot?
 
@@ -254,6 +255,11 @@ The other change I made was calibrating the angle mapping on the potentiometer. 
 ### 7. Final Product and Photo Gallery
 
 ![.](images/avatarm/done.jpg)
+
+Unfortunately, I ran out of regular grapes so I used a ~~chicken grape~~ egg instead to test out the surgical aptitude of the Avatarm. As you can see, perhaps some more R&D is necessary before this technology is released to the public.
+
+{{< youtube id="9VuyiFmWmVE" >}}
+&NewLine;
 
 More photos coming soon!
 
