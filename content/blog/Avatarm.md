@@ -4,25 +4,32 @@ date: 2021-04-26T02:40:45-05:00
 draft: false
 ---
 
-{{< youtube id="fKCS6ebLzv4" >}}
-&NewLine;
+{{< rawhtml >}}
+<iframe width="700" height="385" src="https://www.youtube-nocookie.com/embed/fKCS6ebLzv4?rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<br>
+<br>
+{{< /rawhtml >}}
 
-Have you seen the video where a doctor performed surgery on a grape via robot?
-
-{{< youtube id="KNHgeykDXFw" >}}
-&NewLine;
-
-Though this came out more than a decade ago, I am fascinated by the concept of a remotely-controlled "avatar" robot. Particularly in the field of healthcare, I think such robots will transform telemedicine and help bring much-needed treatment capabilities to regions with few trained physicians. More generally, robots represent the idea of expanding human capabilities beyond the limits of our physical bodies, and will surely play a huge role in our future.
 
 ### 1. The idea.
 
-I want to build a robot arm avatar (the "Avatarm") which will allow me to perform surgery on a grape from another room. As a realistic goal, I shall consider the surgery successful if I can cut the grape into thirds. The system shall be comprised of three components:
+The year was 2010. In a dazzling display of human ingenuity, the world was introduced to a $2 million grape-peeling machine.
+
+{{< rawhtml >}}
+<iframe width="700" height="385" src="https://www.youtube-nocookie.com/embed/KNHgeykDXFw?rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<br>
+<br>
+{{< /rawhtml >}}
+
+Though this came out more than a decade ago, I am fascinated by the concept of a remotely-controlled "avatar". Particularly in the field of healthcare, I think such robots will transform telemedicine and help bring much-needed treatment capabilities to regions with few trained physicians.
+
+I want to build a robot arm avatar (the "Avatarm") which will allow me to perform surgery on a grape from another room. The system shall be comprised of three components:
 
 * The control arm, with position encoded by potentiometers
 * The Avatarm, driven by motors
 * A camera feed transmitting live video from the perspective of the Avatarm
 
-### 2. The electronics.
+### 2. Proof of Concept.
 
 I'm comfortable enough with 3D design/printing that I do not expect huge challenges in making the mechanical (plastic) parts of the arms. In a worst-case scenario, I have hot glue and popsicle sticks ready to deploy. However, the electronics are a bit more iffy. Therefore I want to make sure I can get the potentiometer-motor control system working before starting on the mechanical bits. I began experimenting with various control systems starting with Week 6, and after chasing a few red herrings I settled on using servo motors controlled over ESP-NOW communication. But for the sake of completeness, I am summarizing my journey below, and including the links to more detailed documentation of my (mis)adventures.
 
@@ -133,7 +140,7 @@ From then on it was relatively simple to connect the servos to the NodeMCU. Sinc
 
 ![Art.](images/avatarm/art.gif)
 
-As you can see, aside from missing the upper limb, the arm is not very intuitive to control using the potentiometers. But no worries, I have a plan to address this later. For now, I'll print and add on Part C:
+As you can see, aside from missing the upper limb, the arm is not very intuitive to control using the potentiometers. But no worries, I'll build the controller arm next. For now, I'll print and add on Part C:
 
 ![.](images/avatarm/C-raw.jpg)
 
@@ -205,9 +212,9 @@ However, there were still a couple of issues. One was that although the wiring w
 
 I had never worked with perfboard before but it seemed straightforward enough. Perfboard is essentially a grid of solderable points which can be connected to components and to each other. First, I sketched some designs based on the wiring diagrams above, with two modifications. Firstly, on each perfboard I placed pins for 6 potentiometers/servos even though I only have four now. These extra pins will allow me to easily add more servos later with only firmware changes needed. In addition, I added two buttons on the controller board which are mapped to pins D7 and D8 to allow for added functionality later.
 
-![.](images/avatarm/.jpg)
+![.](images/avatarm/cb-diagrams.png)
 
-The design was complicated by overlapping wires as well as the need to make several connections through the board itself. After some rather hacky soldering, I had two functional circuit boards!
+The design was complicated by overlapping wires as well as the need to make several connections through the board itself. After some rather hacky soldering, I had two functional circuit boards! The controller board is missing a diode (I ran out) but it's okay for the time being since we aren't using that pin anyways.
 
 ![.](images/avatarm/cb-front.jpg)
 ![.](images/avatarm/cb-back.jpg)
@@ -250,18 +257,35 @@ The other change I made was calibrating the angle mapping on the potentiometer. 
 
 **[Updated controller code](files/avatarm/updated_controller_code.txt)**
 
+After some further testing, I realized the arm would sometimes "jump" from its set position while at rest. I attributed this to the use of servo.writeMicroseconds() so on the receiver end I mapped it back own to a 0-180 degree range and went back to servo.write(). I also set initial servo values to the "home" positions. (These used to be set to some random number so the arm tended to punch me in the face if I turned it on before the controller.)
+
 **[Updated Avatarm code](files/avatarm/updated_avatarm_code.txt)**
 
 ### 7. Final Product and Photo Gallery
 
 ![.](images/avatarm/done.jpg)
+![.](images/avatarm/pg-avatarm-extended.jpg)
+![.](images/avatarm/pg-avatarm-cb.jpg)
+![.](images/avatarm/pg-controller-cb.jpg)
+![.](images/avatarm/pg-controller-closeup.jpg)
+![.](images/avatarm/pg-topview.jpg)
+![.](images/avatarm/pg-sideview.jpg)
 
-Unfortunately, I ran out of regular grapes so I used a ~~chicken grape~~ egg instead to test out the surgical aptitude of the Avatarm. As you can see, perhaps some more R&D is necessary before this technology is released to the public.
+To demonstrate the precise and intuitive control that this machine affords, I made one final piece of robot art.
 
-{{< youtube id="9VuyiFmWmVE" >}}
-&NewLine;
+{{< rawhtml >}}
+<iframe width="700" height="385" src="https://www.youtube-nocookie.com/embed/IB0fF9iGAfw?rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<br>
+<br>
+{{< /rawhtml >}}
 
-More photos coming soon!
+Finally, it is time to put this machine to the test. I ran out of regular grapes so I used a ~~chicken grape~~ egg instead to test out the surgical aptitude of the Avatarm. As you can see, perhaps some more R&D is necessary before this technology is released to the public.
+
+{{< rawhtml >}}
+<iframe width="700" height="385" src="https://www.youtube-nocookie.com/embed/zhRoPBNo_vg?rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<br>
+<br>
+{{< /rawhtml >}}
 
 ### 8. Bill of Materials.
 
@@ -278,6 +302,36 @@ A lot of materials I had laying around already, but I've included links where yo
 * Diodes, buttons, and solid-core wire: **Free**. These were kindly provided by the PS70 teaching staff. You could desolder these from pretty much any unwanted circuit board.
 
 ### 9. STL Files
+
+**Download parts for the Avatarm:**
+1. [Base](files/avatarm/avatarm-base.stl)
+2. [Base Feet 1](files/avatarm/avatarm-baseFeet1.stl)
+3. [Base Feet 2](files/avatarm/avatarm-baseFeet2.stl)
+4. [Base Feet 3](files/avatarm/avatarm-baseFeet3.stl)
+5. [Base Feet 4](files/avatarm/avatarm-baseFeet4.stl)
+6. [Base Back Panel (unused)](files/avatarm/avatarm-baseBackPanel.stl)
+7. [Part A](files/avatarm/avatarm-partA.stl)
+8. [Part B](files/avatarm/avatarm-partB.stl)
+9. [Part C](files/avatarm/avatarm-partC.stl)
+10. [Wrist Base](files/avatarm/avatarm-wristBase.stl)
+11. [Wrist Joint Part A](files/avatarm/avatarm-wristA.stl)
+12. [Wrist Joint Part B](files/avatarm/avatarm-wristB.stl)
+13. [Wrist Joint Cap](files/avatarm/avatarm-wristCap.stl)
+14. [Pen Mount Base](files/avatarm/avatarm-penBase.stl)
+15. [Pen Mount Holder](files/avatarm/avatarm-penHolder.stl)
+
+**Download parts for the controller:**
+1. [Base](files/avatarm/controller-base.stl)
+2. [Base Feet 1](files/avatarm/controller-baseFeet1.stl)
+3. [Base Feet 2](files/avatarm/controller-baseFeet2.stl)
+4. [Base Feet 3](files/avatarm/controller-baseFeet3.stl)
+5. [Base Feet 4](files/avatarm/controller-baseFeet4.stl)
+6. [NodeMCU mount](files/avatarm/controller-NodeMCUmount.stl)
+7. [Part A](files/avatarm/controller-partA.stl)
+8. [Part B](files/avatarm/controller-partB.stl)
+9. [Part C](files/avatarm/controller-partC.stl)
+10. [Wrist Joint Part A](files/avatarm/controller-wristA.stl)
+11. [Wrist Joint Part B](files/avatarm/controller-wristB.stl)
 
 
 

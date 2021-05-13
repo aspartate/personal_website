@@ -92,14 +92,14 @@ void loop() {
   digitalWrite(D2, LOW);
   digitalWrite(D3, HIGH);
   digitalWrite(D4, LOW);
-  val_pot3 = map(analogRead(A0), 0, 1024, -300, 2000);
+  val_pot3 = map(analogRead(A0), 0, 1024, -300, 1950);
   delay(5);
 
   digitalWrite(D1, LOW);
   digitalWrite(D2, LOW);
   digitalWrite(D3, LOW);
   digitalWrite(D4, HIGH);
-  val_pot4 = 1900 - map(analogRead(A0), 0, 1024, 0, 2400);
+  val_pot4 = 1800 - map(analogRead(A0), 0, 1024, -200, 2300);
   if (val_pot4 < 0) {
     val_pot4 = 0;
   }
