@@ -150,7 +150,7 @@ Part C had a rough time with supports, with me having enlist the help of tape an
 ![.](images/avatarm/ABC-2.jpg)
 
 
-[//]: # "As of today (4/27), I am approximately 2 weeks away from the final presentation. I plan to leave a week for making the promo video and polishing up my documentation, so I need to finish building by May 7th. I plan to finish the output arm by the end of this Friday, and work on the input arm (which will be simpler and incorporate the potentiometers) through the weekend. This would conclude the minimal viable product, which is a robot arm that can be remotely controlled via a teaching arm. Depending on how well I meet this timeline, there are 2 potential upgrades I plan to make to this project. One is to figure out a way to record the position of the arm over a duration of time and replay them, so the arm can be 'taught'. Another is to use gyroscope/accelerometer sensors (such as the MPU6050) to detect the orientation of various joints of my own arm and use that information to control the orientation of the Avatarm.)"
+[//]: # "As of today (4/27), I am approximately 2 weeks away from the final presentation. I plan to leave a week for making the promo video and polishing up my documentation, so I need to finish building by May 7th. I plan to finish the output arm by the end of this Friday, and work on the input arm (which will be simpler and incorporate the potentiometers) through the weekend. This would conclude the minimal viable product, which is a robot arm that can be remotely controlled via a teaching arm. Depending on how well I meet this timeline, there are 2 potential upgrades I plan to make to this project. One is to figure out a way to record the position of the arm over a duration of time and replay them, so the arm can be 'taught'. Another is to use gyroscope/accelerometer sensors (such as the MPU6050) to detect the orientation of various joints of my own arm and use that information to control the orientation of the Avatarm."
 
 Although the Avatarm is nearing completion, it's still missing the wrist joint. On the real KUKA KR150, the wrist joint actually has two axes of rotation:
 
@@ -265,8 +265,6 @@ After some further testing, I realized the arm would sometimes "jump" from its s
 
 ![.](images/avatarm/done.jpg)
 ![.](images/avatarm/pg-avatarm-extended.jpg)
-![.](images/avatarm/pg-avatarm-cb.jpg)
-![.](images/avatarm/pg-controller-cb.jpg)
 ![.](images/avatarm/pg-controller-closeup.jpg)
 ![.](images/avatarm/pg-topview.jpg)
 ![.](images/avatarm/pg-sideview.jpg)
@@ -287,6 +285,12 @@ Finally, it is time to put this machine to the test. I ran out of regular grapes
 <br>
 {{< /rawhtml >}}
 
+### 8. Reflections & Future Plans
+
+This was my first proper robotics project and I'm pretty happy with my progress so far. Besides learning to work with Arduino and servos, I also improved my CAD skills. Designing parts to fit together precisely required careful consideration of clearances as well as the limits of FDM 3D printing. Having not much experience in soldering, I was intimidated by fabricating my own circuit boards at first but found that with a little bit of patience it was quite fun. Overall, this project (and this class) really opened my mind to the world of electronic hardware and circuitry.
+
+I'm thinking of this robot arm as a starting point for many future projects. One idea I would like to implement is to record arm positions over time and replay them, so the arm can be taught a sequence of motions. Another is to use gyroscope/accelerometer sensors (such as the MPU6050) to detect the orientation of various joints of my own arm and use that information to control the motion of the robot. With the addition of a gripper and ESP32-CAM, I think there are also some very cool computer vision applications that could be explored. I'm excited to work on this further!
+
 ### 8. Bill of Materials.
 
 A lot of materials I had laying around already, but I've included links where you could find compatible parts. I suggest recovering parts from old electronics circuitry whenever possible, since you're not only improving your (de)soldering skills but also helping address the growing problem of electronics waste.
@@ -294,11 +298,11 @@ A lot of materials I had laying around already, but I've included links where yo
 * ESP8266 NodeMCU Development Board: **[$10 for 3](https://www.amazon.com/dp/B07HF44GBT?psc=1&ref=ppx_yo2_dt_b_product_details)**. The reliability of these is kind of dodgy; I had a board fail on me. But otherwise they seem to be well-built.
 * MG996R Metal Gear Servos: **[$19 for 5](https://www.amazon.com/dp/B081JN7C4M?psc=1&ref=ppx_yo2_dt_b_product_details)**. These are rated for 12 kg-cm at 6V. I'm actually powering them off a 5V power bank but they still hold up well.
 * SG90 Plastic Gear Servos: **[$18 for 10](https://www.amazon.com/Micro-Helicopter-Airplane-Remote-Control/dp/B072V529YD/ref=sr_1_8?dchild=1&keywords=sg90+servo&qid=1619543945&sr=8-8)**. These were kindly provided by the PS70 teaching staff.
+* Perfboard: **[$13.99 for 30 pieces](https://www.amazon.com/gp/product/B07CK3RCKS/ref=ppx_yo_dt_b_asin_title_o03_s00?ie=UTF8&psc=1)**, with header connectors included. Be careful when cutting these! Fiberglass splinters are no fun.
 * 10K Potentiometers: **[$6 for 10](https://www.amazon.com/gp/product/B07CZXCBWD/ref=ox_sc_saved_title_1?smid=ATHZ0BI0D2RLH&psc=1)**. These were kindly provided by the PS70 teaching staff.
 * Dupont Wire (M-M, M-F): **[$6 for 120](https://www.amazon.com/EDGELEC-Breadboard-Optional-Assorted-Multicolored/dp/B07GD2BWPY/ref=sr_1_3?dchild=1&keywords=dupont+cables&qid=1619543905&sr=8-3)**. I had these laying around already.
 * PLA Filament: **[$20 per kg roll](https://www.amazon.com/Printer-Filament-SUNLU-Dimensional-Accuracy/dp/B07XG3RM58/ref=sr_1_3?dchild=1&keywords=pla%2Bfilament&qid=1619544207&sr=8-3&th=1)**. I used white and black, probably 500g of plastic in total, so about $10 worth.
 * Various assorted small screws: **Free**. I had a lot of tiny screws laying around from various electronics I've taken apart and tried to fix over the years (some of them successfully...). If you have some unwanted electronics or toys laying around you can harvest screws from them.
-* Perfboard: **[13.99 for 30 pieces, plus a bunch of header connectors and other stuff](https://www.amazon.com/gp/product/B07CK3RCKS/ref=ppx_yo_dt_b_asin_title_o03_s00?ie=UTF8&psc=1)**. Be careful when cutting these! Fiberglass splinters are no fun.
 * Diodes, buttons, and solid-core wire: **Free**. These were kindly provided by the PS70 teaching staff. You could desolder these from pretty much any unwanted circuit board.
 
 ### 9. STL Files
@@ -332,8 +336,6 @@ A lot of materials I had laying around already, but I've included links where yo
 9. [Part C](files/avatarm/controller-partC.stl)
 10. [Wrist Joint Part A](files/avatarm/controller-wristA.stl)
 11. [Wrist Joint Part B](files/avatarm/controller-wristB.stl)
-
-
 
 [//]: # "Various helpful links: https://www.youtube.com/watch?v=uEd2B7fS8Eg, https://www.youtube.com/watch?v=zxBC1ivOVfM, https://www.youtube.com/watch?v=GC0gRdBpylw, https://www.instructables.com/Wireless-Servo-Control/, https://dronebotworkshop.com/esp32-servo/"
 
