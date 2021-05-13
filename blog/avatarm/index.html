@@ -110,7 +110,7 @@
           <h1> Final Project </h1>
 
             <div class="sub-header">
-              April 26, 2021 · 19 minutes read
+              April 26, 2021 · 20 minutes read
             </div>
 
           <article class="entry-content">
@@ -271,8 +271,6 @@ For practical purposes, this does not achieve anywhere near 0.1 degree precision
 <h3 id="7-final-product-and-photo-gallery">7. Final Product and Photo Gallery</h3>
 <p><img src="images/avatarm/done.jpg" alt=".">
 <img src="images/avatarm/pg-avatarm-extended.jpg" alt=".">
-<img src="images/avatarm/pg-avatarm-cb.jpg" alt=".">
-<img src="images/avatarm/pg-controller-cb.jpg" alt=".">
 <img src="images/avatarm/pg-controller-closeup.jpg" alt=".">
 <img src="images/avatarm/pg-topview.jpg" alt=".">
 <img src="images/avatarm/pg-sideview.jpg" alt="."></p>
@@ -290,17 +288,20 @@ For practical purposes, this does not achieve anywhere near 0.1 degree precision
 <br>
 <br>
 
+<h3 id="8-reflections--future-plans">8. Reflections &amp; Future Plans</h3>
+<p>This was my first proper robotics project and I&rsquo;m pretty happy with my progress so far. Besides learning to work with Arduino and servos, I also improved my CAD skills. Designing parts to fit together precisely required careful consideration of clearances as well as the limits of FDM 3D printing. Having not much experience in soldering, I was intimidated by fabricating my own circuit boards at first but found that with a little bit of patience it was quite fun. Overall, this project (and this class) really opened my mind to the world of electronic hardware and circuitry.</p>
+<p>I&rsquo;m thinking of this robot arm as a starting point for many future projects. One idea I would like to implement is to record arm positions over time and replay them, so the arm can be taught a sequence of motions. Another is to use gyroscope/accelerometer sensors (such as the MPU6050) to detect the orientation of various joints of my own arm and use that information to control the motion of the robot. With the addition of a gripper and ESP32-CAM, I think there are also some very cool computer vision applications that could be explored. I&rsquo;m excited to work on this further!</p>
 <h3 id="8-bill-of-materials">8. Bill of Materials.</h3>
 <p>A lot of materials I had laying around already, but I&rsquo;ve included links where you could find compatible parts. I suggest recovering parts from old electronics circuitry whenever possible, since you&rsquo;re not only improving your (de)soldering skills but also helping address the growing problem of electronics waste.</p>
 <ul>
 <li>ESP8266 NodeMCU Development Board: <strong><a href="https://www.amazon.com/dp/B07HF44GBT?psc=1&amp;ref=ppx_yo2_dt_b_product_details">$10 for 3</a></strong>. The reliability of these is kind of dodgy; I had a board fail on me. But otherwise they seem to be well-built.</li>
 <li>MG996R Metal Gear Servos: <strong><a href="https://www.amazon.com/dp/B081JN7C4M?psc=1&amp;ref=ppx_yo2_dt_b_product_details">$19 for 5</a></strong>. These are rated for 12 kg-cm at 6V. I&rsquo;m actually powering them off a 5V power bank but they still hold up well.</li>
 <li>SG90 Plastic Gear Servos: <strong><a href="https://www.amazon.com/Micro-Helicopter-Airplane-Remote-Control/dp/B072V529YD/ref=sr_1_8?dchild=1&amp;keywords=sg90+servo&amp;qid=1619543945&amp;sr=8-8">$18 for 10</a></strong>. These were kindly provided by the PS70 teaching staff.</li>
+<li>Perfboard: <strong><a href="https://www.amazon.com/gp/product/B07CK3RCKS/ref=ppx_yo_dt_b_asin_title_o03_s00?ie=UTF8&amp;psc=1">$13.99 for 30 pieces</a></strong>, with header connectors included. Be careful when cutting these! Fiberglass splinters are no fun.</li>
 <li>10K Potentiometers: <strong><a href="https://www.amazon.com/gp/product/B07CZXCBWD/ref=ox_sc_saved_title_1?smid=ATHZ0BI0D2RLH&amp;psc=1">$6 for 10</a></strong>. These were kindly provided by the PS70 teaching staff.</li>
 <li>Dupont Wire (M-M, M-F): <strong><a href="https://www.amazon.com/EDGELEC-Breadboard-Optional-Assorted-Multicolored/dp/B07GD2BWPY/ref=sr_1_3?dchild=1&amp;keywords=dupont+cables&amp;qid=1619543905&amp;sr=8-3">$6 for 120</a></strong>. I had these laying around already.</li>
 <li>PLA Filament: <strong><a href="https://www.amazon.com/Printer-Filament-SUNLU-Dimensional-Accuracy/dp/B07XG3RM58/ref=sr_1_3?dchild=1&amp;keywords=pla%2Bfilament&amp;qid=1619544207&amp;sr=8-3&amp;th=1">$20 per kg roll</a></strong>. I used white and black, probably 500g of plastic in total, so about $10 worth.</li>
 <li>Various assorted small screws: <strong>Free</strong>. I had a lot of tiny screws laying around from various electronics I&rsquo;ve taken apart and tried to fix over the years (some of them successfully&hellip;). If you have some unwanted electronics or toys laying around you can harvest screws from them.</li>
-<li>Perfboard: <strong><a href="https://www.amazon.com/gp/product/B07CK3RCKS/ref=ppx_yo_dt_b_asin_title_o03_s00?ie=UTF8&amp;psc=1">13.99 for 30 pieces, plus a bunch of header connectors and other stuff</a></strong>. Be careful when cutting these! Fiberglass splinters are no fun.</li>
 <li>Diodes, buttons, and solid-core wire: <strong>Free</strong>. These were kindly provided by the PS70 teaching staff. You could desolder these from pretty much any unwanted circuit board.</li>
 </ul>
 <h3 id="9-stl-files">9. STL Files</h3>
