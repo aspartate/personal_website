@@ -269,7 +269,7 @@ After some further testing, I realized the arm would sometimes "jump" from its s
 ![.](images/avatarm/pg-topview.jpg)
 ![.](images/avatarm/pg-sideview.jpg)
 
-To demonstrate the precise and intuitive control that this machine affords, I made one final piece of robot art.
+To demonstrate the "precise and intuitive control" that this machine affords, I made one final piece of robot art.
 
 {{< rawhtml >}}
 <iframe width="700" height="385" src="https://www.youtube-nocookie.com/embed/IB0fF9iGAfw?rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -277,13 +277,15 @@ To demonstrate the precise and intuitive control that this machine affords, I ma
 <br>
 {{< /rawhtml >}}
 
-Finally, it is time to put this machine to the test. I ran out of regular grapes so I used a ~~chicken grape~~ egg instead to test out the surgical aptitude of the Avatarm. As you can see, perhaps some more R&D is necessary before this technology is released to the public.
+Satisfied with the results, I decided to proceed with the surgery. I ran out of grapes so I used an egg instead. Unfortunately, the patient tried to escape halfway through the procedure.
 
 {{< rawhtml >}}
 <iframe width="700" height="385" src="https://www.youtube-nocookie.com/embed/zhRoPBNo_vg?rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 <br>
 <br>
 {{< /rawhtml >}}
+
+As you can see, perhaps some more R&D is necessary before this technology is released to the public.
 
 ### 8. Reflections & Future Plans
 
